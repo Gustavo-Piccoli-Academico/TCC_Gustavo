@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Resta um</title>
+    <link rel="stylesheet" href="../css/resta1_jogo.css">
+    <script src="../js/resta1_jogo.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="buttonGroup">
+            <button id="homeButton">Menu do Aluno</button>
+            <button id="backButton">Voltar</button>
+            <button id="rulesButton">Regras</button>
+            <button id="restartButton">Recomeçar</button>
+        </div>
+    </div>
+    <h1>Resta 1</h1>
+    <div class="container">
+        <div id="boardContainer" class="relative">
+        </div>
+    <div>
+
+    <div id="restartModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Confirmação</h2>
+            <p>Você realmente deseja perder o seu progresso?</p>
+            <button id="confirmYes">Sim</button>
+            <button id="confirmNo">Não</button>
+        </div>
+    </div>
+
+    <div id="homeModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Confirmação</h2>
+            <p>Você realmente deseja perder o seu progresso?</p>
+            <button id="confirmYes">Sim</button>
+            <button id="confirmNo">Não</button>
+        </div>
+    </div>
+
+    <div id="backModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Confirmação</h2>
+            <p>Você realmente deseja perder o seu progresso?</p>
+            <button id="confirmYes">Sim</button>
+            <button id="confirmNo">Não</button>
+        </div>
+    </div>
+    <div id="rulesModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Regras do Resta 1</h2>
+            <p>
+                O jogo começa com um tabuleiro cheio de pecinhas, menos um buraco vazio.
+                <br><br>
+                O objetivo é deixar apenas uma pecinha no tabuleiro.
+                <br><br>
+                Para isso, você precisa mover uma pecinha pulando outra que está ao lado. A pecinha que foi pulada sai do tabuleiro.
+                <br><br>
+                Há dois tipo de Resta 1, o Normal e o Diagonal.
+                <br><br>
+                No Resta 1 Normal, você pode pular pecinhas na horizontal ou na vertical, nunca na diagonal.
+                <br><br>
+                No Resta 1 Diagonal, você pode pular pecinhas na horizontal ou nas diagonais, nunca na vertical.
+                <br><br>
+                Continue pulando e retirando pecinhas até não ter mais movimentos possíveis.
+                <br><br>
+                Se sobrar apenas uma pecinha, parabéns, você venceu!
+                <br><br>
+                <strong>Você consegue! 🧩😊</strong>
+            </p>
+        </div>
+    </div>
+    <div id="winModal" class="modal">
+        <div class="modal-content">
+            <h2>Parabéns, você ganhou!</h2>
+            <p>Você deseja recomeçar ou retornar ao menu?</p>
+            <button id="confirmYes">Recomeçar</button>
+            <button id="confirmNo">Menu</button>
+        </div>
+    </div>
+    <div id="loseModal" class="modal">
+        <div class="modal-content">
+            <h2>Não há mais movimentos válidos 😢</h2>
+            <p>Você deseja recomeçar ou retornar ao menu?</p>
+            <button id="confirmYes">Recomeçar</button>
+            <button id="confirmNo">Menu</button>
+        </div>
+    </div>
+
+</body>
+</html>

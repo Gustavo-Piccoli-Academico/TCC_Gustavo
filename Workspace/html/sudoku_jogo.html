@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku 9X9</title>
+    <link rel="stylesheet" href="../css/sudoku_jogo.css">
+    <script src="../js/sudoku_jogo.js" defer></script>
+</head>
+
+<body>
+    <div class="buttonGroup">
+        <button id="homeButton">Página Inicial</button>
+        <button id="backButton">Voltar</button>
+        <button id="rulesButton">Regras</button>
+        <button id="restartButton">Recomeçar</button>
+    </div>
+    <div class="sudoku9x9" id="sudoku9x9"></div>
+    <div class="buttonGroup">
+        <div class="buttonGroup">
+            <button id="noteButton">Notas</button>
+            <button id="eraseButton">Apagar</button>
+            <button class="numberButton">1</button>
+            <button class="numberButton">2</button>
+            <button class="numberButton">3</button>
+            <button class="numberButton">4</button>
+            <button class="numberButton">5</button>
+            <button class="numberButton">6</button>
+            <button class="numberButton">7</button>
+            <button class="numberButton">8</button>
+            <button class="numberButton">9</button>
+        </div>
+    </div>
+    <div id="noteMessage" style="display: none; text-align: center; margin-top: 10px; 
+        border: 5px solid black; padding: 10px; color: white; width: fit-content; 
+        margin-left: auto; margin-right: auto; background-color: red;">
+        <strong>Modo de anotações está ligado!</strong> 
+    </div>
+    <div id="rulesModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Regras do Sudoku</h2>
+            <p>
+                O tabuleiro do Sudoku é como uma grande tabela com 81 quadradinhos, dividida em 9 partes menores (chamadas “quadrados” ou “blocos”), cada uma com 9 quadradinhos.
+                <br><br>
+                O que você precisa fazer: preencher todos os quadradinhos com números de 1 a 9, seguindo três regras simples.
+                <br><br>
+                <strong>As regras:</strong>
+                <br>
+                1) Na linha - Cada linha (de um lado ao outro, como no caderno) só pode ter o número 1, o número 2, e assim por diante até o 9, sem repetir.
+                <br><br>
+                2) Na coluna - Cada coluna (de cima para baixo) também só pode ter os números de 1 a 9, sem repetir nenhum.
+                <br><br>
+                3) No bloco - Cada bloco (aquelas divisões de 3x3) só pode ter os números de 1 a 9, também sem repetir.
+                <br><br>
+                Alguns quadradinhos já vêm preenchidos no começo do jogo. Eles são pistas para você saber onde colocar os outros números! O segredo é pensar e testar até encontrar os lugares certos.
+                <br><br>
+                É como um quebra-cabeça de números. <strong>Você consegue! 🧩😊</strong>
+            </p>
+        </div>
+    </div>
+    <div id="restartModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Confirmação</h2>
+            <p>Você realmente deseja perder o seu progresso?</p>
+            <button id="confirmYes">Sim</button>
+            <button id="confirmNo">Não</button>
+        </div>
+    </div>
+    <div id="homeModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Confirmação</h2>
+            <p>Você realmente deseja perder o seu progresso?</p>
+            <button id="confirmYes">Sim</button>
+            <button id="confirmNo">Não</button>
+        </div>
+    </div>
+    <div id="backModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Confirmação</h2>
+            <p>Você realmente deseja perder o seu progresso?</p>
+            <button id="confirmYes">Sim</button>
+            <button id="confirmNo">Não</button>
+        </div>
+    </div>
+</body>
+
+</html>

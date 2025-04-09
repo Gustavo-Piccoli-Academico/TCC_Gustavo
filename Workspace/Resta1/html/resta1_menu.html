@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>menu_sudoku</title>
+    <link rel="stylesheet" href="../css/resta1_menu.css">
+    <script src="../js/resta1_menu.js" defer></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="headerButtons">
+            <button id="homeButton">Menu do Aluno</button>
+            <button id="rulesButton">Regras</button>
+        </div>
+        <h1>Resta 1 Normais:</h1>
+        <div class="buttonGroup">
+            <button id="standardButton">Tradicional</button>
+            <button id="squareButton">Quadrado</button>
+            <button id="europeanButton">Europeu</button>
+            <button id="asymmetricButton">Assimétrico</button>
+            <button id="germanButton">Alemão</button>
+            <button id="diamondButton">Diamante</button>
+        </div>
+        <h1>Resta 1 Diagonais:</h1>
+        <div class="buttonGroup">
+            <button id="starButton">Estrela</button>
+            <button id="piramidButton">Pirâmide</button>
+            <button id="trapezoidButton">Trapezóide</button>
+            <button id="rhombusButton">Losango</button>
+            <button id="snowButton">Floco de Neve</button>
+            <button id="hexagonalButton">Hexagonal</button>
+            <button id="triangleButton">Triângulo</button>
+        </div>
+        <button id="playButton">Jogar</button>
+        <div id="rulesModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Regras do Resta 1</h2>
+                <p>
+                    O jogo começa com um tabuleiro cheio de pecinhas, menos um buraco vazio.
+                    <br><br>
+                    O objetivo é deixar apenas uma pecinha no tabuleiro.
+                    <br><br>
+                    Para isso, você precisa mover uma pecinha pulando outra que está ao lado. A pecinha que foi pulada sai do tabuleiro.
+                    <br><br>
+                    Há dois tipo de Resta 1, o Normal e o Diagonal.
+                    <br><br>
+                    No Resta 1 Normal, você pode pular pecinhas na horizontal ou na vertical, nunca na diagonal.
+                    <br><br>
+                    No Resta 1 Diagonal, você pode pular pecinhas na horizontal ou nas diagonais, nunca na vertical.
+                    <br><br>
+                    Continue pulando e retirando pecinhas até não ter mais movimentos possíveis.
+                    <br><br>
+                    Se sobrar apenas uma pecinha, parabéns, você venceu!
+                    <br><br>
+                    <strong>Você consegue! 🧩😊</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

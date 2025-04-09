@@ -1,0 +1,66 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #EBF3E8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+
+.container {
+    text-align: center;
+    padding: 20px;
+    display: flex; /* Adicionando flexbox para organizar os elementos */
+    flex-direction: column; /* Os itens vão se alinhar em coluna */
+    justify-content: center;
+    align-items: center; /* Alinha o botão horizontalmente */
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.logo {
+    width: 400px;
+    height: auto;
+    margin-bottom: -100px;
+    margin-top: -100px;
+}
+
+
+.buttonGroup {
+    margin-top: 20px;
+    display: flex; /* Alinha os elementos filhos lado a lado */
+    align-items: center; /* Alinha os botões verticalmente */
+    justify-content: center; /* Centraliza os botões horizontalmente */
+}
+
+/* Add margin between buttons */
+.buttonGroup button {
+    background-color: #c28039;
+    color: white;
+    /* padding: 15px 25px; */
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 20px;
+    transition: background-color 0.3s;
+    white-space: normal; /* Permite a quebra de linha */
+    line-height: 1.4;    /* Ajusta o espaçamento entre as linhas */
+    width: 100px;        /* Define a largura fixa para os botões */
+    height: 70px;        /* Define a altura fixa para os botões */
+}
+
+button:hover {
+    background-color: #c28039c0;
+    transform: scale(1.1); 
+}
