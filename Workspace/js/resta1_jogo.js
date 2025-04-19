@@ -9,7 +9,7 @@ let first_piece = null;
 
 let modal = 0;
 let valid_moves = [];
-let normal_diagonal = 0; // 0 for normal, 1 for diagonal
+let is_diagonal = false;
 let diagonals = ["star_matrix", "piramid_matrix", "trapezoid_matrix", "rhombus_matrix", "snow_matrix", "hexagonal_matrix", "triangle_matrix"];
 
 // Function to get the matrix shape based on its type
@@ -124,14 +124,14 @@ function Matrix_Shape() {
             [0, 3, 0, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 0, 3, 0]
         ],
         triangle_matrix: [
-            [3, 3, 3, 3, 3, 3, 2, 3, 2, 3, 3, 3, 3, 3, 3], 
+            [3, 3, 3, 3, 3, 3, 1, 3, 1, 3, 3, 3, 3, 3, 3], 
             [3, 3, 3, 3, 3, 3, 3, 1, 3, 3, 3, 3, 3, 3, 3], 
-            [3, 3, 3, 3, 3, 3, 2, 3, 1, 3, 3, 3, 3, 3, 3], 
-            [3, 3, 3, 3, 3, 2, 3, 2, 3, 2, 3, 3, 3, 3, 3], 
-            [3, 3, 3, 3, 2, 3, 2, 3, 2, 3, 2, 3, 3, 3, 3], 
-            [3, 3, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 3, 3], 
-            [2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2], 
-            [3, 2, 3, 0, 3, 0, 3, 0, 3, 0, 3, 0, 3, 2, 3]
+            [3, 3, 3, 3, 3, 3, 1, 3, 1, 3, 3, 3, 3, 3, 3], 
+            [3, 3, 3, 3, 3, 1, 3, 2, 3, 1, 3, 3, 3, 3, 3], 
+            [3, 3, 3, 3, 1, 3, 1, 3, 1, 3, 1, 3, 3, 3, 3], 
+            [3, 3, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 3, 3], 
+            [1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1], 
+            [3, 1, 3, 0, 3, 0, 3, 0, 3, 0, 3, 0, 3, 1, 3]
         ]
     }
     matrix = matrices[type] || null;
@@ -141,7 +141,7 @@ function Matrix_Shape() {
 // Function to create the board
 function Create_Board() {
     if (diagonals.includes(type)) {
-        normal_diagonal = 1;
+        is_diagonal = true;
     }
     let numRows = matrix.length;
     let numCols = Math.max(...matrix.map(r => r.length));
@@ -149,8 +149,8 @@ function Create_Board() {
     let boardSize = boardContainer.clientWidth; // Get the size of the container
     
     let cellSize = null;
-    if (normal_diagonal == 0){
-        cellSize = Math.floor(boardSize / Math.max(numRows, numCols)) - 4; // Calculate the size of the cells
+    if (!is_diagonal){
+        cellSize = Math.floor(boardSize / Math.max(numRows, numCols)) - 10; // Calculate the size of the cells
     }
     else{
         switch(type){
@@ -161,19 +161,19 @@ function Create_Board() {
                 cellSize = Math.floor(boardSize / Math.max(numRows, numCols)) * 1.7;
                 break;
             case "trapezoid_matrix":
-                cellSize = Math.floor(boardSize / Math.max(numRows, numCols)) * 1.8;
+                cellSize = Math.floor(boardSize / Math.max(numRows, numCols)) * 1.7;
                 break;
             case "rhombus_matrix":
                 cellSize = Math.floor(boardSize / Math.max(numRows, numCols)) * 1.7;
                 break;
             case "snow_matrix":
-                cellSize = Math.floor(boardSize / Math.max(numRows, numCols)) * 1.8;
+                cellSize = Math.floor(boardSize / Math.max(numRows, numCols)) * 1.7;
                 break;
             case "hexagonal_matrix":
-                cellSize = Math.floor(boardSize / Math.max(numRows, numCols)) * 1.8;
+                cellSize = Math.floor(boardSize / Math.max(numRows, numCols)) * 1.7;
                 break;
             case "triangle_matrix":
-                cellSize = Math.floor(boardSize / Math.max(numRows, numCols)) * 1.8;
+                cellSize = Math.floor(boardSize / Math.max(numRows, numCols)) * 1.7;
                 break;
         }
     }
@@ -212,65 +212,64 @@ function Create_Board() {
 }
 
 // Function to check if the vertical or horizontal move is valid
-function Valid_Normal_Moves(colIndex, rowIndex) {
+function Valid_Normal_Moves(rowIndex, colIndex) {
     let adjacent = [];
     
     // Right
-    if (colIndex < matrix[0].length - 2 && matrix[rowIndex][colIndex + 1] == 1 && matrix[rowIndex][colIndex + 2] == 2) {
-        adjacent.push([rowIndex, colIndex + 2, "right"]);
+    if (rowIndex < matrix[0].length - 2 && matrix[colIndex][rowIndex + 1] == 1 && matrix[colIndex][rowIndex + 2] == 2) {
+        adjacent.push([colIndex, rowIndex + 2, "right"]);
     } 
 
     // Left
-    if (colIndex - 2 >= 0 && matrix[rowIndex][colIndex - 1] == 1 && matrix[rowIndex][colIndex - 2] == 2) {
-        adjacent.push([rowIndex, colIndex - 2, "left"]); 
+    if (rowIndex - 2 >= 0 && matrix[colIndex][rowIndex - 1] == 1 && matrix[colIndex][rowIndex - 2] == 2) {
+        adjacent.push([colIndex, rowIndex - 2, "left"]); 
     } 
 
     // Up
-    if (rowIndex - 2 >= 0 && matrix[rowIndex - 1][colIndex] == 1 && matrix[rowIndex - 2][colIndex] == 2) {
-        adjacent.push([rowIndex - 2, colIndex, "up"]);
+    if (colIndex - 2 >= 0 && matrix[colIndex - 1][rowIndex] == 1 && matrix[colIndex - 2][rowIndex] == 2) {
+        adjacent.push([colIndex - 2, rowIndex, "up"]);
     }
     
     // Down
-    if (rowIndex < matrix.length - 2 && matrix[rowIndex + 1][colIndex] == 1 && matrix[rowIndex + 2][colIndex] == 2) {
-        adjacent.push([rowIndex + 2, colIndex, "down"]);
+    if (colIndex < matrix.length - 2 && matrix[colIndex + 1][rowIndex] == 1 && matrix[colIndex + 2][rowIndex] == 2) {
+        adjacent.push([colIndex + 2, rowIndex, "down"]);
     }
     return adjacent;
 }
 
 // Function to check if the horizontal or diagonal move is valid
-function Valid_Diagonal_Moves(colIndex, rowIndex) {
+function Valid_Diagonal_Moves(rowIndex, colIndex) {
     let adjacent = [];
     
     // Right
-    if (colIndex < matrix[0].length - 4 && matrix[rowIndex][colIndex + 2] == 1 && matrix[rowIndex][colIndex + 4] == 2) {
-        adjacent.push([rowIndex, colIndex + 4, "right"]);
+    if (rowIndex < matrix[0].length - 4 && matrix[colIndex][rowIndex + 2] == 1 && matrix[colIndex][rowIndex + 4] == 2) {
+        adjacent.push([colIndex, rowIndex + 4, "right"]);
     } 
 
     // Left
-    if (colIndex - 4 >= 0 && matrix[rowIndex][colIndex - 2] == 1 && matrix[rowIndex][colIndex - 4] == 2) {
-        adjacent.push([rowIndex, colIndex - 4, "left"]); 
+    if (rowIndex - 4 >= 0 && matrix[colIndex][rowIndex - 2] == 1 && matrix[colIndex][rowIndex - 4] == 2) {
+        adjacent.push([colIndex, rowIndex - 4, "left"]); 
     } 
 
     // Up Right
-    if (rowIndex - 2 >= 0 && colIndex < matrix[0].length - 2 && matrix[rowIndex - 1][colIndex + 1] == 1 && matrix[rowIndex - 2][colIndex + 2] == 2) {
-        adjacent.push([rowIndex - 2, colIndex + 2, "upRight"]);
+    if (colIndex - 2 >= 0 && rowIndex < matrix[0].length - 2 && matrix[colIndex - 1][rowIndex + 1] == 1 && matrix[colIndex - 2][rowIndex + 2] == 2) {
+        adjacent.push([colIndex - 2, rowIndex + 2, "upRight"]);
     }
 
     // Up Left
-    if (rowIndex - 2 >= 0 && colIndex - 2 >= 0 && matrix[rowIndex - 1][colIndex - 1] == 1 && matrix[rowIndex - 2][colIndex - 2] == 2) {
-        adjacent.push([rowIndex - 2, colIndex - 2, "upLeft"]);
+    if (colIndex - 2 >= 0 && rowIndex - 2 >= 0 && matrix[colIndex - 1][rowIndex - 1] == 1 && matrix[colIndex - 2][rowIndex - 2] == 2) {
+        adjacent.push([colIndex - 2, rowIndex - 2, "upLeft"]);
     }
 
     // Down Right
-    if (rowIndex < matrix.length - 2 && colIndex < matrix[0].length - 2 && matrix[rowIndex + 1][colIndex + 1] == 1 && matrix[rowIndex + 2][colIndex + 2] == 2) {
-        adjacent.push([rowIndex + 2, colIndex + 2, "downRight"]);
+    if (colIndex < matrix.length - 2 && rowIndex < matrix[0].length - 2 && matrix[colIndex + 1][rowIndex + 1] == 1 && matrix[colIndex + 2][rowIndex + 2] == 2) {
+        adjacent.push([colIndex + 2, rowIndex + 2, "downRight"]);
     }
 
     // Down Left
-    if (rowIndex < matrix.length - 2 && colIndex - 2 >= 0 && matrix[rowIndex + 1][colIndex - 1] == 1 && matrix[rowIndex + 2][colIndex - 2] == 2) {
-        adjacent.push([rowIndex + 2, colIndex - 2, "downLeft"]);
+    if (colIndex < matrix.length - 2 && rowIndex - 2 >= 0 && matrix[colIndex + 1][rowIndex - 1] == 1 && matrix[colIndex + 2][rowIndex - 2] == 2) {
+        adjacent.push([colIndex + 2, rowIndex - 2, "downLeft"]);
     }
-    console.log(adjacent);
     return adjacent;
 }
 
@@ -287,7 +286,7 @@ document.addEventListener("click", function (event) {
         first_piece = event.target;
         let colIndex = parseInt(first_piece.getAttribute("pos_i"));
         let rowIndex = parseInt(first_piece.getAttribute("pos_j"));
-        if (normal_diagonal == 0) {
+        if (!is_diagonal) {
                 valid_moves = Valid_Normal_Moves(rowIndex, colIndex);
         }
         else{
@@ -331,11 +330,14 @@ document.addEventListener("click", function (event) {
                 break;
             }
         }
-        let win = Check_Win();
-        if (!win){
-            Check_Lose();
+        if (Check_Win()){
+            document.getElementById('winModal').style.display = 'block';
+            modal = 4;
         }
-        
+        else if (Check_Lose()){
+            document.getElementById('loseModal').style.display = 'block';
+            modal = 4;
+        } 
     }
     else{
         if (first_piece){
@@ -359,29 +361,38 @@ function Check_Win(){
         }
     }
     if (win == 1){
-        document.getElementById('winModal').style.display = 'block';
-        return win;
+        return true;
     }
     else{
-        return win;
+        return false;
     }
 }
 
 //Corrigir
 function Check_Lose(){ //Corrigir
-    let count = 0;
+    let aux = 0;
     for (let i = 0; i < matrix.length; i++){
         for (let j = 0; j < matrix[i].length; j++){
-            if (matrix[i][j] == 1){
-                count++;
+            if(matrix[i][j] == 1){
+                if(is_diagonal){
+                    valid_moves = Valid_Diagonal_Moves(j, i);
+                }
+                else{
+                    valid_moves = Valid_Normal_Moves(j, i);
+                }
+                if (valid_moves.length > 0){
+                    aux++;
+                }
             }
-        }
+        }  
     }
-    if (count == 1){
-        document.getElementById('loseModal').style.display = 'block';
+    if (aux != 0){
+        return false;
+    }
+    else{
+        return true;
     }
 }
-
 // Restart, Rules Home and Back Buttons Event Listeners
 document.addEventListener("click", function (event) {
     const target = event.target;
@@ -406,7 +417,7 @@ document.addEventListener("click", function (event) {
             }
             else if (modal == 2){
                 document.getElementById('homeModal').style.display = 'none';
-                
+                window.location.href = "logicamente.html";
             }
             else if (modal == 3){
                 document.getElementById('backModal').style.display = 'none';
@@ -436,16 +447,6 @@ document.addEventListener("click", function (event) {
         }
         case ('rulesButton'):{ // Detects when the user clicks on the rules button
             document.getElementById('rulesModal').style.display = 'block';
-            break;
-        }
-        case ('winModal'):{ // Detects when the user clicks on the win modal
-            document.getElementById('winModal').style.display = 'none';
-            modal = 4;
-            break;
-        }
-        case ('loseModal'):{ // Detects when the user clicks on the lose modal
-            document.getElementById('loseModal').style.display = 'none';
-            modal = 4;
             break;
         }
         default: // Detects when the close button in clicken in a opened window

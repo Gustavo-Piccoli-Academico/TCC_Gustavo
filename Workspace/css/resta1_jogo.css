@@ -53,7 +53,7 @@ button:hover {
     max-width: 500px;
     height: auto;
     aspect-ratio: 1/1;
-    background: url("../img/textura.png") center/cover no-repeat;
+    background: url("../imagens/textura.png") center/cover no-repeat;
     border: 2px solid #8c7351;
     border-radius: 8px;
     padding: 10px;
@@ -76,13 +76,13 @@ button:hover {
     cursor: pointer;
     transition: background 0.2s ease-in-out;
     background: #67543b;
+    border: 3px solid #555; 
+    border-radius: 50%;    
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); 
 }
 
 .empty {    
     background-color: #333; /* Cor escura do preenchimento */
-    border: 3px solid #555; 
-    border-radius: 50%;    
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); 
 }
 
 .active {

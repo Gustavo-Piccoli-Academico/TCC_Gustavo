@@ -4,7 +4,7 @@ document.getElementById("playButton").classList.add("active");
 document.addEventListener("click", function (event) {
     switch(event.target.id){
         case ('homeButton'):{ // 
-            window.location.href = "aluno_menu.html";
+            window.location.href = "logicamente.html";
             break;
         }
         case('rulesButton'):{
