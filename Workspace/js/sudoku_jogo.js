@@ -25,9 +25,6 @@ let container = document.getElementById("sudoku9x9");
 // }
 
 
-
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // SUDOKU GENERATION FUNCTIONS
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -263,63 +260,10 @@ function Fun_Peers_And_Equals(selectedCell, rowIndex, colIndex){
     });
 }            
 
-function Fun_Handle_Note_Mode(number) {
-    /*if (selectedCell) {
-        let note = selectedCell.querySelector(`.note[data-number="${number}"]`);
-        if (note) {
-            selectedCell.removeChild(note);
-        } else {
-            if (!selectedCell.querySelector('.noteContainer')) {
-                let noteContainer = document.createElement('div');
-                noteContainer.classList.add('noteContainer');
-                selectedCell.appendChild(noteContainer);
-            }
-            let noteContainer = selectedCell.querySelector('.noteContainer');
-            note = document.createElement('div');
-            note.classList.add('note');
-            note.setAttribute('data-number', number);
-            note.textContent = number;
-            noteContainer.appendChild(note);
-        }
-    }
-        */
-    alert("IMPLEMENTAR");
-}
-
-// Transform the puzzle from a string to a 2D array
-function transformPuzzle(puzzle1) {
-    const puzzle2 = [];
-    const size = 4;
-    for (let i = 0; i < size; i++) {
-        const row = [];
-        for (let j = 0; j < size; j++) {
-            row.push(Number(puzzle1[i * size + j]));
-        }
-        puzzle2.push(row);
-    }
-    return puzzle2;
-}
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // EVENT LISTENERS
 /////////////////////////////////////////////////////////////////////////////////////////////////////            
-
-// Add event listener to detect when the solve button is clicked
-document.getElementById("noteButton").addEventListener("click", function(){ 
-    noteMode = !noteMode;
-    document.getElementById('noteButton').classList.toggle('noteButtonClicked');
-    document.getElementById('eraseButton').classList.toggle('noteButtonClicked');
-    document.querySelectorAll('.numberButton').forEach(function(button) {
-        button.classList.toggle('noteButtonClicked');
-    });
-    if(noteMode == true){
-        document.getElementById('noteMessage').style.display = 'block';
-    }
-    else{
-        document.getElementById('noteMessage').style.display = 'none';
-    }
-});
 
 // Add event listeners to detect when the cells are clicked
 document.addEventListener("click", function (event) { 
@@ -441,19 +385,15 @@ document.addEventListener("click", function (event) {
     }
 }); 
 
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // MAIN FUNCTION
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function main(){
-
-    // let puzzle4 = "1300240030004000";
-    // let puzzle5 = transformPuzzle(puzzle4);
-    // console.log(puzzle4);
-    // console.log(puzzle5);
-
     let initialPuzzle = Fun_Generate_Random_Sudoku();
     puzzle = JSON.parse(JSON.stringify(initialPuzzle));
+    console.log(puzzle, size, dificulty);
     solvedPuzzle = Fun_Solve_Sudoku(puzzle);
     document.querySelectorAll(".numberButton").forEach((button, index) => { //Disables the number buttons according to the size of the board
         if (index < size) {
