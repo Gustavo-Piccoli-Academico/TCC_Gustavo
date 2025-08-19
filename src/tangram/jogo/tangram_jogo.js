@@ -215,15 +215,15 @@ document.addEventListener("click", function (event) {
         case ('confirmYes'): { // Detects when the user clicks on the "Yes" button in the restart window
             if (modal == 1){
                 document.getElementById('restartModal').style.display = 'none';
-                window.location.href = "tangram_jogo.html";
+                window.location.href = "../jogo/tangram_jogo.html";
             }
             else if (modal == 2){
                 document.getElementById('homeModal').style.display = 'none';
-                window.location.href = "logicamente.html";
+                window.location.href = "../../logicamente/logicamente.html";
             }
             else if (modal == 3){
                 document.getElementById('backModal').style.display = 'none';
-                window.location.href = "tangram_menu.html";
+                window.location.href = "../menu/tangram_menu.html";
             }
             break;
         }

@@ -5,7 +5,7 @@ document.getElementById("playButton").classList.add("active");
 document.addEventListener("click", function (event) {
     switch(event.target.id){
         case ('homeButton'):{ // 
-            window.location.href = "logicamente.html";
+            window.location.href = "../../logicamente/logicamente.html";
             break;
         }
         case('rulesButton'):{
@@ -119,7 +119,7 @@ document.addEventListener("click", function (event) {
         case ('playButton'):{
             if (type != null){
                 localStorage.setItem('type', type);
-                window.location.href = "resta1_jogo.html";
+                window.location.href = "../jogo/resta1_jogo.html";
             }
             else{
                 document.getElementById('boardModal').style.display = 'block';

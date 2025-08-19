@@ -401,7 +401,7 @@ document.addEventListener("click", function (event) {
             if (modal == 4){ //menu
                 document.getElementById('winModal').style.display = 'none';
                 document.getElementById('loseModal').style.display = 'none';
-                window.location.href = "resta1_menu.html";
+                window.location.href = "../menu/resta1_menu.html";
             }
             else{
                 document.getElementById('restartModal').style.display = 'none';
@@ -417,11 +417,11 @@ document.addEventListener("click", function (event) {
             }
             else if (modal == 2){
                 document.getElementById('homeModal').style.display = 'none';
-                window.location.href = "logicamente.html";
+                window.location.href = "../../logicamente/logicamente.html";
             }
             else if (modal == 3){
                 document.getElementById('backModal').style.display = 'none';
-                window.location.href = "resta1_menu.html";
+                window.location.href = "../menu/resta1_menu.html";
             }
             else if (modal == 4){//Restart
                 document.getElementById('winModal').style.display = 'none';

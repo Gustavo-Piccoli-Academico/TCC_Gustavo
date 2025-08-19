@@ -6,7 +6,7 @@ document.getElementById("playButton").classList.add("active");
 document.addEventListener("click", function (event) {
     switch(event.target.id){
         case ('homeButton'):{ // 
-            window.location.href = "logicamente.html";
+            window.location.href = "../../logicamente/logicamente.html";
             break;
         }
         case('rulesButton'):{
@@ -79,7 +79,7 @@ document.addEventListener("click", function (event) {
             else{
                 localStorage.setItem('dificulty', dificulty);
                 localStorage.setItem('size', size);
-                window.location.href = "sudoku_jogo.html";
+                window.location.href = "../jogo/sudoku_jogo.html";
             }
             break;
         }

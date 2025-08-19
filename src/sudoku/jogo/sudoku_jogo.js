@@ -25,24 +25,24 @@ function Fun_Get_Initial_Puzzle() {
     return new Promise((resolve, reject) => {
         let csvPath = '';
         if (size == 4) {
-            csvPath = '../arquivos/Sudoku/4x4.csv';
+            csvPath = "../puzzles/4x4.csv";
         } 
         else if (size == 6) {
             if (dificulty == 1) {
-                csvPath = '../arquivos/Sudoku/6x6facil.csv';
+                csvPath = '../puzzles/6x6facil.csv';
             } else if (dificulty == 2) {
-                csvPath = '../arquivos/Sudoku/6x6medio.csv';
+                csvPath = '../puzzles/6x6medio.csv';
             } else if (dificulty == 3) {
-                csvPath = '../arquivos/Sudoku/6x6dificil.csv';
+                csvPath = '../puzzles/6x6dificil.csv';
             }
         } 
         else if (size == 9) {
             if (dificulty == 1) {
-                csvPath = '../arquivos/Sudoku/9x9facil.csv';
+                csvPath = '../puzzles/9x9facil.csv';
             } else if (dificulty == 2) {
-                csvPath = '../arquivos/Sudoku/9x9medio.csv';
+                csvPath = '../puzzles/9x9medio.csv';
             } else if (dificulty == 3) {
-                csvPath = '../arquivos/Sudoku/9x9dificil.csv';
+                csvPath = '../puzzles/9x9dificil.csv';
             }
         }
         fetch(csvPath)
@@ -343,7 +343,7 @@ document.addEventListener("click", function (event) {
         case ('confirmNo'):{ // Detects when the user clicks on the "No" button in the restart window
             if (modal == 4){
                 document.getElementById('winModal').style.display = 'none';
-                window.location.href = "sudoku_menu.html";
+                window.location.href = "../menu/sudoku_menu.html";
             }
             else{
                 document.getElementById('restartModal').style.display = 'none';
@@ -368,11 +368,11 @@ document.addEventListener("click", function (event) {
             }
             else if (modal == 2){
                 document.getElementById('homeModal').style.display = 'none';
-                window.location.href = "logicamente.html";
+                window.location.href = "../../logicamente/logicamente.html";
             }
             else if (modal == 3){
                 document.getElementById('backModal').style.display = 'none';
-                window.location.href = "sudoku_menu.html";
+                window.location.href = "../menu/sudoku_menu.html";
             }
             else if (modal == 4){
                 selectedCell = null;
