@@ -1,3 +1,4 @@
+localStorage.clear();
 let type = null;
 document.getElementById("playButton").classList.add("active");
 
@@ -118,10 +119,10 @@ document.addEventListener("click", function (event) {
         case ('playButton'):{
             if (type != null){
                 localStorage.setItem('type', type);
-                window.location.href = "resta1_jogo.html?type=" + type;
+                window.location.href = "resta1_jogo.html";
             }
             else{
-                alert("Selecione um tabuleiro antes de jogar!");
+                document.getElementById('boardModal').style.display = 'block';
             }
             break;
         }
@@ -129,8 +130,9 @@ document.addEventListener("click", function (event) {
         {
             if (event.target.classList.contains('close')) { // Detects when the user clicks on a close button
                 document.getElementById('rulesModal').style.display = 'none';
+                document.getElementById('boardModal').style.display = 'none';
             }
-            else if (event.target == document.getElementById('rulesModal')) {
+            else if (event.target == document.getElementById('rulesModal') || event.target == document.getElementById('boardModal')) { // Detects when the user clicks outside the modal
                 event.target.style.display = 'none';
             }
         }

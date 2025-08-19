@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../css/tangram_jogo.css">
+  <script src="../js/tangram_jogo.js" defer></script>
+  <title>Tangram</title>
+</head>
+<body>
+    <div class="buttonGroup">
+        <button id="homeButton">Página Inicial</button>
+        <button id="backButton">Voltar</button>
+        <button id="rulesButton">Regras</button>
+        <button id="restartButton">Recomeçar</button>
+    </div>
+    <svg id="svgCanvas"></svg>
+    <div id="rulesModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Regras do Tangram</h2>
+            <p>
+                O Tangram tem 7 pecinhas diferentes. Para montar um desenho, você precisa usar todas elas, sem deixar nenhuma de fora!
+                <br><br>
+                As peças têm que ficar lado a lado, como um quebra-cabeça. Não pode colocar uma por cima da outra.
+                <br><br>
+                Você pode girar e virar as peças do jeito que quiser! Para girar, é só clicar no anel ao redor da peça e arraste o mouse.
+                <br><br>
+                Use a criatividade! Pode brincar montando figuras do livro ou inventar as suas próprias. <strong>Você consegue! 🧩😊</strong>
+            </p>
+        </div>
+    </div>
+    <div id="restartModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Confirmação</h2>
+            <p>Você realmente deseja perder o seu progresso?</p>
+            <button id="confirmYes">Sim</button>
+            <button id="confirmNo">Não</button>
+        </div>
+    </div>
+    <div id="homeModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Confirmação</h2>
+            <p>Você realmente deseja perder o seu progresso?</p>
+            <button id="confirmYes">Sim</button>
+            <button id="confirmNo">Não</button>
+        </div>
+    </div>
+    <div id="backModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Confirmação</h2>
+            <p>Você realmente deseja perder o seu progresso?</p>
+            <button id="confirmYes">Sim</button>
+            <button id="confirmNo">Não</button>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,3 +1,4 @@
+localStorage.clear();
 let size = 0;
 let dificulty = 0;
 document.getElementById("playButton").classList.add("active");
@@ -69,14 +70,11 @@ document.addEventListener("click", function (event) {
             break;
         }
         case ('playButton'):{
-            if((size == 0) && (dificulty == 0)){
-                alert("Selecione um tamanho e uma dificuldade para jogar!");
-            }
-            else if(size == 0){
-                alert("Selecione um tamanho para jogar!");
+            if(size == 0){
+                document.getElementById('sizeModal').style.display = 'block';
             }
             else if (dificulty == 0){
-                alert("Selecione uma dificuldade para jogar!");
+                document.getElementById('dificultyModal').style.display = 'block';
             }
             else{
                 localStorage.setItem('dificulty', dificulty);
@@ -89,8 +87,10 @@ document.addEventListener("click", function (event) {
         {
             if (event.target.classList.contains('close')) { // Detects when the user clicks on a close button
                 document.getElementById('rulesModal').style.display = 'none';
+                document.getElementById('sizeModal').style.display = 'none';
+                document.getElementById('dificultyModal').style.display = 'none';
             }
-            else if (event.target == document.getElementById('rulesModal')) {
+            else if (event.target == document.getElementById('rulesModal') || event.target == document.getElementById('dificultyModal') || event.target == document.getElementById('sizeModal')) { // Detects when the user clicks outside the modal
                 event.target.style.display = 'none';
             }
         }

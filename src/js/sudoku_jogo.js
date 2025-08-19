@@ -3,9 +3,9 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 let selectedCell = null;
+let initialPuzzle = [];
 let solvedPuzzle = [];
 let allCells = null;
-let noteMode = false;
 let puzzle = [];
 let rowIndex = null;
 let colIndex = null;
@@ -13,16 +13,7 @@ let goalCorrect = 0;
 let modal = 0;
 const dificulty = localStorage.getItem('dificulty');
 const size = localStorage.getItem('size');
-let container = document.getElementById("sudoku9x9");
-// if (size == 4){
-//     container = document.getElementById("sudoku4x4");
-// }
-// else if (size == 6){
-//     container = document.getElementById("sudoku6x6");
-// }
-// else if (size == 9){
-//     container = document.getElementById("sudoku9x9");
-// }
+let container = document.getElementById("sudokucontainer");
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -30,44 +21,75 @@ let container = document.getElementById("sudoku9x9");
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Generate a random Sudoku puzzle
-function Fun_Generate_Random_Sudoku() {
-    let puzzle = [];
-    if (size == 4){
-        puzzle = [
-            [1, 3, 0, 0],
-            [2, 4, 0, 0],
-            [3, 0, 0, 0],
-            [4, 0, 0, 0],
-        ];
-    }
-    else if (size == 6){
-        puzzle = [
-            [1, 3, 5, 0, 0, 0],
-            [2, 4, 6, 0, 0, 0],
-            [3, 0, 0, 0, 0, 0],
-            [4, 0, 0, 0, 0, 0],
-            [5, 0, 0, 0, 0, 0],
-            [6, 0, 0, 0, 0, 0]
-        ];
-    }
-    else if (size == 9){
-        puzzle = [
-            [5, 3, 0, 0, 7, 0, 0, 0, 0],
-            [6, 0, 0, 1, 9, 5, 0, 0, 0],
-            [0, 9, 8, 0, 0, 0, 0, 6, 0],
-            [8, 0, 0, 0, 6, 0, 0, 0, 3],
-            [4, 0, 0, 8, 0, 3, 0, 0, 1],
-            [7, 0, 0, 0, 2, 0, 0, 0, 6],
-            [0, 6, 0, 0, 0, 0, 2, 8, 0],
-            [0, 0, 0, 4, 1, 9, 0, 0, 5],
-            [0, 0, 0, 0, 8, 0, 0, 7, 9]
-        ];
-    }
-    return puzzle;
+function Fun_Get_Initial_Puzzle() {
+    return new Promise((resolve, reject) => {
+        let csvPath = '';
+        if (size == 4) {
+            csvPath = '../arquivos/Sudoku/4x4.csv';
+        } 
+        else if (size == 6) {
+            if (dificulty == 1) {
+                csvPath = '../arquivos/Sudoku/6x6facil.csv';
+            } else if (dificulty == 2) {
+                csvPath = '../arquivos/Sudoku/6x6medio.csv';
+            } else if (dificulty == 3) {
+                csvPath = '../arquivos/Sudoku/6x6dificil.csv';
+            }
+        } 
+        else if (size == 9) {
+            if (dificulty == 1) {
+                csvPath = '../arquivos/Sudoku/9x9facil.csv';
+            } else if (dificulty == 2) {
+                csvPath = '../arquivos/Sudoku/9x9medio.csv';
+            } else if (dificulty == 3) {
+                csvPath = '../arquivos/Sudoku/9x9dificil.csv';
+            }
+        }
+        fetch(csvPath)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao carregar o arquivo CSV');
+                }
+                return response.text();
+            })
+            .then(data => {
+                const lines = data.trim().split('\n');
+                const randomLine = lines[Math.floor(Math.random() * lines.length)];
+                const [puzzleString, solutionString] = randomLine.split(',');
+                for (let i = 0; i < size; i++) {
+                    let row = [];
+                    for (let j = 0; j < size; j++) {
+                        row.push(parseInt(puzzleString[i * size + j], 10));
+                    }
+                    initialPuzzle.push(row);
+                }
+                for (let i = 0; i < size; i++) {
+                    let row = [];
+                    for (let j = 0; j < size; j++) {
+                        row.push(parseInt(solutionString[i * size + j], 10));
+                    }
+                    solvedPuzzle.push(row);
+                }
+                resolve(); // Indica que o processamento foi concluído
+            })
+            .catch(error => {
+                console.error('Erro ao ler o arquivo:', error);
+                reject(error); // Indica que ocorreu um erro
+            });
+    });
 }
 
 // Create the Sudoku puzzle board
 function Fun_Create_Sudoku_Board(puzzle) {
+    if (size == 4) {
+        cellSize = 90;
+    } 
+    else if (size == 6) {
+        cellSize = 70;
+    } 
+    else if (size == 9) {
+        cellSize = 50;
+    }
     container.innerHTML = "";
     for (let i = 0; i < size; i++) {
         const row = document.createElement("div");
@@ -79,6 +101,12 @@ function Fun_Create_Sudoku_Board(puzzle) {
             cell.setAttribute("pos_i", i);
             cell.setAttribute("pos_j", j);
             cell.classList.add("backgroundColor"); // Add classes to alternate the colors of the quadrants
+            
+            cell.style.width = `${cellSize}px`;
+            cell.style.height = `${cellSize}px`;
+            cell.style.lineHeight = `${cellSize}px`;
+            cell.style.fontSize = `${cellSize * 0.4}px`;
+
             if (puzzle[i][j] !== 0) { // Add the numbers to the cells
                 cell.textContent = puzzle[i][j];
                 cell.editableStatus = 0;
@@ -176,17 +204,17 @@ function Fun_Solve_Helper(board) {
     return false; // No valid number found for this cell
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // SUDOKU AUXILARY FUNCTIONS
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function Fun_Check_Game_Over(){
+function Fun_Check_Win(){
     if(goalCorrect == 0){
         selectedCell.classList.remove("incorrect");
         selectedCell.classList.add("correct");
         selectedCell.classList.add("selected");
-        setTimeout(function(){ alert("Parabéns! Você resolveu o Sudoku!"); }, 200);
+        document.getElementById('winModal').style.display = 'block';
+            modal = 4;
     }
 }
 
@@ -200,22 +228,11 @@ function Fun_Enable_Disable_Buttons(status) {
             }
         });
         document.getElementById("eraseButton").disabled = false; // Enable the erase button
-        document.getElementById("noteButton").disabled = false; // Enable the note button
     } else { // Disable the buttons
         document.querySelectorAll(".numberButton").forEach(button => {
             button.disabled = true;
         });
         document.getElementById("eraseButton").disabled = true; // Disable the erase button
-        if (noteMode == true) { // Reset note mode if active
-            noteMode = false;
-            document.getElementById("noteButton").classList.remove('noteButtonClicked');
-            document.getElementById("eraseButton").classList.remove('noteButtonClicked');
-            document.querySelectorAll('.numberButton').forEach(function(button) {
-                button.classList.remove('noteButtonClicked');
-            });
-            document.getElementById('noteMessage').style.display = 'none';
-        }
-        document.getElementById("noteButton").disabled = true; // Disable the note button
     }
 }
 
@@ -260,7 +277,6 @@ function Fun_Peers_And_Equals(selectedCell, rowIndex, colIndex){
     });
 }            
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // EVENT LISTENERS
 /////////////////////////////////////////////////////////////////////////////////////////////////////            
@@ -284,29 +300,24 @@ document.addEventListener("click", function (event) {
 // Add event listener to detect when the numbered buttons are clicked
 document.querySelectorAll(".numberButton").forEach(button => {button.addEventListener("click", function () {
     if (selectedCell) {
-        if(noteMode){ // If note mode is enabled, the note is added to the cell
-            Fun_Handle_Note_Mode(button.textContent);
-        }
-        else{ // If note mode is disabled, the number is added to the cell
-                selectedCell.textContent = button.textContent;
-                rowIndex = selectedCell.getAttribute("pos_i");
-                colIndex = selectedCell.getAttribute("pos_j");
-                puzzle[rowIndex][colIndex] = parseInt(button.textContent);
-                allCells.forEach(c => {c.classList.remove("cellsWithSameValue", "selected", "peerCells");}); // Remove the highlighting from the wrong cells
-                Fun_Peers_And_Equals(selectedCell, rowIndex, colIndex); // Highlight the correct peer cells and cells with the same value
-                if ((solvedPuzzle[rowIndex][colIndex] != selectedCell.textContent) && (selectedCell.textContent != "")) {  //if the value in the cell is incorrect, the cell becomes red
-                    selectedCell.classList.remove("selected");
-                    selectedCell.classList.add("incorrect");
-                }
-                else {//if the value in the cell is correct, the cell becomes green and the selected cell is disabled
-                    selectedCell.classList.remove("incorrect");
-                    selectedCell.classList.add("correct");
-                    selectedCell.classList.add("selected");
-                    selectedCell.editableStatus = 0;
-                    Fun_Enable_Disable_Buttons(false);
-                    goalCorrect--;
-                    Fun_Check_Game_Over(); // Check if the game is over
-                }
+            selectedCell.textContent = button.textContent;
+            rowIndex = selectedCell.getAttribute("pos_i");
+            colIndex = selectedCell.getAttribute("pos_j");
+            puzzle[rowIndex][colIndex] = parseInt(button.textContent);
+            allCells.forEach(c => {c.classList.remove("cellsWithSameValue", "selected", "peerCells");}); // Remove the highlighting from the wrong cells
+            Fun_Peers_And_Equals(selectedCell, rowIndex, colIndex); // Highlight the correct peer cells and cells with the same value
+            if ((solvedPuzzle[rowIndex][colIndex] != selectedCell.textContent) && (selectedCell.textContent != "")) {  //if the value in the cell is incorrect, the cell becomes red
+                selectedCell.classList.remove("selected");
+                selectedCell.classList.add("incorrect");
+            }
+            else {//if the value in the cell is correct, the cell becomes green and the selected cell is disabled
+                selectedCell.classList.remove("incorrect");
+                selectedCell.classList.add("correct");
+                selectedCell.classList.add("selected");
+                selectedCell.editableStatus = 0;
+                Fun_Enable_Disable_Buttons(false);
+                goalCorrect--;
+                Fun_Check_Win(); // Check if the game is over
             }
         } 
     });
@@ -330,13 +341,28 @@ document.addEventListener("click", function (event) {
     const target = event.target;
     switch(target.id){
         case ('confirmNo'):{ // Detects when the user clicks on the "No" button in the restart window
-            document.getElementById('restartModal').style.display = 'none';
-            document.getElementById('backModal').style.display = 'none';
-            document.getElementById('homeModal').style.display = 'none';
+            if (modal == 4){
+                document.getElementById('winModal').style.display = 'none';
+                window.location.href = "sudoku_menu.html";
+            }
+            else{
+                document.getElementById('restartModal').style.display = 'none';
+                document.getElementById('backModal').style.display = 'none';
+                document.getElementById('homeModal').style.display = 'none';
+            }
             break;
         }
         case ('confirmYes'): { // Detects when the user clicks on the "Yes" button in the restart window
             if (modal == 1){
+                selectedCell = null;
+                initialPuzzle = [];
+                solvedPuzzle = [];
+                allCells = null;
+                puzzle = [];
+                rowIndex = null;
+                colIndex = null;
+                goalCorrect = 0;
+                modal = 0;
                 document.getElementById('restartModal').style.display = 'none';
                 main();
             }
@@ -347,7 +373,20 @@ document.addEventListener("click", function (event) {
             else if (modal == 3){
                 document.getElementById('backModal').style.display = 'none';
                 window.location.href = "sudoku_menu.html";
-            }           
+            }
+            else if (modal == 4){
+                selectedCell = null;
+                initialPuzzle = [];
+                solvedPuzzle = [];
+                allCells = null;
+                puzzle = [];
+                rowIndex = null;
+                colIndex = null;
+                goalCorrect = 0;
+                modal = 0;
+                document.getElementById('winModal').style.display = 'none';
+                main();
+            }       
             break;
         }
         case ('restartButton'): { // Detects when the user clicks on the "Restart" button
@@ -390,20 +429,22 @@ document.addEventListener("click", function (event) {
 // MAIN FUNCTION
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function main(){
-    let initialPuzzle = Fun_Generate_Random_Sudoku();
-    puzzle = JSON.parse(JSON.stringify(initialPuzzle));
-    console.log(puzzle, size, dificulty);
-    solvedPuzzle = Fun_Solve_Sudoku(puzzle);
-    document.querySelectorAll(".numberButton").forEach((button, index) => { //Disables the number buttons according to the size of the board
-        if (index < size) {
-            button.disabled = false;
-        } else {
-            button.disabled = true;
-        }
-    });
-    Fun_Create_Sudoku_Board(puzzle);
-    allCells = document.querySelectorAll(`.cell${size}`);
-    Fun_Goal_Correct();
+async function main(){
+    try {
+        await Fun_Get_Initial_Puzzle(); // Aguarda o carregamento do puzzle
+        document.querySelectorAll(".numberButton").forEach((button, index) => { //Disables the number buttons according to the size of the board
+            if (index < size) {
+                button.disabled = false;
+            } else {
+                button.disabled = true;
+            }
+        });
+        Fun_Create_Sudoku_Board(initialPuzzle);
+        allCells = document.querySelectorAll(`.cell${size}`);
+        puzzle = JSON.parse(JSON.stringify(initialPuzzle));
+        Fun_Goal_Correct();
+    } catch (error) {
+        console.error('Erro na inicialização do jogo:', error);
+    }
 }
 main();

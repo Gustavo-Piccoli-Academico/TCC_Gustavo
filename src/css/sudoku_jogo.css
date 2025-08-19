@@ -11,13 +11,12 @@ body {
 /*************************************************************************************/
 /* SUDOKU BOARD STYLE*/
 /* Defines the style of the container */
-.sudoku9x9 {
+.sudokucontainer {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 50px;
 }
-
 
 /* 4x4 Cell Style*/
 .cell4 {
@@ -29,15 +28,6 @@ body {
     line-height: 40px;
     border: 1px solid #000;
     font-weight: bold;
-}
-
-.cell4 .note {
-    font-size: 10px;
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    text-align: center;
-    vertical-align: middle;
 }
 
 .cell4:nth-child(n) {
@@ -87,15 +77,6 @@ body {
     line-height: 40px;
     border: 1px solid #000;
     font-weight: bold;
-}
-
-.cell6 .note {
-    font-size: 10px;
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    text-align: center;
-    vertical-align: middle;
 }
 
 .cell6:nth-child(n) {
@@ -148,15 +129,6 @@ body {
     font-weight: bold;
 }
 
-.cell9 .note {
-    font-size: 10px;
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    text-align: center;
-    vertical-align: middle;
-}
-
 .cell9:nth-child(n) {
     border-right-width: 3px;
 }
@@ -194,8 +166,6 @@ body {
     border-top-width: 6px;
 }
 
-
-
 /*************************************************************************************/
 /*************************************************************************************/
 /* CELL COLORS */
@@ -225,11 +195,6 @@ body {
 
 .peerCells {
     background-color: rgba(0, 250, 255, 0.551);
-}
-
-.noteButtonClicked{
-    background-color: black;
-    color: white;
 }
 
 /*************************************************************************************/
