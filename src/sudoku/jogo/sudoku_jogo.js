@@ -1,6 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-// CONSTANTS
-/////////////////////////////////////////////////////////////////////////////////////////////////////
+//#region CONSTANTS
 
 let selectedCell = null;
 let initialPuzzle = [];
@@ -15,10 +14,11 @@ const dificulty = localStorage.getItem('dificulty');
 const size = localStorage.getItem('size');
 let container = document.getElementById("sudokucontainer");
 
+//#endregion
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-// SUDOKU GENERATION FUNCTIONS
-/////////////////////////////////////////////////////////////////////////////////////////////////////
+//#region SUDOKU GENERATION FUNCTIONS
 
 // Generate a random Sudoku puzzle
 function Fun_Get_Initial_Puzzle() {
@@ -131,12 +131,13 @@ function Fun_Goal_Correct(){
         }
     }
 }
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-// SUDOKU SOLVING FUNCTIONS
+//#endregion
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Find an empty cell in the Sudoku puzzle
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//#region SUDOKU SOLVING FUNCTIONS
+
+// Finds an empty cell in the Sudoku puzzle
 function Fun_Find_Empty_Cell(board) {
     for (let row = 0; row < size; row++) {
         for (let col = 0; col < size; col++) {
@@ -148,15 +149,15 @@ function Fun_Find_Empty_Cell(board) {
     return null;
 }
 
-// Check if a move is valid
+// Checks if a move is valid
 function Fun_Is_Valid_Move(board, row, col, num) {
-    // Check row
+    // Checks row
     for (let i = 0; i < size; i++) {
         if (board[row][i] === num) {
             return false;
         }
     }
-    // Check column
+    // Checks column
     for (let i = 0; i < size; i++) {
         if (board[i][col] === num) {
             return false;
@@ -204,9 +205,11 @@ function Fun_Solve_Helper(board) {
     return false; // No valid number found for this cell
 }
 
+//#endregion
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-// SUDOKU AUXILARY FUNCTIONS
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////
+//#region SUDOKU AUXILARY FUNCTIONS
 
 function Fun_Check_Win(){
     if(goalCorrect == 0){
@@ -275,11 +278,12 @@ function Fun_Peers_And_Equals(selectedCell, rowIndex, colIndex){
             c.classList.add("cellsWithSameValue");
         }
     });
-}            
+}
+//#endregion
+/////////////////////////////////////////////////////////////////////////////////////////////////////      
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-// EVENT LISTENERS
-/////////////////////////////////////////////////////////////////////////////////////////////////////            
+//#region EVENT_LISTENERS;        
 
 // Add event listeners to detect when the cells are clicked
 document.addEventListener("click", function (event) { 
@@ -339,7 +343,7 @@ document.getElementById("eraseButton").addEventListener("click", function() {
 // Restart, Rules Home and Back Buttons Event Listeners
 document.addEventListener("click", function (event) {
     const target = event.target;
-    switch(target.id){
+        switch(target.id){
         case ('confirmNo'):{ // Detects when the user clicks on the "No" button in the restart window
             if (modal == 4){
                 document.getElementById('winModal').style.display = 'none';
@@ -423,11 +427,11 @@ document.addEventListener("click", function (event) {
         }
     }
 }); 
-
+//#endregion
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-// MAIN FUNCTION
-/////////////////////////////////////////////////////////////////////////////////////////////////////
+//#region MAIN FUNCTION
 
 async function main(){
     try {
@@ -448,3 +452,6 @@ async function main(){
     }
 }
 main();
+
+//#endregion
+/////////////////////////////////////////////////////////////////////////////////////////////////////
