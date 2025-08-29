@@ -642,6 +642,50 @@ function Fun_Peers_And_Equals(selectedCell, rowIndex, colIndex){
 /////////////////////////////////////////////////////////////////////////////////////////////////////      
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
+//#region SYMBOL STYLE FUNCTIONALITY
+
+const styles = {
+    numbers: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+    letters: ["A", "B", "C", "D", "E", "F", "G", "H", "I"],
+    colors: ["🔴", "🟠", "🟡", "🟢", "🔵", "🟣", "⚫", "⚪", "🟤"],
+    fruits: ["🍎", "🍌", "🍇", "🍓", "🍊", "🍍", "🍉", "🥝", "🍑"],
+    animals: ["🐶", "🐱", "🐭", "🦊", "🐻", "🐼", "🐨", "🐯", "🦁"]
+};
+
+let currentStyle = "numbers";
+
+function Fun_Update_Style(newStyle) {
+    currentStyle = newStyle;
+    const mapping = styles[currentStyle];
+    const sizeLimit = size > 9 ? 9 : size;
+
+    // Update board symbols
+    allCells.forEach(cell => {
+        const rowIndex = parseInt(cell.getAttribute("pos_i"), 10);
+        const colIndex = parseInt(cell.getAttribute("pos_j"), 10);
+        const value = puzzle[rowIndex][colIndex]; // Use the internal puzzle state
+        if (value > 0 && value <= sizeLimit) {
+            cell.textContent = mapping[value - 1];
+        } else {
+            cell.textContent = ""; // Clear empty cells
+        }
+    });
+
+    // Update number buttons
+    document.querySelectorAll(".numberButton").forEach((button, index) => {
+        if (index < sizeLimit) {
+            button.textContent = mapping[index];
+        }
+    });
+
+    // Highlight active style button
+    document.querySelectorAll(".styleButton").forEach(button => {
+        button.classList.toggle("activeStyle", button.id === `style-${newStyle}`);
+    });
+}
+
+//#endregion
+
 //#region EVENT_LISTENERS;        
 
 // Adicionando os event listeners dentro do escopo do módulo
@@ -788,7 +832,16 @@ window.addEventListener('DOMContentLoaded', () => {
                 }
             }
         }
-    }); 
+
+        
+    });
+
+    document.addEventListener("click", function (event) {
+        if (event.target.classList.contains("styleButton")) {
+            const newStyle = event.target.getAttribute("data-style");
+            Fun_Update_Style(newStyle);
+        }
+    });
 
     async function main(){
         try {

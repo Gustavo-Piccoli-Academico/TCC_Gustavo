@@ -1,26 +1,17 @@
-# Implementação:
-- Para todos os jogos: Talvez considerar os tamanhos das telas que o jogo vai rodar, para ficarem bem enquadrados nas telas;
-
-# Trilhas:
-- Pensar em forma de implementar as trilhas e gerenciar a parte entre os alunos e o professor;
-- Sudoku:
-- Resta 1:
-- Tangram:
-- Einstein:
-
 # Sudoku:
-- A princípio tudo feito;
-- Trilhas:
-  - Adicionar Opção criar jogo personalizado;
+- Botão Recomeçar troca o tabuleiro, sendo que deveria manter igual;
+- Os novos estilos estão sendo alterados visualmente corretamente, mas a lógica com eles está completamente quebrada;
+- Ver a questão das dicas (algoritmo de back tracking ou adiciona aleatoriamente parte resposta);
+- Colocar botão para remover as dicas de linhas, colunas e quadrantes;
+- Adicionar opção do tabuleiro vazio;
+- Botão de solução (vai colocar a resposta?);
+- Melhorar as regras, caso seja necessário;
 
 # Resta 1:
-- A princípio tudo feito;
-- Trilhas: 
-  - Adicionar formatos personalizados seria bem difícil;
-  - Talvez daria para ter a opção de deixar os tabuleiros já implementados mais vazios nas trilhas, assim facilitando a resolução dos problemas;
+- Fazer correções Ribas
 
 # Einstein:
-- Implementar tudo
+- Provavelmente não vou implementar
 
 # Tangram:
 - Corrigir posição inicial das peças, elas devem começar em uma posição fixa independente da tela;
