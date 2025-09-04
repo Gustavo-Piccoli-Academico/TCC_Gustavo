@@ -7,11 +7,14 @@
 - Botão de solução (vai colocar a resposta?);
 - Melhorar as regras, caso seja necessário;
 
+
 ## Resta 1:
 - Fazer correções Ribas
 
+
 ## Einstein:
 - Provavelmente não vou implementar
+
 
 ## Tangram:
 - Corrigir posição inicial das peças, elas devem começar em uma posição fixa independente da tela;
@@ -25,6 +28,7 @@
 - DESENHAR NA TELA O FUNDO DAS FIGURAS (MENOS NO MODO LIVRE);
 - Trilha:
   - Permitir inserir sugestões personalizadas;
+
 
 ## Relatório:
 - Fazer tudo
