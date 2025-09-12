@@ -1,4 +1,4 @@
-# Sudoku:
+## Sudoku:
 - Botão Recomeçar troca o tabuleiro, sendo que deveria manter igual;
 - Os novos estilos estão sendo alterados visualmente corretamente, mas a lógica com eles está completamente quebrada;
 - Ver a questão das dicas (algoritmo de back tracking ou adiciona aleatoriamente parte resposta);
@@ -7,13 +7,16 @@
 - Botão de solução (vai colocar a resposta?);
 - Melhorar as regras, caso seja necessário;
 
-# Resta 1:
+
+## Resta 1:
 - Fazer correções Ribas
 
-# Einstein:
+
+## Einstein:
 - Provavelmente não vou implementar
 
-# Tangram:
+
+## Tangram:
 - Corrigir posição inicial das peças, elas devem começar em uma posição fixa independente da tela;
   - Atualmente elas alternam a posição;
 - Estudar o código e fazer algo meu;
@@ -26,6 +29,7 @@
 - Trilha:
   - Permitir inserir sugestões personalizadas;
 
-# Relatório:
+
+## Relatório:
 - Fazer tudo
 - Focar no aspecto das trilhas e da expandabilidade dos desafios lógicos;
