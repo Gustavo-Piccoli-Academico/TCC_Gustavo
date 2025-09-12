@@ -1,15 +1,15 @@
 /*************************************************************************************/
-/*************************************************************************************/
-/* PAGE STYLE */
-/*Defines the style of the page*/ 
+/* #region PAGE STYLE */
 body {
     font-family: Arial, sans-serif;
     background-color: #EBF3E8;
 }
 
+/* #endregion */
+
 /*************************************************************************************/
-/*************************************************************************************/
-/* SUDOKU BOARD STYLE*/
+/* #region SUDOKU BOARD STYLE*/
+
 /* Defines the style of the container */
 .sudokucontainer {
     display: flex;
@@ -166,9 +166,10 @@ body {
     border-top-width: 6px;
 }
 
+/* #endregion */
+
 /*************************************************************************************/
-/*************************************************************************************/
-/* CELL COLORS */
+/* #region CELL COLORS */
 
 /* Board Default Color */
 .backgroundColor {
@@ -197,9 +198,15 @@ body {
     background-color: rgba(0, 250, 255, 0.551);
 }
 
+.activePeers{
+    background-color: rgba(0, 250, 255, 0.551);
+}
+
+/* #endregion */
+
 /*************************************************************************************/
-/*************************************************************************************/
-/* BUTTON STYLES */
+/* #region BUTTON STYLES */
+
 .buttonGroup {
     margin-top: 20px;
     display: flex; 
@@ -237,6 +244,8 @@ body {
     z-index: 1;
     padding: 10px;
     border-radius: 5px;
+    width: max-content;
+    align-items: center;
 }
 
 .styleGroup:hover .styleDropdown {
@@ -263,9 +272,11 @@ body {
     font-weight: bold;
 }
 
+/* #endregion */
+
 /*************************************************************************************/
-/*************************************************************************************/
-/*RULES WINDOW*/
+/* #region RULES WINDOW*/
+
 .modal {
     display: none;
     position: fixed;
@@ -300,3 +311,5 @@ body {
     text-decoration: none;
     cursor: pointer;
 }
+
+/* #endregion */

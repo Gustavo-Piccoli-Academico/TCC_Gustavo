@@ -10,6 +10,7 @@ let rowIndex = null;
 let colIndex = null;
 let goalCorrect = 0;
 let modal = 0;
+let showPeers = localStorage.getItem('showPeers');
 const dificulty = localStorage.getItem('dificulty');
 const size = localStorage.getItem('size');
 let container = document.getElementById("sudokucontainer");
@@ -396,7 +397,6 @@ const puzzles = {
 };
 
 //#endregion
-/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //#region SUDOKU GENERATION FUNCTIONS
@@ -490,14 +490,15 @@ function Fun_Goal_Correct(){
         }
     }
 }
+
 //#endregion
-/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-//#region SUDOKU SOLVING FUNCTIONS
+//#region SUDOKU SOLVING FUNCTIONS 
 
 // Finds an empty cell in the Sudoku puzzle
-function Fun_Find_Empty_Cell(board) {
+function Fun_Find_Empty_Cell(board) 
+{
     for (let row = 0; row < size; row++) {
         for (let col = 0; col < size; col++) {
             if (board[row][col] === 0) {
@@ -509,7 +510,8 @@ function Fun_Find_Empty_Cell(board) {
 }
 
 // Checks if a move is valid
-function Fun_Is_Valid_Move(board, row, col, num) {
+function Fun_Is_Valid_Move(board, row, col, num) 
+{
     // Checks row
     for (let i = 0; i < size; i++) {
         if (board[row][i] === num) {
@@ -538,14 +540,15 @@ function Fun_Is_Valid_Move(board, row, col, num) {
 }
 
 // Solve the Sudoku puzzle
-function Fun_Solve_Sudoku(board) {
+function Fun_Solve_Sudoku(board) 
+{
     // Placeholder for solving Sudoku puzzle
     const solvedPuzzle = JSON.parse(JSON.stringify(board));
     Fun_Solve_Helper(solvedPuzzle);
     return solvedPuzzle;
 }
 
-// Helper function for solving Sudoku recursively
+// Auxiliar function for solving Sudoku recursively
 function Fun_Solve_Helper(board) {
     const emptyCell = Fun_Find_Empty_Cell(board);
     if (!emptyCell) {
@@ -565,12 +568,12 @@ function Fun_Solve_Helper(board) {
 }
 
 //#endregion
-/////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//#region SUDOKU AUXILARY FUNCTIONS
+/////////////////////////////////////////////////////////////////////////////////////////////////////      
+//#region SUDOKU AUXILARY FUNCTIONS 
 
-function Fun_Check_Win(){
+function Fun_Check_Win()
+{
     if(goalCorrect == 0){
         selectedCell.classList.remove("incorrect");
         selectedCell.classList.add("correct");
@@ -581,7 +584,9 @@ function Fun_Check_Win(){
 }
 
 function Fun_Enable_Disable_Buttons(status) {
-    if (status == true) { // Enable the buttons
+    // Enable the buttons
+    if (status == true) 
+    { 
         document.querySelectorAll(".numberButton").forEach((button, index) => {
             if (index < size) {
                 button.disabled = false; // Enable buttons within the board size range
@@ -590,7 +595,10 @@ function Fun_Enable_Disable_Buttons(status) {
             }
         });
         document.getElementById("eraseButton").disabled = false; // Enable the erase button
-    } else { // Disable the buttons
+    } 
+
+    else // Disable the buttons
+    { 
         document.querySelectorAll(".numberButton").forEach(button => {
             button.disabled = true;
         });
@@ -599,7 +607,8 @@ function Fun_Enable_Disable_Buttons(status) {
 }
 
 // Highlight peer cells and cells with the same value
-function Fun_Peers_And_Equals(selectedCell, rowIndex, colIndex){
+function Fun_Peers_And_Equals(selectedCell, rowIndex, colIndex)
+{
     if (size == 4){
         allCells.forEach(c => {// Highlight peer cells
             cRowIndex = c.getAttribute("pos_i");
@@ -638,11 +647,31 @@ function Fun_Peers_And_Equals(selectedCell, rowIndex, colIndex){
         }
     });
 }
-//#endregion
-/////////////////////////////////////////////////////////////////////////////////////////////////////      
+
+function PeersFunction()
+{
+    showPeers = !showPeers;
+    localStorage.setItem('showPeers', showPeers);
+    
+    // Turn off peer cells
+    if(!showPeers)
+    {
+        allCells.forEach(c => {c.classList.remove("peerCells");});
+        document.getElementById('peersButton').classList.remove('activePeers-ativo');
+        
+    }
+
+    // Turn on peer cells
+    else
+    {
+        document.getElementById('peersButton').classList.add('activePeers-ativo');
+        Fun_Peers_And_Equals(selectedCell, rowIndex, colIndex);
+    }
+}
+//#endregion    
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-//#region SYMBOL STYLE FUNCTIONALITY
+//#region SYMBOL STYLE 
 
 const styles = {
     numbers: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
@@ -684,15 +713,19 @@ function Fun_Update_Style(newStyle) {
     });
 }
 
-//#endregion
+//#endregion      
 
-//#region EVENT_LISTENERS;        
+/////////////////////////////////////////////////////////////////////////////////////////////////////      
+//#region EVENT LISTENERS;        
 
 // Adicionando os event listeners dentro do escopo do módulo
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', () => 
+{
     // Add event listeners to detect when the cells are clicked
-    document.addEventListener("click", function (event) { 
-        if ((event.target.classList.contains("cell4")) || (event.target.classList.contains("cell6")) || (event.target.classList.contains("cell9"))) {
+    document.addEventListener("click", function (event) 
+    { 
+        if ((event.target.classList.contains("cell4")) || (event.target.classList.contains("cell6")) || (event.target.classList.contains("cell9"))) 
+        {
             selectedCell = event.target;
             let rowIndex = selectedCell.getAttribute("pos_i");
             let colIndex = selectedCell.getAttribute("pos_j");
@@ -702,166 +735,151 @@ window.addEventListener('DOMContentLoaded', () => {
             if(selectedCell.classList.contains("incorrect") == false){ 
                 selectedCell.classList.add("selected");}// Highlight the selected cell in dark blue
             Fun_Enable_Disable_Buttons(selectedCell.editableStatus != 0); //cells that cannot be edited
-            Fun_Peers_And_Equals(selectedCell, rowIndex, colIndex); // Highlight peer cells and cells with the same value
+            
+            if(showPeers)
+                Fun_Peers_And_Equals(selectedCell, rowIndex, colIndex); // Highlight peer cells and cells with the same value
         }
-    });
 
-    // Add event listener to detect when the numbered buttons are clicked
-    document.querySelectorAll(".numberButton").forEach(button => {
-        button.addEventListener("click", function () {
+        else if (event.target.classList.contains('numberButton'))
+        {            
+            // Add event listener to detect when the numbered buttons are clicked
             if (selectedCell) {
-                selectedCell.textContent = button.textContent;
+                selectedCell.textContent = event.target.textContent;
                 rowIndex = selectedCell.getAttribute("pos_i");
                 colIndex = selectedCell.getAttribute("pos_j");
-                puzzle[rowIndex][colIndex] = parseInt(button.textContent);
-                allCells.forEach(c => {c.classList.remove("cellsWithSameValue", "selected", "peerCells");}); // Remove the highlighting from the wrong cells
-                Fun_Peers_And_Equals(selectedCell, rowIndex, colIndex); // Highlight the correct peer cells and cells with the same value
-                if ((solvedPuzzle[rowIndex][colIndex] != selectedCell.textContent) && (selectedCell.textContent != "")) {  //if the value in the cell is incorrect, the cell becomes red
-                    selectedCell.classList.remove("selected");
-                    selectedCell.classList.add("incorrect");
-                }
-                else {//if the value in the cell is correct, the cell becomes green and the selected cell is disabled
-                    selectedCell.classList.remove("incorrect");
-                    selectedCell.classList.add("correct");
-                    selectedCell.classList.add("selected");
-                    selectedCell.editableStatus = 0;
-                    Fun_Enable_Disable_Buttons(false);
-                    goalCorrect--;
-                    Fun_Check_Win(); // Check if the game is over
-                }
+                puzzle[rowIndex][colIndex] = parseInt(event.target.textContent);
+                selectedCell.classList.add("selected");
+                Fun_Check_Win(); // Check if the game is over
             } 
-        });
-    });
-
-    // Add event listener to detect when the erase button is clicked
-    document.getElementById("eraseButton").addEventListener("click", function() { 
-        if (selectedCell) {
-            selectedCell.textContent = "";
-            rowIndex = selectedCell.getAttribute("pos_i");
-            colIndex = selectedCell.getAttribute("pos_j");
-            puzzle[rowIndex][colIndex] = 0;
-            allCells.forEach(c => {c.classList.remove("incorrect", "correct", "cellsWithSameValue", "selected", "peerCells");}); // Remove the highlighting from the wrong cells
-            Fun_Peers_And_Equals(selectedCell, rowIndex, colIndex); // Highlight the correct peer cells and cells with the same value
-            selectedCell.classList.add("selected");
         }
-    });
 
-    // Restart, Rules Home and Back Buttons Event Listeners
-    document.addEventListener("click", function (event) {
-        const target = event.target;
+        // Restart, Rules Home and Back Buttons Event Listeners
+        else
+        {
+            const target = event.target;
             switch(target.id){
-            case ('confirmNo'):{ // Detects when the user clicks on the "No" button in the restart window
-                if (modal == 4){
-                    document.getElementById('winModal').style.display = 'none';
-                    window.location.href = "../menu/sudoku_menu.html";
+                case ('confirmNo'):{ // Detects when the user clicks on the "No" button in the restart window
+                    if (modal == 4){
+                        document.getElementById('winModal').style.display = 'none';
+                        window.location.href = "../menu/sudoku_menu.html";
+                    }
+                    else{
+                        document.getElementById('restartModal').style.display = 'none';
+                        document.getElementById('backModal').style.display = 'none';
+                        document.getElementById('homeModal').style.display = 'none';
+                    }
+                    break;
                 }
-                else{
-                    document.getElementById('restartModal').style.display = 'none';
-                    document.getElementById('backModal').style.display = 'none';
-                    document.getElementById('homeModal').style.display = 'none';
+                case ('confirmYes'): { // Detects when the user clicks on the "Yes" button in the restart window
+                    if (modal == 1){
+                        selectedCell = null;
+                        initialPuzzle = [];
+                        solvedPuzzle = [];
+                        allCells = null;
+                        puzzle = [];
+                        rowIndex = null;
+                        colIndex = null;
+                        goalCorrect = 0;
+                        modal = 0;
+                        document.getElementById('restartModal').style.display = 'none';
+                        main();
+                    }
+                    else if (modal == 2){
+                        document.getElementById('homeModal').style.display = 'none';
+                        window.location.href = "../../logicamente/logicamente.html";
+                    }
+                    else if (modal == 3){
+                        document.getElementById('backModal').style.display = 'none';
+                        window.location.href = "../menu/sudoku_menu.html";
+                    }
+                    else if (modal == 4){
+                        selectedCell = null;
+                        initialPuzzle = [];
+                        solvedPuzzle = [];
+                        allCells = null;
+                        puzzle = [];
+                        rowIndex = null;
+                        colIndex = null;
+                        goalCorrect = 0;
+                        modal = 0;
+                        document.getElementById('winModal').style.display = 'none';
+                        main();
+                    }       
+                    break;
                 }
-                break;
-            }
-            case ('confirmYes'): { // Detects when the user clicks on the "Yes" button in the restart window
-                if (modal == 1){
-                    selectedCell = null;
-                    initialPuzzle = [];
-                    solvedPuzzle = [];
-                    allCells = null;
-                    puzzle = [];
-                    rowIndex = null;
-                    colIndex = null;
-                    goalCorrect = 0;
-                    modal = 0;
-                    document.getElementById('restartModal').style.display = 'none';
-                    main();
+                case ('restartButton'): { // Detects when the user clicks on the "Restart" button
+                    document.getElementById('restartModal').style.display = 'block';
+                    modal = 1;
+                    break;
                 }
-                else if (modal == 2){
-                    document.getElementById('homeModal').style.display = 'none';
-                    window.location.href = "../../logicamente/logicamente.html";
+                case('homeButton'):{ // Detects when the user clicks on the home button
+                    document.getElementById('homeModal').style.display = 'block';
+                    modal = 2;
+                    break;
                 }
-                else if (modal == 3){
-                    document.getElementById('backModal').style.display = 'none';
-                    window.location.href = "../menu/sudoku_menu.html";
+                case('backButton'):{ // Detects when the user clicks on the home button
+                    document.getElementById('backModal').style.display = 'block';
+                    modal = 3;
+                    break;
                 }
-                else if (modal == 4){
-                    selectedCell = null;
-                    initialPuzzle = [];
-                    solvedPuzzle = [];
-                    allCells = null;
-                    puzzle = [];
-                    rowIndex = null;
-                    colIndex = null;
-                    goalCorrect = 0;
-                    modal = 0;
-                    document.getElementById('winModal').style.display = 'none';
-                    main();
-                }       
-                break;
-            }
-            case ('restartButton'): { // Detects when the user clicks on the "Restart" button
-                document.getElementById('restartModal').style.display = 'block';
-                modal = 1;
-                break;
-            }
-            case('homeButton'):{ // Detects when the user clicks on the home button
-                document.getElementById('homeModal').style.display = 'block';
-                modal = 2;
-                break;
-            }
-            case('backButton'):{ // Detects when the user clicks on the home button
-                document.getElementById('backModal').style.display = 'block';
-                modal = 3;
-                break;
-            }
-            case ('rulesButton'):{ // Detects when the user clicks on the rules button
-                document.getElementById('rulesModal').style.display = 'block';
-                break;
-            }
-            default: // Detects when the close button in clicken in a opened window
-            {
-                if (target.classList.contains('close')) { // Detects when the user clicks on a close button
-                    document.getElementById('rulesModal').style.display = 'none';
-                    document.getElementById('restartModal').style.display = 'none';
-                    document.getElementById('homeModal').style.display = 'none';
-                    document.getElementById('backModal').style.display = 'none';
+                case ('rulesButton'):{ // Detects when the user clicks on the rules button
+                    document.getElementById('rulesModal').style.display = 'block';
+                    break;
                 }
-                else if (target == document.getElementById('restartModal') || target == document.getElementById('rulesModal') || 
-                        target == document.getElementById('homeModal') || target == document.getElementById('backModal')) {
-                    target.style.display = 'none';
+                case('eraseButton'): // Add event listener to detect when the erase button is clicked
+                {
+                    if (selectedCell) 
+                    {
+                        selectedCell.textContent = "";
+                        rowIndex = selectedCell.getAttribute("pos_i");
+                        colIndex = selectedCell.getAttribute("pos_j");
+                        puzzle[rowIndex][colIndex] = 0;
+                        allCells.forEach(c => {c.classList.remove("incorrect", "correct", "cellsWithSameValue", "selected", "peerCells");}); // Remove the highlighting from the wrong cells
+                        if(showPeers)
+                            Fun_Peers_And_Equals(selectedCell, rowIndex, colIndex); // Highlight the correct peer cells and cells with the same value
+                        selectedCell.classList.add("selected");
+                    }
+                }
+
+                default: // Detects when the close button in clicken in a opened window
+                {
+                    if (target.classList.contains('close')) { // Detects when the user clicks on a close button
+                        document.getElementById('rulesModal').style.display = 'none';
+                        document.getElementById('restartModal').style.display = 'none';
+                        document.getElementById('homeModal').style.display = 'none';
+                        document.getElementById('backModal').style.display = 'none';
+                    }
+                    else if (target == document.getElementById('restartModal') || target == document.getElementById('rulesModal') || 
+                            target == document.getElementById('homeModal') || target == document.getElementById('backModal')) {
+                        target.style.display = 'none';
+                    }
                 }
             }
         }
-
-        
     });
-
-    document.addEventListener("click", function (event) {
-        if (event.target.classList.contains("styleButton")) {
-            const newStyle = event.target.getAttribute("data-style");
-            Fun_Update_Style(newStyle);
-        }
-    });
-
-    async function main(){
-        try {
-            await Fun_Get_Initial_Puzzle(); // Aguarda o carregamento do puzzle
-            document.querySelectorAll(".numberButton").forEach((button, index) => { //Disables the number buttons according to the size of the board
-                if (index < size) {
-                    button.disabled = false;
-                } else {
-                    button.disabled = true;
-                }
-            });
-            Fun_Create_Sudoku_Board(initialPuzzle);
-            allCells = document.querySelectorAll(`.cell${size}`);
-            puzzle = JSON.parse(JSON.stringify(initialPuzzle));
-            Fun_Goal_Correct();
-        } catch (error) {
-            console.error('Erro na inicialização do jogo:', error);
-        }
-    }
-    main();
 });
 //#endregion
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////
+//#region MAIN;
+async function main(){
+    try {
+        await Fun_Get_Initial_Puzzle(); // Aguarda o carregamento do puzzle
+        document.querySelectorAll(".numberButton").forEach((button, index) => { //Disables the number buttons according to the size of the board
+            if (index < size) {
+                button.disabled = false;
+            } else {
+                button.disabled = true;
+            }
+        });
+        Fun_Create_Sudoku_Board(initialPuzzle);
+        allCells = document.querySelectorAll(`.cell${size}`);
+        puzzle = JSON.parse(JSON.stringify(initialPuzzle));
+        Fun_Goal_Correct();
+    } catch (error) {
+        console.error('Erro na inicialização do jogo:', error);
+    }
+}
+
+main();
+//#endregion

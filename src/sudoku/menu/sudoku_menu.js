@@ -79,6 +79,7 @@ document.addEventListener("click", function (event) {
             else{
                 localStorage.setItem('dificulty', dificulty);
                 localStorage.setItem('size', size);
+                localStorage.setItem('showPeers', true);
                 window.location.href = "../jogo/sudoku_jogo.html";
             }
             break;
