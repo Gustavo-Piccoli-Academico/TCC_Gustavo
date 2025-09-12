@@ -539,7 +539,7 @@ function Fun_Is_Valid_Move(board, row, col, num)
     return true; // Move is valid
 }
 
-// Solve the Sudoku puzzle
+// Solve the Sudoku puzzle (Important)
 function Fun_Solve_Sudoku(board) 
 {
     // Placeholder for solving Sudoku puzzle
