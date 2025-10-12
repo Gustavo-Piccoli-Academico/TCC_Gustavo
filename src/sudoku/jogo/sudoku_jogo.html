@@ -1,146 +1,136 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Sudoku</title>
-		<link rel="stylesheet" href="sudoku_jogo.css" />
-		<script src="sudoku_jogo.js" defer></script>
-	</head>
 
-	<body>
-		<div class="buttonGroup">
-			<button id="homeButton">Página Inicial</button>
-			<button id="backButton">Voltar</button>
-			<button id="rulesButton">Regras</button>
-			<button id="restartButton">Recomeçar</button>
-			<div class="styleGroup">
-				<button id="styleButton">Estilo</button>
-				<div class="styleDropdown" id="styleDropdown">
-					<button
-						class="styleButton"
-						id="numbers"
-						onclick="Fun_Update_Style('numbers')">
-						Números
-					</button>
-					<button
-						class="styleButton"
-						id="letters"
-						onclick="Fun_Update_Style('letters')">
-						Letras
-					</button>
-					<button
-						class="styleButton"
-						id="colors"
-						onclick="Fun_Update_Style('colors')">
-						Cores
-					</button>
-					<button
-						class="styleButton"
-						id="fruits"
-						onclick="Fun_Update_Style('fruits')">
-						Frutas
-					</button>
-					<button
-						class="styleButton"
-						id="animals"
-						onclick="Fun_Update_Style('animals')">
-						Animais
-					</button>
-				</div>
-            </div>
-           <button 
-                id="peersButton"
-                onclick="PeersFunction()">
-                Casas Relevantes
-            </button>
-		</div>
-		
-        <div class="sudokucontainer" id="sudokucontainer"></div>
-        
-        <div class="buttonGroup">
-            <button id="eraseButton">Apagar</button>
-            <button class="numberButton">1</button>
-            <button class="numberButton">2</button>
-            <button class="numberButton">3</button>
-            <button class="numberButton">4</button>
-            <button class="numberButton">5</button>
-            <button class="numberButton">6</button>
-            <button class="numberButton">7</button>
-            <button class="numberButton">8</button>
-            <button class="numberButton">9</button>
-        </div>
-		<div id="rulesModal" class="modal">
-			<div class="modal-content">
-				<span class="close">&times;</span>
-				<h2>Regras do Sudoku</h2>
-				<p>
-					O tabuleiro do Sudoku é como uma grande tabela com 81
-					quadradinhos, dividida em 9 partes menores (chamadas
-					“quadrados” ou “blocos”), cada uma com 9 quadradinhos.
-					<br /><br />
-					O que você precisa fazer: preencher todos os quadradinhos
-					com números de 1 a 9, seguindo três regras simples.
-					<br /><br />
-					<strong>As regras:</strong>
-					<br />
-					1) Na linha - Cada linha (de um lado ao outro, como no
-					caderno) só pode ter o número 1, o número 2, e assim por
-					diante até o 9, sem repetir.
-					<br /><br />
-					2) Na coluna - Cada coluna (de cima para baixo) também só
-					pode ter os números de 1 a 9, sem repetir nenhum.
-					<br /><br />
-					3) No bloco - Cada bloco (aquelas divisões de 3x3) só pode
-					ter os números de 1 a 9, também sem repetir.
-					<br /><br />
-					Alguns quadradinhos já vêm preenchidos no começo do jogo.
-					Eles são pistas para você saber onde colocar os outros
-					números! O segredo é pensar e testar até encontrar os
-					lugares certos.
-					<br /><br />
-					Também há versões com tamanhos menores de sukoku: 4x4 e 6x6,
-					que são mais fáceis de se jogar!
-					<br /><br />
-					É como um quebra-cabeça de números.
-					<strong>Você consegue! 🧩😊</strong>
-				</p>
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Sudoku</title>
+	<link rel="stylesheet" href="sudoku_jogo.css" />
+	<script  src="sudoku_jogo.js" defer></script>
+</head>
+
+<body>
+	<h1 style="text-align: center;">Sudoku</h1>
+	<div class="buttonGroup">
+		<!-- Botão Página Inicial -->
+		<button id="homeButton" onclick="document.getElementById('homeModal').style.display = 'block';">Página Inicial</button>
+		<!-- Botão de Voltar -->
+		<button id="backButton" onclick="document.getElementById('backModal').style.display = 'block';">Voltar</button>
+		<!-- Botão de Regras -->
+		<button id="rulesButton" onclick="document.getElementById('rulesModal').style.display = 'block';">Regras</button>
+		<!-- Botão de Reinício -->
+		<button id="restartButton" onclick="document.getElementById('restartModal').style.display = 'block';">Recomeçar</button>
+		<!-- Botão de Estilo -->
+		<div class="styleGroup">
+			<button id="styleButton" onclick="">Estilo</button>
+			<div class="styleDropdown" id="styleDropdown">
+				<button class="styleButton" id="numbers" onclick="UpdateStyle('numbers')">Números</button>
+				<button class="styleButton" id="letters" onclick="UpdateStyle('letters')">Letras</button>
+				<button class="styleButton" id="colors" onclick="UpdateStyle('colors')">Cores</button>
+				<button class="styleButton" id="fruits" onclick="UpdateStyle('fruits')">Frutas</button>
+				<button class="styleButton" id="animals" onclick="UpdateStyle('animals')">Animais</button>
 			</div>
 		</div>
-		<div id="restartModal" class="modal">
-			<div class="modal-content">
-				<span class="close">&times;</span>
-				<h2>Confirmação</h2>
-				<p>Você realmente deseja perder o seu progresso?</p>
-				<button id="confirmYes">Sim</button>
-				<button id="confirmNo">Não</button>
-			</div>
+		<button id="peersButton" onclick="PeersFunction()"> Casas Relevantes</button>
+	</div>
+
+	<div class="sudokucontainer" id="sudokucontainer"></div>
+
+	<!-- Tabuleiro -->
+	<div class="buttonGroup">
+		<button id="eraseButton" onclick="EraseCell()">Apagar</button>
+		<button class="numberButton">1</button>
+		<button class="numberButton">2</button>
+		<button class="numberButton">3</button>
+		<button class="numberButton">4</button>
+		<button class="numberButton">5</button>
+		<button class="numberButton">6</button>
+		<button class="numberButton">7</button>
+		<button class="numberButton">8</button>
+		<button class="numberButton">9</button>
+	</div>
+
+	<!-- Modal de Regras -->
+	<div id="rulesModal" class="modal" onclick="this.style.display='none'">
+		<div class="modal-content" onclick="event.stopPropagation()">
+			<span class="close" onclick="document.getElementById('rulesModal').style.display = 'none';">&times;</span>
+			<h2>Regras do Sudoku</h2>
+			<p>
+				O tabuleiro do Sudoku é como uma grande tabela com 81
+				quadradinhos, dividida em 9 partes menores (chamadas
+				“quadrados” ou “blocos”), cada uma com 9 quadradinhos.
+				<br /><br />
+				O que você precisa fazer: preencher todos os quadradinhos
+				com números de 1 a 9, seguindo três regras simples.
+				<br /><br />
+				<strong>As regras:</strong>
+				<br />
+				1) Na linha - Cada linha (de um lado ao outro, como no
+				caderno) só pode ter o número 1, o número 2, e assim por
+				diante até o 9, sem repetir.
+				<br /><br />
+				2) Na coluna - Cada coluna (de cima para baixo) também só
+				pode ter os números de 1 a 9, sem repetir nenhum.
+				<br /><br />
+				3) No bloco - Cada bloco (aquelas divisões de 3x3) só pode
+				ter os números de 1 a 9, também sem repetir.
+				<br /><br />
+				Alguns quadradinhos já vêm preenchidos no começo do jogo.
+				Eles são pistas para você saber onde colocar os outros
+				números! O segredo é pensar e testar até encontrar os
+				lugares certos.
+				<br /><br />
+				Também há versões com tamanhos menores de sukoku: 4x4 e 6x6,
+				que são mais fáceis de se jogar!
+				<br /><br />
+				É como um quebra-cabeça de números.
+				<strong>Você consegue! 🧩😊</strong>
+			</p>
 		</div>
-		<div id="homeModal" class="modal">
-			<div class="modal-content">
-				<span class="close">&times;</span>
-				<h2>Confirmação</h2>
-				<p>Você realmente deseja perder o seu progresso?</p>
-				<button id="confirmYes">Sim</button>
-				<button id="confirmNo">Não</button>
-			</div>
+	</div>
+
+	<!-- Modal de Reinício -->
+	<div id="restartModal" class="modal" onclick="this.style.display='none'">
+		<div class="modal-content" onclick="event.stopPropagation()">
+			<span class="close" onclick="document.getElementById('restartModal').style.display = 'none';">&times;</span>
+			<h2>Confirmação</h2>
+			<p>Você realmente deseja perder o seu progresso?</p>
+			<button id="confirmYes" onclick="RestartGame()">Sim</button>
+			<button id="confirmNo" onclick="document.getElementById('restartModal').style.display = 'none';">Não</button>
 		</div>
-		<div id="backModal" class="modal">
-			<div class="modal-content">
-				<span class="close">&times;</span>
-				<h2>Confirmação</h2>
-				<p>Você realmente deseja perder o seu progresso?</p>
-				<button id="confirmYes">Sim</button>
-				<button id="confirmNo">Não</button>
-			</div>
+	</div>
+
+	<!-- Modal de Página Inicial -->
+	<div id="homeModal" class="modal" onclick="this.style.display='none'">
+		<div class="modal-content" onclick="event.stopPropagation()">
+			<span class="close" onclick="document.getElementById('homeModal').style.display = 'none';">&times;</span>
+			<h2>Confirmação</h2>
+			<p>Você realmente deseja perder o seu progresso?</p>
+			<button id="confirmYes" onclick="window.location.href = '../../logicamente/logicamente.html';">Sim</button>
+			<button id="confirmNo" onclick="document.getElementById('homeModal').style.display = 'none';">Não</button>
 		</div>
-		<div id="winModal" class="modal">
-			<div class="modal-content">
-				<h2>Parabéns, você ganhou!</h2>
-				<p>Você deseja recomeçar ou retornar ao menu?</p>
-				<button id="confirmYes">Recomeçar</button>
-				<button id="confirmNo">Menu</button>
-			</div>
+	</div>
+	
+	<!-- Modal de Voltar -->
+	<div id="backModal" class="modal" onclick="this.style.display='none'">
+		<div class="modal-content" onclick="event.stopPropagation()">
+			<span class="close" onclick="document.getElementById('backModal').style.display = 'none';">&times;</span>
+			<h2>Confirmação</h2>
+			<p>Você realmente deseja perder o seu progresso?</p>
+			<button id="confirmYes" onclick="window.location.href = '../menu/sudoku_menu.html'">Sim</button>
+			<button id="confirmNo" onclick="document.getElementById('backModal').style.display = 'none';">Não</button>
 		</div>
-	</body>
+	</div>
+
+	<!-- Modal de Vitória -->
+	<div id="winModal" class="modal">
+		<div class="modal-content">
+			<h2>Parabéns, você ganhou!</h2>
+			<p>Você deseja recomeçar ou retornar ao menu?</p>
+			<button onclick="StartNextGame()">Recomeçar</button>
+			<button onclick="ReturnToMenu()">Menu</button>
+		</div>
+	</div>
+</body>
+
 </html>

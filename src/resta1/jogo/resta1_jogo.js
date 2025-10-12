@@ -1,6 +1,6 @@
 // Global Variables
-const type = localStorage.getItem("type");
-let container = document.getElementById("boardContainer");
+const type_resta1 = localStorage.getItem("type");
+let container_resta1 = document.getElementById("container_resta1");
 let matrix = null;
 
 let first_selected = false;
@@ -134,26 +134,26 @@ function Matrix_Shape() {
             [3, 1, 3, 0, 3, 0, 3, 0, 3, 0, 3, 0, 3, 1, 3]
         ]
     }
-    matrix = matrices[type] || null;
+    matrix = matrices[type_resta1] || null;
     return matrix;
 }
 
 // Function to create the board
 function Create_Board() {
-    if (diagonals.includes(type)) {
+    if (diagonals.includes(type_resta1)) {
         is_diagonal = true;
     }
     let numRows = matrix.length;
     let numCols = Math.max(...matrix.map(r => r.length));
-    boardContainer.innerHTML = "";
-    let boardSize = boardContainer.clientWidth; // Get the size of the container
+    container_resta1.innerHTML = "";
+    let boardSize = container_resta1.clientWidth; // Get the size of the container
     
     let cellSize = null;
     if (!is_diagonal){
         cellSize = Math.floor(boardSize / Math.max(numRows, numCols)) - 10; // Calculate the size of the cells
     }
     else{
-        switch(type){
+        switch(type_resta1){
             case "star_matrix":
                 cellSize = Math.floor(boardSize / Math.max(numRows, numCols)) * 1.3;
                 break;
@@ -186,8 +186,8 @@ function Create_Board() {
             const value = matrix[i][j];            
             let cell = document.createElement("div");
             cell.classList.add(`cell`);
-            cell.setAttribute("pos_i", i);
-            cell.setAttribute("pos_j", j);
+            cell.setAttribute("pos_i", i.toString());
+            cell.setAttribute("pos_j", j.toString());
             cell.setAttribute("value", value);
             cell.style.width = `${cellSize}px`;
             cell.style.height = `${cellSize}px`;
@@ -206,7 +206,7 @@ function Create_Board() {
                 row.appendChild(cell);
             }
         }
-        boardContainer.appendChild(row); // Adds the row to the board
+        container_resta1.appendChild(row); // Adds the row to the board
         row++;
     }
 }

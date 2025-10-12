@@ -1,6 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //#region CONSTANTS
 
+let currentStyle = "numbers";
 let selectedCell = null;
 let initialPuzzle = [];
 let solvedPuzzle = [];
@@ -9,13 +10,13 @@ let puzzle = [];
 let rowIndex = null;
 let colIndex = null;
 let goalCorrect = 0;
-let modal = 0;
-let showPeers = localStorage.getItem('showPeers');
-const dificulty = localStorage.getItem('dificulty');
-const size = localStorage.getItem('size');
+let showPeers = Boolean(localStorage.getItem('showPeers'));
+const difficulty = localStorage.getItem('difficulty');
+const size = Number(localStorage.getItem('size'));
 let container = document.getElementById("sudokucontainer");
 const puzzles = {
-    4: [
+    "4": {
+        "1":[
         // 4x4 puzzles
         {puzzle: "0130302040030302", solution: "2134342142131342"},
         {puzzle: "2001030201204010", solution: "2431134231244213"},
@@ -34,9 +35,12 @@ const puzzles = {
         {puzzle: "4020010304023010", solution: "4321214314323214"},
         {puzzle: "3400010400131040", solution: "3421213442131342"}
     ],
-    6: {
+    "2":[],
+    "3":[]
+    },
+    "6": {
         // 6x6 fácil
-        1:[
+        "1":[
             {puzzle: "306050000602050043243000030026400300", solution: "326154514632651243243561135426462315"},
             {puzzle: "001056030020020010500243164000300164", solution: "241356635421423615516243164532352164"},
             {puzzle: "305140000050451360060500000005004621", solution: "325146146253451362263514612435534621"},
@@ -51,7 +55,7 @@ const puzzles = {
             {puzzle: "000531310260026143100050000410040020", solution: "462531315264526143134652253416641325"}
         ],
         // 6x6 médio
-        2:[
+        "2":[
             {puzzle: "160020002001000600025104506010003000", solution: "164325352461431652625134546213213546"},
             {puzzle: "400020000003100300300450010630060200", solution: "431526652143145362326451214635563214"},
             {puzzle: "030040006050002000000500200130003062", solution: "135246426351352614641523264135513462"},
@@ -66,7 +70,7 @@ const puzzles = {
             {puzzle: "640052000040400000105430500060204500", solution: "641352352641436125125436513264264513"}
         ],
         // 6x6 difícil
-        3:[
+        "3":[
             {puzzle: "004000006100051320000000005010200040", solution: "134562526134451326362451645213213645"},
             {puzzle: "200006400030000060600300005002000400", solution: "231546456231523164614325345612162453"},
             {puzzle: "000601000040003000040010304006001023", solution: "452631136245213564645312324156561423"},
@@ -81,9 +85,9 @@ const puzzles = {
             {puzzle: "004000063200000530000602002001001300", solution: "524163163245216534345612632451451326"}
         ]
     },
-    9: {
+    "9": {
         // 6x6 Fácil
-        1:[
+        "1":[
             {puzzle: "000810000020000000010900700070025093402000000000000500097500000563000004000000680", solution: "934817256728653419615942738176425893452398167389176542897564321563281974241739685"},
             {puzzle: "000000005020009000090020003730048100000360000580000400010003580004200000009780002", solution: "473816925628539741195427863732948156941365278586172439217693584864251397359784612"},
             {puzzle: "040100000000000000653000001080900740002400910000000208000562000010070060004001003", solution: "947153682128649357653287491381926745572438916496715238839562174215374869764891523"},
@@ -187,7 +191,7 @@ const puzzles = {
         ],
 
         // 6x6 Médio
-        2:[
+        "2":[
             {puzzle: "100503700603008090000009800010000000876100000000006000000000007080907604700060312", solution: "198543726643278591527619843914735268876192435235486179462351987381927654759864312"},
             {puzzle: "005000740300600019000001005000700020900005800700840000003090002090400000800000103", solution: "215983746387654219469271385538716924941325867726849531653198472192437658874562193"},
             {puzzle: "075000003400000010000672000009001600000300005020560004907040000003809000000000000", solution: "275184963486935712391672548539421687764398125128567394917243856643859271852716439"},
@@ -290,8 +294,8 @@ const puzzles = {
             {puzzle: "092000070030194000050000300001070000600000050005800401000040017000003020200060800", solution: "892356174736194582154782396941675238628431759375829461563248917487913625219567843"}
         ],
 
-            // 6x6 Difícil
-        3:[
+        // 6x6 Difícil
+        "3":[
             {puzzle: "380100000000050600000900003040000000005018000000090561060024780800000006004080020", solution: "386172954419853672527946813741365298695218437238497561163524789852739146974681325"},
             {puzzle: "070160000400007000000008002009000205200900100000503600600200800910000003007000006", solution: "375162984482397561196458372869714235253986147741523698634271859918645723527839416"},
             {puzzle: "904072800000803600800900000609000010083007000007000002200038500000729006000600000", solution: "964572831172843659835961274629485713483217965517396482246138597358729146791654328"},
@@ -398,6 +402,7 @@ const puzzles = {
 
 //#endregion
 
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //#region SUDOKU GENERATION FUNCTIONS
 
@@ -405,13 +410,15 @@ const puzzles = {
 function Fun_Get_Initial_Puzzle() {
     return new Promise((resolve, reject) => {
         try {
-            const puzzleSet = puzzles[size];
+            debugger;
+            let  puzzleSet = puzzles[size.toString()];
             let selectedPuzzle;
 
             if (size == 4) {
                 selectedPuzzle = puzzleSet[Math.floor(Math.random() * puzzleSet.length)];
-            } else {
-                selectedPuzzle = puzzleSet[dificulty][Math.floor(Math.random() * puzzleSet[dificulty].length)];
+            } 
+            else {
+                selectedPuzzle = puzzleSet[difficulty][Math.floor(Math.random() * puzzleSet[difficulty].length)];
             }
 
             for (let i = 0; i < size; i++) {
@@ -431,8 +438,9 @@ function Fun_Get_Initial_Puzzle() {
             }
 
             resolve();
-        } catch (error) {
-            console.error('Erro ao gerar o quebra-cabeça:', error);
+        } 
+        catch (error) {
+            console.log('Erro ao gerar o quebra-cabeça:', error);
             reject(error);
         }
     });
@@ -440,6 +448,7 @@ function Fun_Get_Initial_Puzzle() {
 
 // Create the Sudoku puzzle board
 function Fun_Create_Sudoku_Board(puzzle) {
+    let cellSize;
     if (size == 4) {
         cellSize = 90;
     } 
@@ -456,9 +465,9 @@ function Fun_Create_Sudoku_Board(puzzle) {
         for (let j = 0; j < size; j++) {
             const cell = document.createElement("div");
             cell.classList.add(`cell${size}`);
-            cell.setAttribute("editableStatus", 0);
-            cell.setAttribute("pos_i", i);
-            cell.setAttribute("pos_j", j);
+            cell.setAttribute("editableStatus", "0");
+            cell.setAttribute("pos_i", i.toString());
+            cell.setAttribute("pos_j", j.toString());
             cell.classList.add("backgroundColor"); // Add classes to alternate the colors of the quadrants
             
             cell.style.width = `${cellSize}px`;
@@ -493,6 +502,7 @@ function Fun_Goal_Correct(){
 
 //#endregion
 
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //#region SUDOKU SOLVING FUNCTIONS 
 
@@ -512,6 +522,7 @@ function Fun_Find_Empty_Cell(board)
 // Checks if a move is valid
 function Fun_Is_Valid_Move(board, row, col, num) 
 {
+    let a, b;
     // Checks row
     for (let i = 0; i < size; i++) {
         if (board[row][i] === num) {
@@ -524,9 +535,18 @@ function Fun_Is_Valid_Move(board, row, col, num)
             return false;
         }
     }
-    if (size == 4){a = 2; b = 2;}
-    else if (size == 6){a = 2; b = 3;}
-    else if (size == 9){a = 3; b = 3;}
+    if (size == 4){
+        a = 2;
+        b = 2;
+    }
+    else if (size == 6){
+        a = 2; 
+        b = 3;
+    }
+    else if (size == 9){
+        a = 3; 
+        b = 3;
+    }
     let startRow = Math.floor(row / a) * a;
     let startCol = Math.floor(col / b) * b;
     for (let i = startRow; i < startRow + a; i++) {
@@ -569,6 +589,7 @@ function Fun_Solve_Helper(board) {
 
 //#endregion
 
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////      
 //#region SUDOKU AUXILARY FUNCTIONS 
 
@@ -609,6 +630,7 @@ function Fun_Enable_Disable_Buttons(status) {
 // Highlight peer cells and cells with the same value
 function Fun_Peers_And_Equals(selectedCell, rowIndex, colIndex)
 {
+    let cRowIndex, cColIndex;
     if (size == 4){
         allCells.forEach(c => {// Highlight peer cells
             cRowIndex = c.getAttribute("pos_i");
@@ -651,7 +673,7 @@ function Fun_Peers_And_Equals(selectedCell, rowIndex, colIndex)
 function PeersFunction()
 {
     showPeers = !showPeers;
-    localStorage.setItem('showPeers', showPeers);
+    localStorage.setItem('showPeers', showPeers.toString());
     
     // Turn off peer cells
     if(!showPeers)
@@ -670,9 +692,11 @@ function PeersFunction()
 }
 //#endregion    
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//#region SYMBOL STYLE 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//#region BARRA DE BOTÕES SUPERIOR
+
+// Define os estilos disponíveis
 const styles = {
     numbers: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
     letters: ["A", "B", "C", "D", "E", "F", "G", "H", "I"],
@@ -681,14 +705,13 @@ const styles = {
     animals: ["🐶", "🐱", "🐭", "🦊", "🐻", "🐼", "🐨", "🐯", "🦁"]
 };
 
-let currentStyle = "numbers";
-
-function Fun_Update_Style(newStyle) {
+// Atualiza o estilo dos símbolos no tabuleiro e nos botões
+function UpdateStyle(newStyle) {
     currentStyle = newStyle;
     const mapping = styles[currentStyle];
     const sizeLimit = size > 9 ? 9 : size;
 
-    // Update board symbols
+    // Atualiza as células do tabuleiro
     allCells.forEach(cell => {
         const rowIndex = parseInt(cell.getAttribute("pos_i"), 10);
         const colIndex = parseInt(cell.getAttribute("pos_j"), 10);
@@ -700,20 +723,65 @@ function Fun_Update_Style(newStyle) {
         }
     });
 
-    // Update number buttons
+    // Atualiza os botões numéricos
     document.querySelectorAll(".numberButton").forEach((button, index) => {
         if (index < sizeLimit) {
             button.textContent = mapping[index];
         }
     });
 
-    // Highlight active style button
+    // Destaca o botão de estilo ativo
     document.querySelectorAll(".styleButton").forEach(button => {
         button.classList.toggle("activeStyle", button.id === `style-${newStyle}`);
     });
 }
 
+
+// Reinicia o jogo atual
+function RestartGame(){
+    selectedCell = null;
+    allCells = null;
+    puzzle = [];
+    rowIndex = null;
+    colIndex = null;
+    goalCorrect = 0;
+    modal = 0;
+    document.getElementById('restartModal').style.display = 'none';
+    main();    
+}
+
+// Inicia um novo jogo
+function StartNextGame(){
+    selectedCell = null;
+    initialPuzzle = [];
+    solvedPuzzle = [];
+    allCells = null;
+    puzzle = [];
+    rowIndex = null;
+    colIndex = null;
+    goalCorrect = 0;
+    modal = 0;
+    document.getElementById('winModal').style.display = 'none';
+    main();
+}
+
+// Apaga o conteúdo da célula selecionada
+function EraseCell(){
+    if (selectedCell) 
+    {
+        selectedCell.textContent = "";
+        rowIndex = selectedCell.getAttribute("pos_i");
+        colIndex = selectedCell.getAttribute("pos_j");
+        puzzle[rowIndex][colIndex] = 0;
+        allCells.forEach(c => {c.classList.remove("incorrect", "correct", "cellsWithSameValue", "selected", "peerCells");}); // Remove the highlighting from the wrong cells
+        if(showPeers)
+            Fun_Peers_And_Equals(selectedCell, rowIndex, colIndex); // Highlight the correct peer cells and cells with the same value
+        selectedCell.classList.add("selected");
+    }
+}
+
 //#endregion      
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////      
 //#region EVENT LISTENERS;        
@@ -752,123 +820,22 @@ window.addEventListener('DOMContentLoaded', () =>
                 Fun_Check_Win(); // Check if the game is over
             } 
         }
-
-        // Restart, Rules Home and Back Buttons Event Listeners
-        else
-        {
-            const target = event.target;
-            switch(target.id){
-                case ('confirmNo'):{ // Detects when the user clicks on the "No" button in the restart window
-                    if (modal == 4){
-                        document.getElementById('winModal').style.display = 'none';
-                        window.location.href = "../menu/sudoku_menu.html";
-                    }
-                    else{
-                        document.getElementById('restartModal').style.display = 'none';
-                        document.getElementById('backModal').style.display = 'none';
-                        document.getElementById('homeModal').style.display = 'none';
-                    }
-                    break;
-                }
-                case ('confirmYes'): { // Detects when the user clicks on the "Yes" button in the restart window
-                    if (modal == 1){
-                        selectedCell = null;
-                        initialPuzzle = [];
-                        solvedPuzzle = [];
-                        allCells = null;
-                        puzzle = [];
-                        rowIndex = null;
-                        colIndex = null;
-                        goalCorrect = 0;
-                        modal = 0;
-                        document.getElementById('restartModal').style.display = 'none';
-                        main();
-                    }
-                    else if (modal == 2){
-                        document.getElementById('homeModal').style.display = 'none';
-                        window.location.href = "../../logicamente/logicamente.html";
-                    }
-                    else if (modal == 3){
-                        document.getElementById('backModal').style.display = 'none';
-                        window.location.href = "../menu/sudoku_menu.html";
-                    }
-                    else if (modal == 4){
-                        selectedCell = null;
-                        initialPuzzle = [];
-                        solvedPuzzle = [];
-                        allCells = null;
-                        puzzle = [];
-                        rowIndex = null;
-                        colIndex = null;
-                        goalCorrect = 0;
-                        modal = 0;
-                        document.getElementById('winModal').style.display = 'none';
-                        main();
-                    }       
-                    break;
-                }
-                case ('restartButton'): { // Detects when the user clicks on the "Restart" button
-                    document.getElementById('restartModal').style.display = 'block';
-                    modal = 1;
-                    break;
-                }
-                case('homeButton'):{ // Detects when the user clicks on the home button
-                    document.getElementById('homeModal').style.display = 'block';
-                    modal = 2;
-                    break;
-                }
-                case('backButton'):{ // Detects when the user clicks on the home button
-                    document.getElementById('backModal').style.display = 'block';
-                    modal = 3;
-                    break;
-                }
-                case ('rulesButton'):{ // Detects when the user clicks on the rules button
-                    document.getElementById('rulesModal').style.display = 'block';
-                    break;
-                }
-                case('eraseButton'): // Add event listener to detect when the erase button is clicked
-                {
-                    if (selectedCell) 
-                    {
-                        selectedCell.textContent = "";
-                        rowIndex = selectedCell.getAttribute("pos_i");
-                        colIndex = selectedCell.getAttribute("pos_j");
-                        puzzle[rowIndex][colIndex] = 0;
-                        allCells.forEach(c => {c.classList.remove("incorrect", "correct", "cellsWithSameValue", "selected", "peerCells");}); // Remove the highlighting from the wrong cells
-                        if(showPeers)
-                            Fun_Peers_And_Equals(selectedCell, rowIndex, colIndex); // Highlight the correct peer cells and cells with the same value
-                        selectedCell.classList.add("selected");
-                    }
-                }
-
-                default: // Detects when the close button in clicken in a opened window
-                {
-                    if (target.classList.contains('close')) { // Detects when the user clicks on a close button
-                        document.getElementById('rulesModal').style.display = 'none';
-                        document.getElementById('restartModal').style.display = 'none';
-                        document.getElementById('homeModal').style.display = 'none';
-                        document.getElementById('backModal').style.display = 'none';
-                    }
-                    else if (target == document.getElementById('restartModal') || target == document.getElementById('rulesModal') || 
-                            target == document.getElementById('homeModal') || target == document.getElementById('backModal')) {
-                        target.style.display = 'none';
-                    }
-                }
-            }
-        }
     });
 });
 //#endregion
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //#region MAIN;
 async function main(){
     try {
+        //if (initialPuzzle == [])
         await Fun_Get_Initial_Puzzle(); // Aguarda o carregamento do puzzle
         document.querySelectorAll(".numberButton").forEach((button, index) => { //Disables the number buttons according to the size of the board
             if (index < size) {
                 button.disabled = false;
-            } else {
+            } 
+            else {
                 button.disabled = true;
             }
         });
@@ -877,7 +844,7 @@ async function main(){
         puzzle = JSON.parse(JSON.stringify(initialPuzzle));
         Fun_Goal_Correct();
     } catch (error) {
-        console.error('Erro na inicialização do jogo:', error);
+        console.log('Erro na inicialização do jogo:', error);
     }
 }
 
