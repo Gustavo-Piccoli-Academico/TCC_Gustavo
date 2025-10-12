@@ -6,14 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>menu_sudoku</title>
     <link rel="stylesheet" href="sudoku_menu.css">
-    <script src="sudoku_menu.js" defer></script>
+    <script  src ="sudoku_menu.js" defer></script>
 </head>
 
 <body>
     <div class="container">
         <div class="headerButtons">
-            <button id="homeButton">Página Inicial</button>
-            <button id="rulesButton">Regras</button>
+            <button id="homeButton" onclick="window.location.href = '../../logicamente/logicamente.html'">Página Inicial</button>
+            <button id="rulesButton" onclick="document.getElementById('rulesModal').style.display = 'block'">Regras</button>
         </div>
         <h1>Escolha o tamanho do Sudoku:</h1>
         <div class="buttonGroup">
@@ -34,7 +34,7 @@
         </div>
         <div id="rulesModal" class="modal">
             <div class="modal-content">
-                <span class="close">&times;</span>
+                <span class="close" onclick="document.getElementById('rulesModal').style.display = 'none';">&times;</span>
                 <h2>Regras do Sudoku</h2>
                 <p>
                     O tabuleiro do Sudoku é como uma grande tabela com 81 quadradinhos, dividida em 9 partes menores (chamadas “quadrados” ou “blocos”), cada uma com 9 quadradinhos.
@@ -59,13 +59,13 @@
         </div>
         <div id="sizeModal" class="modal">
             <div class="modal-content">
-                <span class="close">&times;</span>
+                <span class="close" onclick="document.getElementById('sizeModal').style.display = 'none';">&times;</span>
                 <h2>Selecione um tamanho e uma dificuldade para jogar!</h2>
             </div>
         </div>
         <div id="dificultyModal" class="modal">
             <div class="modal-content">
-                <span class="close">&times;</span>
+                <span class="close" onclick="document.getElementById('dificultyModal').style.display = 'none';">&times;</span>
                 <h2>Selecione uma dificuldade para jogar!</h2>
             </div>
         </div>

@@ -13,7 +13,7 @@ document.addEventListener("click", function (event) {
             break;
         }
         case ('standardButton'):{
-            type = "standard_matrix";
+            type_resta1 = "standard_matrix";
             document.querySelectorAll(".buttonGroup button").forEach(button => {
                 button.classList.remove("active");
             });
@@ -21,7 +21,7 @@ document.addEventListener("click", function (event) {
             break;
         }
         case ('squareButton'):{
-            type = "square_matrix";
+            type_resta1 = "square_matrix";
             document.querySelectorAll(".buttonGroup button").forEach(button => {
                 button.classList.remove("active");
             });
@@ -29,7 +29,7 @@ document.addEventListener("click", function (event) {
             break;
         }
         case ('europeanButton'):{
-            type = "european_matrix";
+            type_resta1 = "european_matrix";
             document.querySelectorAll(".buttonGroup button").forEach(button => {
                 button.classList.remove("active");
             });
@@ -37,7 +37,7 @@ document.addEventListener("click", function (event) {
             break;
         }
         case ('asymmetricButton'):{
-            type = "asymmetric_matrix";
+            type_resta1 = "asymmetric_matrix";
             document.querySelectorAll(".buttonGroup button").forEach(button => {
                 button.classList.remove("active");
             });
@@ -45,7 +45,7 @@ document.addEventListener("click", function (event) {
             break;
         }
         case ('germanButton'):{
-            type = "german_matrix";
+            type_resta1 = "german_matrix";
             document.querySelectorAll(".buttonGroup button").forEach(button => {
                 button.classList.remove("active");
             });
@@ -53,7 +53,7 @@ document.addEventListener("click", function (event) {
             break;
         }
         case ('diamondButton'):{
-            type = "diamond_matrix";
+            type_resta1 = "diamond_matrix";
             document.querySelectorAll(".buttonGroup button").forEach(button => {
                 button.classList.remove("active");
             });
@@ -61,7 +61,7 @@ document.addEventListener("click", function (event) {
             break;
         }
         case ('starButton'):{
-            type = "star_matrix";
+            type_resta1 = "star_matrix";
             document.querySelectorAll(".buttonGroup button").forEach(button => {
                 button.classList.remove("active");
             });
@@ -69,7 +69,7 @@ document.addEventListener("click", function (event) {
             break;
         }
         case ('piramidButton'):{
-            type = "piramid_matrix";
+            type_resta1 = "piramid_matrix";
             document.querySelectorAll(".buttonGroup button").forEach(button => {
                 button.classList.remove("active");
             });
@@ -77,7 +77,7 @@ document.addEventListener("click", function (event) {
             break;
         }
         case ('trapezoidButton'):{
-            type = "trapezoid_matrix";
+            type_resta1 = "trapezoid_matrix";
             document.querySelectorAll(".buttonGroup button").forEach(button => {
                 button.classList.remove("active");
             });
@@ -85,7 +85,7 @@ document.addEventListener("click", function (event) {
             break;
         }
         case ('rhombusButton'):{
-            type = "rhombus_matrix";
+            type_resta1 = "rhombus_matrix";
             document.querySelectorAll(".buttonGroup button").forEach(button => {
                 button.classList.remove("active");
             });
@@ -93,7 +93,7 @@ document.addEventListener("click", function (event) {
             break;
         }
         case ('snowButton'):{
-            type = "snow_matrix";
+            type_resta1 = "snow_matrix";
             document.querySelectorAll(".buttonGroup button").forEach(button => {
                 button.classList.remove("active");
             });
@@ -101,7 +101,7 @@ document.addEventListener("click", function (event) {
             break;
         }
         case ('hexagonalButton'):{
-            type = "hexagonal_matrix";
+            type_resta1 = "hexagonal_matrix";
             document.querySelectorAll(".buttonGroup button").forEach(button => {
                 button.classList.remove("active");
             });
@@ -109,7 +109,7 @@ document.addEventListener("click", function (event) {
             break;
         }
         case ('triangleButton'):{
-            type = "triangle_matrix";
+            type_resta1 = "triangle_matrix";
             document.querySelectorAll(".buttonGroup button").forEach(button => {
                 button.classList.remove("active");
             });
@@ -117,8 +117,8 @@ document.addEventListener("click", function (event) {
             break;
         }
         case ('playButton'):{
-            if (type != null){
-                localStorage.setItem('type', type);
+            if (type_resta1 != null){
+                localStorage.setItem('type', type_resta1);
                 window.location.href = "../jogo/resta1_jogo.html";
             }
             else{
