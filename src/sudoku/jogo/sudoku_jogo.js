@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //#region CONSTANTS
 
-let currentStyle = "numbers";
+let currentStyle = localStorage.getItem('style_sudoku'); // Estilo padrão
 let selectedCell = null;
 let initialPuzzle = [];
 let solvedPuzzle = [];
@@ -412,10 +412,10 @@ const puzzles = {
 //#region SUDOKU GENERATION FUNCTIONS
 
 // Generate a random Sudoku puzzle
-function Fun_Get_Initial_Puzzle() {
+function Get_Initial_Puzzle() {
     return new Promise((resolve, reject) => {
         try {
-            debugger;
+            //debugger;
             let strSize = size.toString();
             let strdifficulty = difficulty.toString();
             let  puzzleSet = puzzles[strSize][strdifficulty];
@@ -447,7 +447,7 @@ function Fun_Get_Initial_Puzzle() {
 }
 
 // Create the Sudoku puzzle board
-function Fun_Create_Sudoku_Board(puzzle) {
+function Create_Sudoku_Board(puzzle) {
     let cellSize;
     if (size == 4) {
         cellSize = 90;
@@ -490,7 +490,7 @@ function Fun_Create_Sudoku_Board(puzzle) {
 }
 
 // Counts the number of cells that are different from the solved puzzle
-function Fun_Goal_Correct(){
+function Goal_Correct(){
     for (let i = 0; i < size; i++) {
         for (let j = 0 ; j < size; j++) {
             if (puzzle[i][j] != solvedPuzzle[i][j]) {
@@ -507,7 +507,7 @@ function Fun_Goal_Correct(){
 //#region SUDOKU SOLVING FUNCTIONS 
 
 // Finds an empty cell in the Sudoku puzzle
-function Fun_Find_Empty_Cell(board) 
+function Find_Empty_Cell(board) 
 {
     for (let row = 0; row < size; row++) {
         for (let col = 0; col < size; col++) {
@@ -520,7 +520,7 @@ function Fun_Find_Empty_Cell(board)
 }
 
 // Checks if a move is valid
-function Fun_Is_Valid_Move(board, row, col, num) 
+function Is_Valid_Move(board, row, col, num) 
 {
     let a, b;
     // Checks row
@@ -560,25 +560,25 @@ function Fun_Is_Valid_Move(board, row, col, num)
 }
 
 // Solve the Sudoku puzzle (Important)
-function Fun_Solve_Sudoku(board) 
+function Solve_Sudoku(board) 
 {
     // Placeholder for solving Sudoku puzzle
     const solvedPuzzle = JSON.parse(JSON.stringify(board));
-    Fun_Solve_Helper(solvedPuzzle);
+    Solve_Helper(solvedPuzzle);
     return solvedPuzzle;
 }
 
 // Auxiliar function for solving Sudoku recursively
-function Fun_Solve_Helper(board) {
-    const emptyCell = Fun_Find_Empty_Cell(board);
+function Solve_Helper(board) {
+    const emptyCell = Find_Empty_Cell(board);
     if (!emptyCell) {
         return true; // Puzzle solved
     }
     const [row, col] = emptyCell;
     for (let num = 1; num <= size; num++) {
-        if (Fun_Is_Valid_Move(board, row, col, num)) {
+        if (Is_Valid_Move(board, row, col, num)) {
             board[row][col] = num;
-            if (Fun_Solve_Helper(board)) {
+            if (Solve_Helper(board)) {
                 return true;
             }
             board[row][col] = 0; // Backtrack
@@ -593,18 +593,19 @@ function Fun_Solve_Helper(board) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////      
 //#region SUDOKU AUXILARY FUNCTIONS 
 
-function Fun_Check_Win()
+// Verifica se o jogador venceu
+function Check_Win()
 {
     if(goalCorrect == 0){
         selectedCell.classList.remove("incorrect");
         selectedCell.classList.add("correct");
         selectedCell.classList.add("selected");
         document.getElementById('winModal').style.display = 'block';
-            modal = 4;
     }
 }
 
-function Fun_Enable_Disable_Buttons(status) {
+// Habilita ou desabilita os botões de números e apagar
+function Enable_Disable_Buttons(status) {
     // Enable the buttons
     if (status == true) 
     { 
@@ -627,8 +628,8 @@ function Fun_Enable_Disable_Buttons(status) {
     }
 }
 
-// Highlight peer cells and cells with the same value
-function Fun_Peers_And_Equals(selectedCell, rowIndex, colIndex)
+// Destaca as células relacionadas e com o mesmo valor
+function Peers_And_Equals(selectedCell, rowIndex, colIndex)
 {
     let cRowIndex, cColIndex;
     if (size == 4){
@@ -670,25 +671,29 @@ function Fun_Peers_And_Equals(selectedCell, rowIndex, colIndex)
     });
 }
 
-function PeersFunction()
-{
-    showPeers = !showPeers;
-    localStorage.setItem('showPeers', showPeers.toString());
-    
+// Alterna a exibição das células relacionadas
+function PeersVisibility()
+{    
+    selectedCell = null;
+    rowIndex = null;
+    colIndex = null;
+    allCells.forEach(c => {c.classList.remove("cellsWithSameValue", "selected", "peerCells");});
     // Turn off peer cells
-    if(!showPeers)
+    if(showPeers)
     {
         allCells.forEach(c => {c.classList.remove("peerCells");});
+        selectedCell = null;
         document.getElementById('peersButton').classList.remove('activePeers-ativo');
-        
     }
 
     // Turn on peer cells
     else
     {
         document.getElementById('peersButton').classList.add('activePeers-ativo');
-        Fun_Peers_And_Equals(selectedCell, rowIndex, colIndex);
+        Peers_And_Equals(selectedCell, rowIndex, colIndex);
     }
+    showPeers = !showPeers;
+    localStorage.setItem('showPeers', showPeers.toString());
 }
 //#endregion    
 
@@ -698,15 +703,16 @@ function PeersFunction()
 
 // Define os estilos disponíveis
 const styles = {
-    numbers: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
-    letters: ["A", "B", "C", "D", "E", "F", "G", "H", "I"],
-    colors: ["🔴", "🟠", "🟡", "🟢", "🔵", "🟣", "⚫", "⚪", "🟤"],
-    fruits: ["🍎", "🍌", "🍇", "🍓", "🍊", "🍍", "🍉", "🥝", "🍑"],
-    animals: ["🐶", "🐱", "🐭", "🦊", "🐻", "🐼", "🐨", "🐯", "🦁"]
+    "numbers": ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+    "letters": ["A", "B", "C", "D", "E", "F", "G", "H", "I"],
+    "colors": ["🔴", "🟠", "🟡", "🟢", "🔵", "🟣", "⚫", "⚪", "🟤"],
+    "fruits": ["🍎", "🍌", "🍇", "🍓", "🍊", "🍍", "🍉", "🥝", "🍑"],
+    "animals": ["🐶", "🐱", "🐭", "🦊", "🐻", "🐼", "🐨", "🐯", "🦁"]
 };
 
 // Atualiza o estilo dos símbolos no tabuleiro e nos botões
 function UpdateStyle(newStyle) {
+    localStorage.setItem('sudoku_style', newStyle);
     currentStyle = newStyle;
     const mapping = styles[currentStyle];
     const sizeLimit = size > 9 ? 9 : size;
@@ -736,7 +742,6 @@ function UpdateStyle(newStyle) {
     });
 }
 
-
 // Reinicia o jogo atual
 function RestartGame(){
     selectedCell = null;
@@ -745,7 +750,6 @@ function RestartGame(){
     rowIndex = null;
     colIndex = null;
     goalCorrect = 0;
-    modal = 0;
     document.getElementById('restartModal').style.display = 'none';
     main();    
 }
@@ -753,14 +757,13 @@ function RestartGame(){
 // Inicia um novo jogo
 function StartNextGame(){
     selectedCell = null;
-    initialPuzzle = [];
-    solvedPuzzle = [];
-    allCells = null;
-    puzzle = [];
     rowIndex = null;
     colIndex = null;
+    allCells = null;
+    initialPuzzle = [];
+    solvedPuzzle = [];
+    puzzle = [];
     goalCorrect = 0;
-    modal = 0;
     document.getElementById('winModal').style.display = 'none';
     main();
 }
@@ -775,7 +778,7 @@ function EraseCell(){
         puzzle[rowIndex][colIndex] = 0;
         allCells.forEach(c => {c.classList.remove("incorrect", "correct", "cellsWithSameValue", "selected", "peerCells");}); // Remove the highlighting from the wrong cells
         if(showPeers)
-            Fun_Peers_And_Equals(selectedCell, rowIndex, colIndex); // Highlight the correct peer cells and cells with the same value
+            Peers_And_Equals(selectedCell, rowIndex, colIndex); // Highlight the correct peer cells and cells with the same value
         selectedCell.classList.add("selected");
     }
 }
@@ -802,10 +805,10 @@ window.addEventListener('DOMContentLoaded', () =>
             });
             if(selectedCell.classList.contains("incorrect") == false){ 
                 selectedCell.classList.add("selected");}// Highlight the selected cell in dark blue
-            Fun_Enable_Disable_Buttons(selectedCell.editableStatus != 0); //cells that cannot be edited
+            Enable_Disable_Buttons(selectedCell.editableStatus != 0); //cells that cannot be edited
             
             if(showPeers)
-                Fun_Peers_And_Equals(selectedCell, rowIndex, colIndex); // Highlight peer cells and cells with the same value
+                Peers_And_Equals(selectedCell, rowIndex, colIndex); // Highlight peer cells and cells with the same value
         }
 
         else if (event.target.classList.contains('numberButton'))
@@ -817,7 +820,7 @@ window.addEventListener('DOMContentLoaded', () =>
                 colIndex = selectedCell.getAttribute("pos_j");
                 puzzle[rowIndex][colIndex] = parseInt(event.target.textContent);
                 selectedCell.classList.add("selected");
-                Fun_Check_Win(); // Check if the game is over
+                Check_Win(); // Check if the game is over
             } 
         }
     });
@@ -830,20 +833,20 @@ window.addEventListener('DOMContentLoaded', () =>
 async function main(){
     try {
         //if (initialPuzzle == [])
-        await Fun_Get_Initial_Puzzle(); // Aguarda o carregamento do puzzle
-        document.querySelectorAll(".numberButton").forEach((button, index) => { //Disables the number buttons according to the size of the board
-            if (index < size) {
+        await Get_Initial_Puzzle(); // Aguarda o carregamento do puzzle
+        document.querySelectorAll(".numberButton").forEach((button, index) => { // Disabilita os botões que não serão usados
+            if (index < size) 
                 button.disabled = false;
-            } 
-            else {
+            else 
                 button.disabled = true;
-            }
         });
-        Fun_Create_Sudoku_Board(initialPuzzle);
+        Create_Sudoku_Board(initialPuzzle);
         allCells = document.querySelectorAll(`.cell${size}`);
         puzzle = JSON.parse(JSON.stringify(initialPuzzle));
-        Fun_Goal_Correct();
-    } catch (error) {
+        Goal_Correct();
+        UpdateStyle(currentStyle);
+    } 
+    catch (error) {
         console.log('Erro na inicialização do jogo:', error);
     }
 }
