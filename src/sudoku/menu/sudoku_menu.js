@@ -1,13 +1,13 @@
 localStorage.clear();
 let size_sudoku = 0;
-let dificulty_sudoku = 0;
+let difficulty_sudoku = 0;
 document.getElementById("playButton").classList.add("active");
 
 document.addEventListener("click", function (event) {
     switch(event.target.id){
         case ('4x4Button'):{ // 
             size_sudoku = 4;
-            dificulty_sudoku = 1;
+            difficulty_sudoku = 1;
             document.getElementById("6x6Button").classList.remove("active");
             document.getElementById("9x9Button").classList.remove("active");
             document.getElementById("4x4Button").classList.add("active");
@@ -41,21 +41,21 @@ document.addEventListener("click", function (event) {
             break;
         }
         case ('easyButton'):{ // 
-            dificulty_sudoku = 1;
+            difficulty_sudoku = 1;
             document.getElementById("easyButton").classList.add("active");
             document.getElementById("mediumButton").classList.remove("active");
             document.getElementById("hardButton").classList.remove("active");
             break;
         }
         case ('mediumButton'):{ // 
-            dificulty_sudoku = 2;
+            difficulty_sudoku = 2;
             document.getElementById("easyButton").classList.remove("active");
             document.getElementById("mediumButton").classList.add("active");
             document.getElementById("hardButton").classList.remove("active");
             break;
         }
         case ('hardButton'):{ // 
-            dificulty_sudoku = 3;
+            difficulty_sudoku = 3;
             document.getElementById("easyButton").classList.remove("active");
             document.getElementById("mediumButton").classList.remove("active");
             document.getElementById("hardButton").classList.add("active");
@@ -65,11 +65,11 @@ document.addEventListener("click", function (event) {
             if(size_sudoku == 0){
                 document.getElementById('sizeModal').style.display = 'block';
             }
-            else if (dificulty_sudoku == 0){
-                document.getElementById('dificultyModal').style.display = 'block';
+            else if (difficulty_sudoku == 0){
+                document.getElementById('difficultyModal').style.display = 'block';
             }
             else{
-                localStorage.setItem('dificulty_sudoku', dificulty_sudoku.toString());
+                localStorage.setItem('difficulty_sudoku', difficulty_sudoku.toString());
                 localStorage.setItem('size_sudoku', size_sudoku.toString());
                 localStorage.setItem('showPeers', true.toString());
                 window.location.href = "../jogo/sudoku_jogo.html";
