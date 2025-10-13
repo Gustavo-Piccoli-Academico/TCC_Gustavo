@@ -11,11 +11,14 @@ let rowIndex = null;
 let colIndex = null;
 let goalCorrect = 0;
 let showPeers = Boolean(localStorage.getItem('showPeers'));
-const difficulty = localStorage.getItem('difficulty');
-const size = Number(localStorage.getItem('size'));
+const difficulty = localStorage.getItem('difficulty_sudoku');
+const size = Number(localStorage.getItem('size_sudoku'));
+console.log(localStorage.getItem('size'));
+console.log("Tamanho do Sudoku:", size);
 let container = document.getElementById("sudokucontainer");
 const puzzles = {
     "4": {
+        // 4x4 fácil
         "1":[
         // 4x4 puzzles
         {puzzle: "0130302040030302", solution: "2134342142131342"},
@@ -34,9 +37,11 @@ const puzzles = {
         {puzzle: "4020030100121200", solution: "4123234134121234"},
         {puzzle: "4020010304023010", solution: "4321214314323214"},
         {puzzle: "3400010400131040", solution: "3421213442131342"}
-    ],
-    "2":[],
-    "3":[]
+        ],
+        // 4x4 médio
+        "2":[],
+        // 4x4 difícil
+        "3":[]
     },
     "6": {
         // 6x6 fácil
@@ -86,7 +91,7 @@ const puzzles = {
         ]
     },
     "9": {
-        // 6x6 Fácil
+        // 9x9 Fácil
         "1":[
             {puzzle: "000810000020000000010900700070025093402000000000000500097500000563000004000000680", solution: "934817256728653419615942738176425893452398167389176542897564321563281974241739685"},
             {puzzle: "000000005020009000090020003730048100000360000580000400010003580004200000009780002", solution: "473816925628539741195427863732948156941365278586172439217693584864251397359784612"},
@@ -190,7 +195,7 @@ const puzzles = {
             {puzzle: "800600009000001200301500070270000060068040000000000407000000084000000900900080105", solution: "842673519756891243391524678274359861568147392139268457615932784483715926927486135"}
         ],
 
-        // 6x6 Médio
+        // 9x9 Médio
         "2":[
             {puzzle: "100503700603008090000009800010000000876100000000006000000000007080907604700060312", solution: "198543726643278591527619843914735268876192435235486179462351987381927654759864312"},
             {puzzle: "005000740300600019000001005000700020900005800700840000003090002090400000800000103", solution: "215983746387654219469271385538716924941325867726849531653198472192437658874562193"},
@@ -294,7 +299,7 @@ const puzzles = {
             {puzzle: "092000070030194000050000300001070000600000050005800401000040017000003020200060800", solution: "892356174736194582154782396941675238628431759375829461563248917487913625219567843"}
         ],
 
-        // 6x6 Difícil
+        // 9x9 Difícil
         "3":[
             {puzzle: "380100000000050600000900003040000000005018000000090561060024780800000006004080020", solution: "386172954419853672527946813741365298695218437238497561163524789852739146974681325"},
             {puzzle: "070160000400007000000008002009000205200900100000503600600200800910000003007000006", solution: "375162984482397561196458372869714235253986147741523698634271859918645723527839416"},
@@ -411,15 +416,10 @@ function Fun_Get_Initial_Puzzle() {
     return new Promise((resolve, reject) => {
         try {
             debugger;
-            let  puzzleSet = puzzles[size.toString()];
-            let selectedPuzzle;
-
-            if (size == 4) {
-                selectedPuzzle = puzzleSet[Math.floor(Math.random() * puzzleSet.length)];
-            } 
-            else {
-                selectedPuzzle = puzzleSet[difficulty][Math.floor(Math.random() * puzzleSet[difficulty].length)];
-            }
+            let strSize = size.toString();
+            let strdifficulty = difficulty.toString();
+            let  puzzleSet = puzzles[strSize][strdifficulty];
+            let selectedPuzzle = puzzleSet[Math.floor(Math.random() * puzzleSet.length)];
 
             for (let i = 0; i < size; i++) {
                 let row = [];
