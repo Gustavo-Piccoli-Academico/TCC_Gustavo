@@ -27,14 +27,14 @@
 		<div class="styleGroup">
 			<button id="styleButton" onclick="">Estilo</button>
 			<div class="styleDropdown" id="styleDropdown">
-				<button class="styleButton" id="numbers" onclick="UpdateStyle('numbers')">Números</button>
-				<button class="styleButton" id="letters" onclick="UpdateStyle('letters')">Letras</button>
-				<button class="styleButton" id="colors" onclick="UpdateStyle('colors')">Cores</button>
-				<button class="styleButton" id="fruits" onclick="UpdateStyle('fruits')">Frutas</button>
-				<button class="styleButton" id="animals" onclick="UpdateStyle('animals')">Animais</button>
+				<button class="styleButton" id="numbers" onclick="currentBoard.updateStyle('numbers')">Números</button>
+				<button class="styleButton" id="letters" onclick="currentBoard.updateStyle('letters')">Letras</button>
+				<button class="styleButton" id="colors" onclick="currentBoard.updateStyle('colors')">Cores</button>
+				<button class="styleButton" id="fruits" onclick="currentBoard.updateStyle('fruits')">Frutas</button>
+				<button class="styleButton" id="animals" onclick="currentBoard.updateStyle('animals')">Animais</button>
 			</div>
 		</div>
-		<button id="peersButton" onclick="PeersVisibility()"> Casas Relevantes</button>
+		<button id="peersButton">Casas Relevantes</button>
 	</div>
 
 	<!-- Tabuleiro do Sudoku -->
@@ -42,16 +42,16 @@
 
 	<!-- Botões Sudoku -->
 	<div class="buttonGroup">
-		<button id="eraseButton" onclick="EraseCell()">Apagar</button>
-		<button class="numberButton">1</button>
-		<button class="numberButton">2</button>
-		<button class="numberButton">3</button>
-		<button class="numberButton">4</button>
-		<button class="numberButton">5</button>
-		<button class="numberButton">6</button>
-		<button class="numberButton">7</button>
-		<button class="numberButton">8</button>
-		<button class="numberButton">9</button>
+		<button id="eraseButton" onclick="currentBoard.eraseCell()">Apagar</button>
+		<button class="numberButton" id="numberButton1" onclick="currentBoard.numberButtonManager(1)">1</button>
+		<button class="numberButton" id="numberButton2" onclick="currentBoard.numberButtonManager(2)">2</button>
+		<button class="numberButton" id="numberButton3" onclick="currentBoard.numberButtonManager(3)">3</button>
+		<button class="numberButton" id="numberButton4" onclick="currentBoard.numberButtonManager(4)">4</button>
+		<button class="numberButton" id="numberButton5" onclick="currentBoard.numberButtonManager(5)">5</button>
+		<button class="numberButton" id="numberButton6" onclick="currentBoard.numberButtonManager(6)">6</button>
+		<button class="numberButton" id="numberButton7" onclick="currentBoard.numberButtonManager(7)">7</button>
+		<button class="numberButton" id="numberButton8" onclick="currentBoard.numberButtonManager(8)">8</button>
+		<button class="numberButton" id="numberButton9" onclick="currentBoard.numberButtonManager(9)">9</button>
 	</div>
 
 	<!-- Modal de Regras -->
@@ -99,7 +99,7 @@
 			<span class="close" onclick="document.getElementById('restartModal').style.display = 'none';">&times;</span>
 			<h2>Confirmação</h2>
 			<p>Você realmente deseja perder o seu progresso?</p>
-			<button id="confirmYes" onclick="RestartGame()">Sim</button>
+			<button id="confirmYes" onclick="currentBoard.restartGame()">Sim</button>
 			<button id="confirmNo" onclick="document.getElementById('restartModal').style.display = 'none';">Não</button>
 		</div>
 	</div>
@@ -131,8 +131,8 @@
 		<div class="modal-content">
 			<h2>Parabéns, você ganhou!</h2>
 			<p>Você deseja recomeçar ou retornar ao menu?</p>
-			<button onclick="StartNextGame()">Recomeçar</button>
-			<button onclick="ReturnToMenu()">Menu</button>
+			<button onclick="currentBoard.startNextGame()">Recomeçar</button>
+			<button onclick="currentBoard.returnToMenu()">Menu</button>
 		</div>
 	</div>
 </body>
