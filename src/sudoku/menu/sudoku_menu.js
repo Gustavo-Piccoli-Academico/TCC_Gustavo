@@ -71,8 +71,8 @@ document.addEventListener("click", function (event) {
             else{
                 localStorage.setItem('difficulty_sudoku', difficulty_sudoku.toString());
                 localStorage.setItem('size_sudoku', size_sudoku.toString());
-                localStorage.setItem('sudoku_peers', true.toString());
-                localStorage.setItem('sudoku_style', "numbers");
+                localStorage.setItem('sudoku_peers', "true");
+                localStorage.setItem('style_sudoku', "numbers");
                 window.location.href = "../jogo/sudoku_jogo.html";
             }
             break;
