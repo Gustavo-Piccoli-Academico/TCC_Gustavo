@@ -197,11 +197,6 @@ body {
 .peerCells {
     background-color: rgba(0, 250, 255, 0.551);
 }
-
-.activePeers{
-    background-color: rgba(0, 250, 255, 0.551);
-}
-
 /* #endregion */
 
 /*************************************************************************************/
@@ -226,6 +221,14 @@ body {
 /* Different color when the cursor hovers on the button */
 .buttonGroup button:hover {
     background-color: gray;
+}
+
+.buttonGroup button:active {
+    background-color: #4CAF50;
+}
+
+#peersButton.active {
+    background-color: #4CAF50;
 }
 
 /* Style Button Group */

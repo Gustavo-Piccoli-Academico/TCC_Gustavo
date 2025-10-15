@@ -1,6 +1,8 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //#region CONSTANTS
 
+var currentBoard = null;
+
 const styles = { // Estilos disponíveis
     "numbers": ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
     "letters": ["A", "B", "C", "D", "E", "F", "G", "H", "I"],
@@ -424,8 +426,6 @@ class Cell
         this.calculateQuadrant(size) // Calcula o quadrante da célula
         this.currentValue = currentValue; // Valor atual da célula
         this.finalValue = finalValue; // Valor final da célula
-        this.selectedStatus = false; // Status de seleção da célula
-        this.currentStyle = null; // Estilo atual da célula (números, letras, cores, frutas, animais)
         this.editableStatus = editableStatus; // true se a célula for editável, false caso contrário
     }
     
@@ -472,17 +472,17 @@ class Matrix
      */
     constructor() 
     {
-        this.showPeers = Boolean(localStorage.getItem('sudoku_peers')); // Mostrar células relacionadas
+        this.showPeersAndRelatedCellsStatus = Boolean(localStorage.getItem('sudoku_peers')); // Mostrar células relacionadas
         this.difficulty = Number(localStorage.getItem('difficulty_sudoku')); // Dificuldade do jogo
         this.size = Number(localStorage.getItem('size_sudoku')); // Tamanho do tabuleiro
-        this.container = document.getElementById("sudokucontainer"); // Container do tabuleiro
         this.style = localStorage.getItem('style_sudoku'); // Estilo do tabuleiro
-        this.selectedCell = [0, 0]; // Célula selecionada (i, j)
+        this.container = document.getElementById("sudokucontainer"); // Container do tabuleiro
+        this.selectedCell = null; // Célula selecionada
         this.initialPuzzle = []; // Quebra-cabeça inicial
-        this.curretPuzzle = []; // Cópia do quebra-cabeça inicial
+        this.currentPuzzle = []; // Quebra-cabeça que vai ser atualizado durante o jogo
         this.solvedPuzzle = []; // Quebra-cabeça resolvido
         this.cellDictionary = {}; // Dicionário de células
-        this.allCellDivs = null; // Todas as células do tabuleiro
+        this.quadrantDictionary = {}; // Dicionário de quadrantes
         this.getInitialPuzzle(); // Inicializa o quebra-cabeça
         this.createSudokuBoard(); // Cria o tabuleiro
     }
@@ -512,7 +512,6 @@ class Matrix
     }
 
     /** Cria o tabuleiro do Sudoku
-     * @param {any[]} puzzle
      */
     createSudokuBoard() 
     {
@@ -538,6 +537,11 @@ class Matrix
                     newCell.cellDiv.textContent = newCell.currentValue;
                 else
                     newCell.cellDiv.textContent = "";
+                newCell.cellDiv.style.width = `${cellSize}px`;
+                // Define o evento de clique para a célula
+                newCell.cellDiv.addEventListener("click", () => {
+                    this.cellBehaviourHandler(newCell);
+                });
                 this.cellDictionary[newCell.id] = newCell;
                 row.appendChild(newCell.cellDiv);
             }
@@ -546,146 +550,41 @@ class Matrix
     }
 
     /** Adiciona os event listeners às células do tabuleiro
+     * @param {Cell} clickedCell Célula clicada
      */
-    addEventListenersToCells()
+    cellBehaviourHandler(clickedCell)
     {
-        this.allCellDivs = document.querySelectorAll(".cell" + this.size);
-        this.allCellDivs.forEach((cell) => {
-            cell.addEventListener("click", (event) => {
-                let rowIndex = parseInt(event.target.getAttribute("pos_i"));
-                let colIndex = parseInt(event.target.getAttribute("pos_j"));
-                // If the cell is editable
-                if (this.getCellById((this.size * rowIndex) + colIndex).editableStatus === true) {
-                    // Enable the number buttons
-                    this.enableDisableButtons(true);
-                }
-            });
+        Object.values(this.cellDictionary).forEach(cell => {
+            cell.cellDiv.classList.remove("selected");
+            cell.cellDiv.classList.remove("cellsWithSameValue");
+            cell.cellDiv.classList.remove("peerCells");
+            cell.cellDiv.classList.remove("incorrect");
         });
+        this.selectedCell = clickedCell;
+        if(this.showPeersAndRelatedCellsStatus)
+            this.showPeersAndRelatedCells();
+        this.selectedCell.cellDiv.classList.add("selected");
     }
 
-    /** Habilita ou desabilita os botões de números e apagar
-     * @param {boolean} status
+    /** Alterna a exibição das células relacionadas
      */
-    enableDisableButtons(status) 
-    {
-        // Enable the buttons
-        if (status == true) 
-        { 
-            document.querySelectorAll(".numberButton").forEach((button, index) => {
-                if (index < size) {
-                    button.disabled = false; // Enable buttons within the board size range
-                } else {
-                    button.disabled = true; // Disable buttons outside the board size range
+    showPeersAndRelatedCells()
+    {    
+        // Desmarca todas as células na mesma linha, coluna e com o mesmo valor
+        Object.values(this.cellDictionary).forEach(cell => {
+            if (cell !== this.selectedCell)
+            {
+                // Destaca as células com o mesmo valor em todo o tabuleiro
+                if (cell.currentValue === this.selectedCell.currentValue && cell.currentValue !== 0) 
+                    cell.cellDiv.classList.add("cellsWithSameValue");
+                
+                // Destaca as células na mesma linha ou coluna ou quadrante
+                if (cell.row === this.selectedCell.row || cell.column === this.selectedCell.column || cell.quadrant === this.selectedCell.quadrant) {
+                    if (cell.currentValue !== this.selectedCell.currentValue || cell.currentValue === 0)
+                        cell.cellDiv.classList.add("peerCells");
+                    else if(cell.currentValue === this.selectedCell.currentValue && cell.currentValue !== 0)
+                        cell.cellDiv.classList.add("incorrect");
                 }
-            });
-            document.getElementById("eraseButton").disabled = false; // Enable the erase button
-        } 
-
-        else // Disable the buttons
-        { 
-            document.querySelectorAll(".numberButton").forEach(button => {
-                button.disabled = true;
-            });
-            document.getElementById("eraseButton").disabled = true; // Disable the erase button
-        }
-    }
-
-    /** Obtém uma célula específica pelo seu ID.
-     * @param {number} id 
-     * @returns {Cell | undefined} Retorna a célula ou undefined se não for encontrada.
-     */
-    getCellById(id) 
-    {
-        return this.cellDictionary[id];
-    }
-
-    /** Verifica se um movimento é válido
-     * @param {any[][]} board
-     * @param {number} row
-     * @param {number} col
-     * @param {number} num
-     */
-    isValidMove(board, row, col, num) 
-    {
-        let a, b;
-        // Checks row
-        for (let i = 0; i < this.size; i++) {
-            if (board[row][i] === num) {
-                return false;
-            }
-        }
-        // Checks column
-        for (let i = 0; i < this.size; i++) {
-            if (board[i][col] === num) {
-                return false;
-            }
-        }
-        if (this.size == 4){
-            a = 2;
-            b = 2;
-        }
-        else if (this.size == 6){
-            a = 2; 
-            b = 3;
-        }
-        else if (this.size == 9){
-            a = 3; 
-            b = 3;
-        }
-        let startRow = Math.floor(row / a) * a;
-        let startCol = Math.floor(col / b) * b;
-        for (let i = startRow; i < startRow + a; i++) {
-            for (let j = startCol; j < startCol + b; j++) {
-                if (board[i][j] === num) 
-                    return false;
-            }
-        }   
-        return true; // Move is valid
-    }
-
-    /** Destaca as células relacionadas e com o mesmo valor
-     * @param {EventTarget} selectedCell
-     * @param {number} rowIndex
-     * @param {number} colIndex
-     */
-    findPeersAndEquals(selectedCell, rowIndex, colIndex)
-    {
-        let cRowIndex, cColIndex;
-        if (this.size == 4){
-            allCells.forEach((/** @type {{ getAttribute: (arg0: string) => any; classList: { contains: (arg0: string) => boolean; add: (arg0: string) => void; }; }} */ c) => {// Highlight peer cells
-                cRowIndex = c.getAttribute("pos_i");
-                cColIndex = c.getAttribute("pos_j");
-                if ((cRowIndex === rowIndex || cColIndex === colIndex || (Math.floor(cRowIndex / 2) === Math.floor(rowIndex / 2) && Math.floor(cColIndex /2) === Math.floor(colIndex / 2))) && 
-                    (c !== selectedCell) && (c.classList.contains("incorrect") === false)) {
-                    c.classList.add("peerCells");
-                }
-            });
-        }
-        else if (this.size == 6){
-            allCells.forEach((/** @type {{ getAttribute: (arg0: string) => any; classList: { contains: (arg0: string) => boolean; add: (arg0: string) => void; }; }} */ c) => {// Highlight peer cells
-                cRowIndex = c.getAttribute("pos_i");
-                cColIndex = c.getAttribute("pos_j");
-                if ((cRowIndex === rowIndex || cColIndex === colIndex || (Math.floor(cRowIndex / 2) === Math.floor(rowIndex / 2) && Math.floor(cColIndex / 3) === Math.floor(colIndex / 3))) && 
-                    (c !== selectedCell) && (c.classList.contains("incorrect") === false)) {
-                    c.classList.add("peerCells");
-                }
-            });
-        }
-        else if (this.size == 9){
-            allCells.forEach((/** @type {{ getAttribute: (arg0: string) => any; classList: { contains: (arg0: string) => boolean; add: (arg0: string) => void; }; }} */ c) => {// Highlight peer cells
-                cRowIndex = c.getAttribute("pos_i");
-                cColIndex = c.getAttribute("pos_j");
-                if ((cRowIndex === rowIndex || cColIndex === colIndex || (Math.floor(cRowIndex / 3) === Math.floor(rowIndex / 3) && Math.floor(cColIndex / 3) === Math.floor(colIndex / 3))) && 
-                    (c !== selectedCell) && (c.classList.contains("incorrect") === false)) {
-                    c.classList.add("peerCells");
-                }
-            });
-        }
-
-        allCells.forEach((/** @type {{ textContent: string; classList: { contains: (arg0: string) => boolean; remove: (arg0: string) => void; add: (arg0: string) => void; }; }} */ c) => {// Highlight cells with the same value
-            if ((c.textContent === selectedCell.textContent) && (c !== selectedCell) && (c.textContent !== "") && (c.classList.contains("incorrect") === false)) {
-                c.classList.remove("peerCells");
-                c.classList.add("cellsWithSameValue");
             }
         });
     }
@@ -694,233 +593,212 @@ class Matrix
      */
     checkWinSudoku()
     {
-        if(this.curretPuzzle === this.solvedPuzzle)
-        {
-            return true;
+        for (let i = 0; i < this.size; i++){
+            for (let j = 0; j < this.size; j++) {
+                if (this.currentPuzzle[i][j] !== this.solvedPuzzle[i][j]) 
+                    return false;
+            }
         }
-        return false;
+        return true;
+    }
+}
+
+//#endregion
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//#region CLASSE BOARD
+
+class Board 
+{
+    /** Construtor da classe Board
+     */
+    constructor() 
+    {
+        this.matrix = new Matrix(); // Instância da matriz do Sudoku
+        this.size = this.matrix.size; // Tamanho do tabuleiro
+        this.container = this.matrix.container; // Container do tabuleiro
+        this.style = localStorage.getItem('style_sudoku'); // Estilo do tabuleiro
+        this.selectedCell = this.matrix.selectedCell; // Célula selecionada
+        this.initialButtonsVisibility(); // Desabilita os botões de números e apagar no início
+        this.peersButton = document.getElementById('peersButton');
+        this.peersButton.addEventListener('click', () => {
+            this.clickPeersButton(); 
+        });
+    }
+    
+    /** Habilita ou desabilita os botões de números e apagar
+     */
+    initialButtonsVisibility() 
+    {
+        if (this.matrix.size != 9)
+        {
+            document.getElementById("numberButton9").style.display = "none";
+            document.getElementById("numberButton8").style.display = "none";
+            document.getElementById("numberButton7").style.display = "none";
+            if (this.matrix.size != 6)
+            {
+                document.getElementById("numberButton6").style.display = "none";
+                document.getElementById("numberButton5").style.display = "none";
+            }
+        }
+        const peersButton = document.getElementById("peersButton");
+        if (this.matrix.showPeersAndRelatedCellsStatus) 
+            peersButton.classList.add("active");
+        else 
+           peersButton.classList.remove("active");
     }
 
-    /** Alterna a exibição das células relacionadas
+    /** Alterna a exibição das células relacionadas (peers)
      */
-    peersVisibility()
-    {    
+    clickPeersButton()
+    {
+        this.matrix.showPeersAndRelatedCellsStatus = !this.matrix.showPeersAndRelatedCellsStatus;
+        localStorage.setItem('sudoku_peers', this.matrix.showPeersAndRelatedCellsStatus.toString());
+        if(this.matrix.selectedCell !== null)
+            this.matrix.cellBehaviourHandler(this.matrix.selectedCell);
+        this.peersButton.classList.toggle("active", this.matrix.showPeersAndRelatedCellsStatus);
+    }
+
+    /** Gerencia os eventos dos botões de números
+     */
+    numberButtonManager(number)
+    {
+        if (this.matrix.selectedCell && this.matrix.selectedCell.editableStatus)
+        {
+            this.matrix.selectedCell.currentValue = number;
+            this.matrix.selectedCell.cellDiv.textContent = number;
+            this.matrix.currentPuzzle[this.matrix.selectedCell.row][this.matrix.selectedCell.column] = number;
+            if(this.matrix.showPeersAndRelatedCellsStatus)
+                this.matrix.showPeersAndRelatedCells();
+            if(this.matrix.checkWinSudoku())
+                document.getElementById('winModal').style.display = 'block';
+        }        
+    }
+
+
+    /** Atualiza o estilo dos símbolos no tabuleiro e nos botões
+     * @param {string} newStyle
+     */
+    updateStyle(newStyle) 
+    {
+        localStorage.setItem('style_sudoku', newStyle);
+        this.matrix.style = newStyle;
+        const mapping = styles[this.matrix.style];
+
+        Object.values(this.matrix.cellDictionary).forEach(cell => {
+            if (cell.currentValue !== 0) {
+                cell.cellDiv.textContent = mapping[cell.currentValue - 1];
+            } else {
+                cell.cellDiv.textContent = "";
+            }
+        });        
+        
+        // Atualiza os botões numéricos
+        document.querySelectorAll(".numberButton").forEach((button, index) => {
+            if (index < this.matrix.size) {
+                button.textContent = mapping[index];
+            }
+        });
+
+        // Destaca o botão de estilo ativo
+        document.querySelectorAll(".styleButton").forEach(button => {
+            button.classList.toggle("activeStyle", button.id === `style-${newStyle}`);
+        });
+    }
+
+    /** Reinicia o jogo atual
+     */
+    restartGame()
+    {
         selectedCell = null;
-        allCells.forEach((/** @type {{ classList: { remove: (arg0: string, arg1: string, arg2: string) => void; }; }} */ c) => {c.classList.remove("cellsWithSameValue", "selected", "peerCells");});
-        // Turn off peer cells
-        if(showPeers)
-        {
-            allCells.forEach((/** @type {{ classList: { remove: (arg0: string) => void; }; }} */ c) => {c.classList.remove("peerCells");});
-            selectedCell = null;
-            document.getElementById('peersButton').classList.remove('activePeers-ativo');
-        }
-
-        // Turn on peer cells
-        else
-        {
-            document.getElementById('peersButton').classList.add('activePeers-ativo');
-            findPeersAndEquals(selectedCell, rowIndex, colIndex);
-        }
-        showPeers = !showPeers;
-        localStorage.setItem('showPeers', showPeers.toString());
+        allCells = null;
+        puzzle = [];
+        rowIndex = null;
+        colIndex = null;
+        document.getElementById('restartModal').style.display = 'none';
+        main();    
     }
 
-    /** Adiciona células ao dicionário.
-     * 
-     * @param {any[]} cellList  - Uma lista de objetos do tipo Cell.
+    /** Inicia um novo jogo
      */
-    addCells(cellList)
+    startNextGame()
     {
-        this.cellDictionary = cellList.reduce((dictionary, cell) => {
-            dictionary[cell.id] = cell;
-            return dictionary;
-        }, {});
+        selectedCell = null;
+        rowIndex = null;
+        colIndex = null;
+        allCells = null;
+        initialPuzzle = [];
+        solvedPuzzle = [];
+        puzzle = [];
+        document.getElementById('winModal').style.display = 'none';
+        main();
     }
-}
 
-//#endregion
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//#region SUDOKU SOLVING FUNCTIONS 
-
-/** Procura uma célula vazia no quebra-cabeça de Sudoku
- * @param {number[][]} board
- */
-function Find_Empty_Cell(board) 
-{
-    for (let row = 0; row < size; row++) {
-        for (let col = 0; col < size; col++) {
-            if (board[row][col] === 0) {
-                return [row, col];
-            }
-        }
-    }
-    return null;
-}
-
-/** Resolve o quebra-cabeça de Sudoku
- * @param {any} board
- */
-function Solve_Sudoku(board) 
-{
-    // Placeholder for solving Sudoku puzzle
-    const solvedPuzzle = JSON.parse(JSON.stringify(board));
-    Solve_Helper(solvedPuzzle);
-    return solvedPuzzle;
-}
-
-/** Função auxiliar para resolver o Sudoku recursivamente
- * @param {number[][]} board
- */
-function Solve_Helper(board)
-{
-    const emptyCell = Find_Empty_Cell(board);
-    if (!emptyCell) {
-        return true; // Puzzle solved
-    }
-    const [row, col] = emptyCell;
-    for (let num = 1; num <= size; num++) {
-        if (Is_Valid_Move(board, row, col, num)) {
-            board[row][col] = num;
-            if (Solve_Helper(board)) {
-                return true;
-            }
-            board[row][col] = 0; // Backtrack
-        }
-    }
-    return false; // No valid number found for this cell
-}
-
-//#endregion
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//#region BARRA DE BOTÕES SUPERIOR
-
-/** Atualiza o estilo dos símbolos no tabuleiro e nos botões
- * @param {string} newStyle
- */
-function UpdateStyle(newStyle) 
-{
-    localStorage.setItem('style_sudoku', newStyle);
-    currentStyle = newStyle;
-    const mapping = styles[currentStyle];
-    const sizeLimit = size > 9 ? 9 : size;
-
-    // Atualiza as células do tabuleiro
-    allCells.forEach((/** @type {{ getAttribute: (arg0: string) => string; textContent: string; }} */ cell) => {
-        const rowIndex = parseInt(cell.getAttribute("pos_i"), 10);
-        const colIndex = parseInt(cell.getAttribute("pos_j"), 10);
-        const value = puzzle[rowIndex][colIndex]; // Use the internal puzzle state
-        if (value > 0 && value <= sizeLimit) {
-            cell.textContent = mapping[value - 1];
-        } else {
-            cell.textContent = ""; // Clear empty cells
-        }
-    });
-
-    // Atualiza os botões numéricos
-    document.querySelectorAll(".numberButton").forEach((button, index) => {
-        if (index < sizeLimit) {
-            button.textContent = mapping[index];
-        }
-    });
-
-    // Destaca o botão de estilo ativo
-    document.querySelectorAll(".styleButton").forEach(button => {
-        button.classList.toggle("activeStyle", button.id === `style-${newStyle}`);
-    });
-}
-
-/** Reinicia o jogo atual
- */
-function RestartGame()
-{
-    selectedCell = null;
-    allCells = null;
-    puzzle = [];
-    rowIndex = null;
-    colIndex = null;
-    document.getElementById('restartModal').style.display = 'none';
-    main();    
-}
-
-/** Inicia um novo jogo
- */
-function StartNextGame()
-{
-    selectedCell = null;
-    rowIndex = null;
-    colIndex = null;
-    allCells = null;
-    initialPuzzle = [];
-    solvedPuzzle = [];
-    puzzle = [];
-    document.getElementById('winModal').style.display = 'none';
-    main();
-}
-
-/** Apaga o conteúdo da célula selecionada
- */
-function EraseCell()
-{
-    if (selectedCell) 
+    /** Apaga o conteúdo da célula selecionada
+     */
+    eraseCell()
     {
-        selectedCell.textContent = "";
-        rowIndex = selectedCell.getAttribute("pos_i");
-        colIndex = selectedCell.getAttribute("pos_j");
-        puzzle[rowIndex][colIndex] = 0;
-        allCells.forEach((/** @type {{ classList: { remove: (arg0: string, arg1: string, arg2: string, arg3: string, arg4: string) => void; }; }} */ c) => {c.classList.remove("incorrect", "correct", "cellsWithSameValue", "selected", "peerCells");}); // Remove the highlighting from the wrong cells
-        if(showPeers)
-            findPeersAndEquals(selectedCell, rowIndex, colIndex); // Highlight the correct peer cells and cells with the same value
-        selectedCell.classList.add("selected");
-    }
-}
-
-//#endregion      
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////      
-//#region EVENT LISTENERS
-
-
-/** Event listeners dentro do escopo do módulo
- */
-window.addEventListener('DOMContentLoaded', () => {
-    // Add event listeners to detect when the cells are clicked
-    document.addEventListener("click", function (event) 
-    { 
-        if ((event.target.classList.contains("cell4")) || (event.target.classList.contains("cell6")) || (event.target.classList.contains("cell9")))
+        if (selectedCell) 
         {
-            selectedCell = event.target;
-            let rowIndex = selectedCell.getAttribute("pos_i");
-            let colIndex = selectedCell.getAttribute("pos_j");
-            allCells.forEach((/** @type {{ classList: { remove: (arg0: string, arg1: string, arg2: string) => void; }; }} */ c) => { // Remove the highlighting from all cells
-                c.classList.remove("cellsWithSameValue", "selected", "peerCells");
-            });
-            if(selectedCell.classList.contains("incorrect") == false){ 
-                selectedCell.classList.add("selected");}// Highlight the selected cell in dark blue
-            Enable_Disable_Buttons(selectedCell.editableStatus != 0); //cells that cannot be edited
-            
+            selectedCell.textContent = "";
+            rowIndex = selectedCell.getAttribute("pos_i");
+            colIndex = selectedCell.getAttribute("pos_j");
+            puzzle[rowIndex][colIndex] = 0;
+            allCells.forEach((/** @type {{ classList: { remove: (arg0: string, arg1: string, arg2: string, arg3: string, arg4: string) => void; }; }} */ c) => {c.classList.remove("incorrect", "correct", "cellsWithSameValue", "selected", "peerCells");}); // Remove the highlighting from the wrong cells
             if(showPeers)
-                findPeersAndEquals(selectedCell, rowIndex, colIndex); // Highlight peer cells and cells with the same value
+                findPeersAndEquals(selectedCell, rowIndex, colIndex); // Highlight the correct peer cells and cells with the same value
+            selectedCell.classList.add("selected");
         }
+    }
+    /** Procura uma célula vazia no quebra-cabeça de Sudoku
+     * @param {number[][]} board
+     */
+    // function Find_Empty_Cell(board) 
+    // {
+    //     for (let row = 0; row < size; row++) {
+    //         for (let col = 0; col < size; col++) {
+    //             if (board[row][col] === 0) {
+    //                 return [row, col];
+    //             }
+    //         }
+    //     }
+    //     return null;
+    // }
 
-        else if (event.target.classList.contains('numberButton'))
-        {            
-            // Add event listener to detect when the numbered buttons are clicked
-            if (selectedCell) {
-                selectedCell.textContent = event.target.textContent;
-                rowIndex = selectedCell.getAttribute("pos_i");
-                colIndex = selectedCell.getAttribute("pos_j");
-                puzzle[rowIndex][colIndex] = parseInt(event.target.textContent);
-                selectedCell.classList.add("selected");
-                checkWinSudoku(); // Check if the game is over
-            } 
-        }
-    });
-});
+    /** Resolve o quebra-cabeça de Sudoku
+     * @param {any} board
+     */
+    // function Solve_Sudoku(board) 
+    // {
+    //     // Placeholder for solving Sudoku puzzle
+    //     const solvedPuzzle = JSON.parse(JSON.stringify(board));
+    //     Solve_Helper(solvedPuzzle);
+    //     return solvedPuzzle;
+    // }
+
+    /** Função auxiliar para resolver o Sudoku recursivamente
+     * @param {number[][]} board
+     */
+    // function Solve_Helper(board)
+    // {
+    //     const emptyCell = Find_Empty_Cell(board);
+    //     if (!emptyCell) {
+    //         return true; // Puzzle solved
+    //     }
+    //     const [row, col] = emptyCell;
+    //     for (let num = 1; num <= size; num++) {
+    //         if (Is_Valid_Move(board, row, col, num)) {
+    //             board[row][col] = num;
+    //             if (Solve_Helper(board)) {
+    //                 return true;
+    //             }
+    //             board[row][col] = 0; // Backtrack
+    //         }
+    //     }
+    //     return false; // No valid number found for this cell
+    // }
+}
 
 //#endregion
 
@@ -931,13 +809,9 @@ window.addEventListener('DOMContentLoaded', () => {
 /** Função principal para iniciar o jogo
  */
 async function main(){
-    try {
-        new Matrix();
-
-        // allCells = document.querySelectorAll(`.cellDiv${size}`);
-        // puzzle = JSON.parse(JSON.stringify(initialPuzzle));
-        // Goal_Correct();
-        // UpdateStyle(currentStyle);
+    try 
+    {
+        currentBoard = new Board();
     } 
     catch (error) {
         console.log(error);
