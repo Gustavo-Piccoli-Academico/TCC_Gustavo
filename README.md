@@ -14,7 +14,6 @@
 ## Einstein:
 - Provavelmente não vou implementar
 
-
 ## Tangram:
 - Corrigir posição inicial das peças, elas devem começar em uma posição fixa independente da tela;
   - Atualmente elas alternam a posição;
