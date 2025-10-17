@@ -7,7 +7,6 @@
 - Botão de solução (vai colocar a resposta?);
 - Melhorar as regras, caso seja necessário;
 
-
 ## Resta 1:
 - Fazer correções Ribas
 
