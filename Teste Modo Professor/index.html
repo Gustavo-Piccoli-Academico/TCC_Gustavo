@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Offline Seguro</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f4f9; color: #333; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); max-width: 500px; text-align: center; }
+        h1 { color: #4a4a4a; }
+        p { color: #666; line-height: 1.6; }
+        strong { color: #d9534f; }
+        code { background: #eee; padding: 2px 5px; border-radius: 4px; }
+        input[type="password"] { width: calc(100% - 20px); padding: 10px; margin-top: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        button { background-color: #5cb85c; color: white; border: none; padding: 12px 20px; border-radius: 4px; cursor: pointer; font-size: 16px; margin-top: 20px; transition: background-color 0.3s; }
+        button:hover { background-color: #4cae4c; }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="mainContainer">
+        <!-- Div para o professor configurar a senha -->
+        <div id="setupDiv" style="display: none;">
+            <h1>Modo de Configuração do Professor</h1>
+            <p>Defina a senha que protegerá o modo "Professor". Após salvar, um novo arquivo <code>config.js</code> será baixado.</p>
+            <p><strong>Instruções:</strong> Substitua o <code>config.js</code> antigo na pasta da aplicação por este novo arquivo.</p>
+            <hr>
+            <label for="passwordInput">Nova Senha do Professor:</label>
+            <input type="password" id="passwordInput" placeholder="Digite a senha desejada">
+            <button onclick="gerarEBaixarConfig()">Salvar e Baixar Configuração</button>
+        </div>
+
+        <!-- Div para a aplicação principal (modo aluno/login) -->
+        <div id="appDiv" style="display: none;">
+            <h1>Aplicação Principal</h1>
+            <p>Bem-vindo! Para acessar as configurações de professor, por favor, insira a senha.</p>
+            <input type="password" id="loginInput" placeholder="Senha do professor">
+            <button onclick="tentarLoginProfessor()">Acessar Modo Professor</button>
+        </div>
+
+        <!-- Div para erro de arquivo adulterado -->
+        <div id="tamperedDiv" style="display: none; color: #d9534f;">
+            <h1>ERRO DE SEGURANÇA</h1>
+            <p>O arquivo de configuração foi adulterado ou está corrompido. A aplicação não pode ser iniciada.</p>
+        </div>
+    </div>
+
+    <!-- É crucial carregar os scripts nesta ordem -->
+    <!-- 1. O arquivo de configuração -->
+    <script src="config.js"></script>
+    
+    <!-- 2. A biblioteca de criptografia -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+
+    <!-- 3. Nosso script principal com a lógica -->
+    <script src="app.js"></script>
+</body>
+</html>
