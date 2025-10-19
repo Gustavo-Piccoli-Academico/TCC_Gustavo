@@ -29,5 +29,5 @@
 
 
 ## Relatório:
-- Fazer tudo
+- Fazer tudo;
 - Focar no aspecto das trilhas e da expandabilidade dos desafios lógicos;
