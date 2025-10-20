@@ -8,7 +8,7 @@
 - Melhorar as regras, caso seja necessário;
 
 ## Resta 1:
-- Fazer correções Ribas
+- Fazer correções Ribas;
 
 
 ## Einstein:
