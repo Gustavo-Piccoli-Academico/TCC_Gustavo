@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>menu_sudoku</title>
+    <link rel="stylesheet" href="sudoku_normal_menu.css">
+    <script  src ="sudoku_normal_menu.js" defer></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="headerButtons">
+            <button id="homeButton" onclick="window.location.href = '../../../logicamente/logicamente.html'">Página Inicial</button>
+            <button id="rulesButton" onclick="document.getElementById('rulesModal').style.display = 'block'">Regras</button>
+        </div>
+        <h1>Escolha o tamanho do Sudoku:</h1>
+        <div class="buttonGroup">
+            <button id="4x4Button">4x4</button>
+            <button id="6x6Button">6x6</button>
+            <button id="9x9Button">9x9</button>
+        </div>
+        <div class="hx"><strong>(O tamanho 4x4 só possui a dificuldade fáci)</strong></div>
+        <h1>Escolha a dificuldade do Sudoku:</h1>
+        <div class="buttonGroup">
+            <button id="easyButton">Fácil</button>
+            <button id="mediumButton">Médio</button>
+            <button id="hardButton">Difícil</button>
+        </div>
+        <div class="buttonGroup">
+            <button id="playButton">Jogar</button>
+            <button id="freeButton">Livre</button>
+        </div>
+        <div id="rulesModal" class="modal" onclick="this.style.display='none'">
+            <div class="modal-content" onclick="event.stopPropagation()">
+			    <span class="close" onclick="document.getElementById('rulesModal').style.display = 'none';">&times;</span>
+                <h2>Regras do Sudoku</h2>
+                <p>
+                    O tabuleiro do Sudoku é como uma grande tabela com 81 quadradinhos, dividida em 9 partes menores (chamadas “quadrados” ou “blocos”), cada uma com 9 quadradinhos.
+                    <br><br>
+                    O que você precisa fazer: preencher todos os quadradinhos com números de 1 a 9, seguindo três regras simples.
+                    <br><br>
+                    <strong>As regras:</strong>
+                    <br>
+                    1) Na linha - Cada linha (de um lado ao outro, como no caderno) só pode ter o número 1, o número 2, e assim por diante até o 9, sem repetir.
+                    <br><br>
+                    2) Na coluna - Cada coluna (de cima para baixo) também só pode ter os números de 1 a 9, sem repetir nenhum.
+                    <br><br>
+                    3) No bloco - Cada bloco (aquelas divisões de 3x3) só pode ter os números de 1 a 9, também sem repetir.
+                    <br><br>
+                    Alguns quadradinhos já vêm preenchidos no começo do jogo. Eles são pistas para você saber onde colocar os outros números! O segredo é pensar e testar até encontrar os lugares certos.
+                    <br><br>
+                    Também há versões com tamanhos menores de sukoku: 4x4 e 6x6, que são mais fáceis de se jogar!
+                    <br><br>
+                    Sudoku é como um quebra-cabeça de números. <strong>Você consegue! 🧩😊</strong>
+                </p>
+            </div>
+        </div>
+        <div id="sizeModal" class="modal" onclick="this.style.display='none'">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <span class="close" onclick="document.getElementById('sizeModal').style.display = 'none';">&times;</span>
+                <h2>Selecione um tamanho e uma dificuldade para jogar!</h2>
+            </div>
+        </div>
+        <div id="difficultyModal" class="modal" onclick="this.style.display='none'">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <span class="close" onclick="document.getElementById('difficultyModal').style.display = 'none';">&times;</span>
+                <h2>Selecione uma dificuldade para jogar!</h2>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

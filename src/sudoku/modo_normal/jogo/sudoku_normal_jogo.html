@@ -5,8 +5,8 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Sudoku</title>
-	<link rel="stylesheet" href="sudoku_jogo.css" />
-	<script  src="sudoku_jogo.js" defer></script>
+	<link rel="stylesheet" href="sudoku_normal_jogo.css" />
+	<script  src="sudoku_normal_jogo.js" defer></script>
 </head>
 
 <body>
@@ -23,6 +23,8 @@
 		<button id="rulesButton" onclick="document.getElementById('rulesModal').style.display = 'block';">Regras</button>
 		<!-- Botão de Reinício -->
 		<button id="restartButton" onclick="document.getElementById('restartModal').style.display = 'block';">Recomeçar</button>
+		<!-- Botão de Dicas -->
+		<button id="hintsButton" onclick="currentBoard.showHintModal()">Dicas</button>
 		<!-- Botão de Estilo -->
 		<div class="styleGroup">
 			<button id="styleButton" onclick="">Estilo</button>
@@ -34,7 +36,8 @@
 				<button class="styleButton" id="animals" onclick="currentBoard.updateStyle('animals')">Animais</button>
 			</div>
 		</div>
-		<button id="peersButton">Casas Relevantes</button>
+		<button id="errorButton" onclick="currentBoard.errorsManager()">Mostrar Erros</button>
+		<button id="peersButton" onclick="currentBoard.peersButtonManager()">Casas Relevantes</button>
 	</div>
 
 	<!-- Tabuleiro do Sudoku -->
@@ -99,8 +102,29 @@
 			<span class="close" onclick="document.getElementById('restartModal').style.display = 'none';">&times;</span>
 			<h2>Confirmação</h2>
 			<p>Você realmente deseja perder o seu progresso?</p>
-			<button id="confirmYes" onclick="currentBoard.restartGame()">Sim</button>
+			<button id="confirmYes" onclick="currentBoard.restartGame();">Sim</button>
 			<button id="confirmNo" onclick="document.getElementById('restartModal').style.display = 'none';">Não</button>
+		</div>
+	</div>
+
+	<!-- Modal de Dicas -->
+	<div id="hintsModal" class="modal" onclick="this.style.display='none'">
+		<div class="modal-content" onclick="event.stopPropagation()">
+			<span class="close" onclick="document.getElementById('hintsModal').style.display = 'none';">&times;</span>
+			<h2>Confirmação</h2>
+			<p>Você deseja usar uma dica? (Você ainda tem <span id="hintCount">?</span> dicas disponíveis)</p>
+			<button id="confirmYes" onclick="currentBoard.useHint();">Sim</button>
+			<button id="confirmNo" onclick="document.getElementById('hintsModal').style.display = 'none';">Não</button>
+		</div>
+	</div>
+
+	<!-- Modal de Sem Mais Dicas -->
+	<div id="NoMoreHintsModal" class="modal" onclick="this.style.display='none'">
+		<div class="modal-content" onclick="event.stopPropagation()">
+			<span class="close" onclick="document.getElementById('NoMoreHintsModal').style.display = 'none';">&times;</span>
+			<h2>Sem Dicas Disponíveis</h2>
+			<p>Você não tem mais dicas disponíveis.</p>
+			<button id="confirmNo" onclick="document.getElementById('NoMoreHintsModal').style.display = 'none';">Fechar</button>
 		</div>
 	</div>
 
@@ -110,7 +134,7 @@
 			<span class="close" onclick="document.getElementById('homeModal').style.display = 'none';">&times;</span>
 			<h2>Confirmação</h2>
 			<p>Você realmente deseja perder o seu progresso?</p>
-			<button id="confirmYes" onclick="window.location.href = '../../logicamente/logicamente.html';">Sim</button>
+			<button id="confirmYes" onclick="window.location.href = '../../../logicamente/logicamente.html';">Sim</button>
 			<button id="confirmNo" onclick="document.getElementById('homeModal').style.display = 'none';">Não</button>
 		</div>
 	</div>
@@ -121,7 +145,7 @@
 			<span class="close" onclick="document.getElementById('backModal').style.display = 'none';">&times;</span>
 			<h2>Confirmação</h2>
 			<p>Você realmente deseja perder o seu progresso?</p>
-			<button id="confirmYes" onclick="window.location.href = '../menu/sudoku_menu.html'">Sim</button>
+			<button id="confirmYes" onclick="window.location.href = '../menu/sudoku_normal_menu.html'">Sim</button>
 			<button id="confirmNo" onclick="document.getElementById('backModal').style.display = 'none';">Não</button>
 		</div>
 	</div>
@@ -132,7 +156,7 @@
 			<h2>Parabéns, você ganhou!</h2>
 			<p>Você deseja recomeçar ou retornar ao menu?</p>
 			<button onclick="currentBoard.startNextGame()">Recomeçar</button>
-			<button onclick="currentBoard.returnToMenu()">Menu</button>
+			<button  onclick="window.location.href = '../../../logicamente/logicamente.html';">Menu</button>
 		</div>
 	</div>
 </body>

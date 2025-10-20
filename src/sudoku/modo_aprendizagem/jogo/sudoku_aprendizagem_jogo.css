@@ -1,14 +1,12 @@
-/*************************************************************************************/
 /* #region PAGE STYLE */
 body {
     font-family: Arial, sans-serif;
     background-color: #EBF3E8;
 }
-
 /* #endregion */
 
-/*************************************************************************************/
-/* #region SUDOKU BOARD STYLE*/
+
+/* #region SUDOKU 4X4 BOARD STYLE*/
 
 /* Defines the style of the container */
 .sudokucontainer {
@@ -66,6 +64,10 @@ body {
 .row4:nth-child(1) .cell4 {
     border-top-width: 6px;
 }
+/* #endregion */
+
+
+/* #region SUDOKU 6X6 BOARD STYLE*/
 
 /* 6x6 Cell Style*/
 .cell6 {
@@ -95,7 +97,7 @@ body {
     border-right-width: 6px;
 }
 
-/* 9x9 Row Style*/
+/* 6x6 Row Style*/
 .row6 {
     display: flex;
 }
@@ -115,8 +117,10 @@ body {
 .row6:nth-child(1) .cell6 {
     border-top-width: 6px;
 }
+/* #endregion */
 
 
+/* #region SUDOKU 9X9 BOARD STYLE*/
 /* 9x9 Cell Style*/
 .cell9 {
     width: 40px;
@@ -168,9 +172,8 @@ body {
 
 /* #endregion */
 
-/*************************************************************************************/
-/* #region CELL COLORS */
 
+/* #region CELL COLORS */
 /* Board Default Color */
 .backgroundColor {
     background-color: white;
@@ -182,8 +185,7 @@ body {
 }
 
 .incorrect {
-    background-color: #690000;
-    color: red;
+    background-color: red;
 }
 
 .selected {
@@ -197,9 +199,17 @@ body {
 .peerCells {
     background-color: rgba(0, 250, 255, 0.551);
 }
+
+.hintedCell {
+    background-color: green;
+}
+
+.active {
+    background-color: #4CAF50;
+}
 /* #endregion */
 
-/*************************************************************************************/
+
 /* #region BUTTON STYLES */
 
 .buttonGroup {
@@ -227,8 +237,10 @@ body {
     background-color: #4CAF50;
 }
 
-#peersButton.active {
-    background-color: #4CAF50;
+.numberButton .disabled {
+    background-color: lightgray;
+    color: darkgray;
+    cursor: not-allowed;
 }
 
 /* Style Button Group */
@@ -271,15 +283,19 @@ body {
 }
 
 .activeStyle {
-    border-color: green;
-    font-weight: bold;
+    background-color: #4CAF50;
+}
+
+.disabledNumberButton {
+    background-color: lightgray;
+    color: darkgray;
+    cursor: not-allowed;
 }
 
 /* #endregion */
 
-/*************************************************************************************/
-/* #region RULES WINDOW*/
 
+/* #region RULES WINDOW*/
 .modal {
     display: none;
     position: fixed;
@@ -314,5 +330,4 @@ body {
     text-decoration: none;
     cursor: pointer;
 }
-
 /* #endregion */
