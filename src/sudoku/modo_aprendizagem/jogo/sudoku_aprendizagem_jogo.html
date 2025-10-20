@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Sudoku</title>
+	<link rel="stylesheet" href="sudoku_aprendizagem_jogo.css" />
+	<script  src="sudoku_aprendizagem_jogo.js" defer></script>
+</head>
+
+<body>
+	<!-- Título -->
+	<h1 style="text-align: center;">Sudoku</h1>
+
+	<!-- Botões Parte Superior da Tela -->
+	<div class="buttonGroup">
+		<!-- Botão Página Inicial -->
+		<button id="homeButton" onclick="document.getElementById('homeModal').style.display = 'block';">Página Inicial</button>
+		<!-- Botão de Voltar -->
+		<button id="backButton" onclick="document.getElementById('backModal').style.display = 'block';">Voltar</button>
+		<!-- Botão de Regras -->
+		<button id="rulesButton" onclick="document.getElementById('rulesModal').style.display = 'block';">Regras</button>
+		<!-- Botão de Reinício -->
+		<button id="restartButton" onclick="document.getElementById('restartModal').style.display = 'block';">Recomeçar</button>
+		<!-- Botão de Dicas -->
+		<button id="hintsButton" onclick="currentBoard.showHintModal()">Dicas</button>
+		<!-- Botão de Estilo -->
+		<div class="styleGroup">
+			<button id="styleButton" onclick="">Estilo</button>
+			<div class="styleDropdown" id="styleDropdown">
+				<button class="styleButton" id="numbers" onclick="currentBoard.updateStyle('numbers')">Números</button>
+				<button class="styleButton" id="letters" onclick="currentBoard.updateStyle('letters')">Letras</button>
+				<button class="styleButton" id="colors" onclick="currentBoard.updateStyle('colors')">Cores</button>
+				<button class="styleButton" id="fruits" onclick="currentBoard.updateStyle('fruits')">Frutas</button>
+				<button class="styleButton" id="animals" onclick="currentBoard.updateStyle('animals')">Animais</button>
+			</div>
+		</div>
+		<button id="errorButton" onclick="currentBoard.errorsManager()">Mostrar Erros</button>
+		<button id="peersButton" onclick="currentBoard.peersButtonManager()">Casas Relevantes</button>
+	</div>
+
+	<!-- Tabuleiro do Sudoku -->
+	<div class="sudokucontainer" id="sudokucontainer"></div>
+
+	<!-- Botões Sudoku -->
+	<div class="buttonGroup">
+		<button id="eraseButton" onclick="currentBoard.eraseCell()">Apagar</button>
+		<button class="numberButton" id="numberButton1" onclick="currentBoard.numberButtonManager(1)">1</button>
+		<button class="numberButton" id="numberButton2" onclick="currentBoard.numberButtonManager(2)">2</button>
+		<button class="numberButton" id="numberButton3" onclick="currentBoard.numberButtonManager(3)">3</button>
+		<button class="numberButton" id="numberButton4" onclick="currentBoard.numberButtonManager(4)">4</button>
+		<button class="numberButton" id="numberButton5" onclick="currentBoard.numberButtonManager(5)">5</button>
+		<button class="numberButton" id="numberButton6" onclick="currentBoard.numberButtonManager(6)">6</button>
+		<button class="numberButton" id="numberButton7" onclick="currentBoard.numberButtonManager(7)">7</button>
+		<button class="numberButton" id="numberButton8" onclick="currentBoard.numberButtonManager(8)">8</button>
+		<button class="numberButton" id="numberButton9" onclick="currentBoard.numberButtonManager(9)">9</button>
+	</div>
+
+	<!-- Modal de Regras -->
+	<div id="rulesModal" class="modal" onclick="this.style.display='none'">
+		<div class="modal-content" onclick="event.stopPropagation()">
+			<span class="close" onclick="document.getElementById('rulesModal').style.display = 'none';">&times;</span>
+			<h2>Regras do Sudoku</h2>
+			<p>
+				O tabuleiro do Sudoku é como uma grande tabela com 81
+				quadradinhos, dividida em 9 partes menores (chamadas
+				“quadrados” ou “blocos”), cada uma com 9 quadradinhos.
+				<br /><br />
+				O que você precisa fazer: preencher todos os quadradinhos
+				com números de 1 a 9, seguindo três regras simples.
+				<br /><br />
+				<strong>As regras:</strong>
+				<br />
+				1) Na linha - Cada linha (de um lado ao outro, como no
+				caderno) só pode ter o número 1, o número 2, e assim por
+				diante até o 9, sem repetir.
+				<br /><br />
+				2) Na coluna - Cada coluna (de cima para baixo) também só
+				pode ter os números de 1 a 9, sem repetir nenhum.
+				<br /><br />
+				3) No bloco - Cada bloco (aquelas divisões de 3x3) só pode
+				ter os números de 1 a 9, também sem repetir.
+				<br /><br />
+				Alguns quadradinhos já vêm preenchidos no começo do jogo.
+				Eles são pistas para você saber onde colocar os outros
+				números! O segredo é pensar e testar até encontrar os
+				lugares certos.
+				<br /><br />
+				Também há versões com tamanhos menores de sukoku: 4x4 e 6x6,
+				que são mais fáceis de se jogar!
+				<br /><br />
+				É como um quebra-cabeça de números.
+				<strong>Você consegue! 🧩😊</strong>
+			</p>
+		</div>
+	</div>
+
+	<!-- Modal de Reinício -->
+	<div id="restartModal" class="modal" onclick="this.style.display='none'">
+		<div class="modal-content" onclick="event.stopPropagation()">
+			<span class="close" onclick="document.getElementById('restartModal').style.display = 'none';">&times;</span>
+			<h2>Confirmação</h2>
+			<p>Você realmente deseja perder o seu progresso?</p>
+			<button id="confirmYes" onclick="currentBoard.restartGame();">Sim</button>
+			<button id="confirmNo" onclick="document.getElementById('restartModal').style.display = 'none';">Não</button>
+		</div>
+	</div>
+
+	<!-- Modal de Dicas -->
+	<div id="hintsModal" class="modal" onclick="this.style.display='none'">
+		<div class="modal-content" onclick="event.stopPropagation()">
+			<span class="close" onclick="document.getElementById('hintsModal').style.display = 'none';">&times;</span>
+			<h2>Confirmação</h2>
+			<p>Você deseja usar uma dica? (Você ainda tem <span id="hintCount">?</span> dicas disponíveis)</p>
+			<button id="confirmYes" onclick="currentBoard.useHint();">Sim</button>
+			<button id="confirmNo" onclick="document.getElementById('hintsModal').style.display = 'none';">Não</button>
+		</div>
+	</div>
+
+	<!-- Modal de Sem Mais Dicas -->
+	<div id="NoMoreHintsModal" class="modal" onclick="this.style.display='none'">
+		<div class="modal-content" onclick="event.stopPropagation()">
+			<span class="close" onclick="document.getElementById('NoMoreHintsModal').style.display = 'none';">&times;</span>
+			<h2>Sem Dicas Disponíveis</h2>
+			<p>Você não tem mais dicas disponíveis.</p>
+			<button id="confirmNo" onclick="document.getElementById('NoMoreHintsModal').style.display = 'none';">Fechar</button>
+		</div>
+	</div>
+
+	<!-- Modal de Página Inicial -->
+	<div id="homeModal" class="modal" onclick="this.style.display='none'">
+		<div class="modal-content" onclick="event.stopPropagation()">
+			<span class="close" onclick="document.getElementById('homeModal').style.display = 'none';">&times;</span>
+			<h2>Confirmação</h2>
+			<p>Você realmente deseja perder o seu progresso?</p>
+			<button id="confirmYes" onclick="window.location.href = '../../../logicamente/logicamente.html';">Sim</button>
+			<button id="confirmNo" onclick="document.getElementById('homeModal').style.display = 'none';">Não</button>
+		</div>
+	</div>
+	
+	<!-- Modal de Voltar -->
+	<div id="backModal" class="modal" onclick="this.style.display='none'">
+		<div class="modal-content" onclick="event.stopPropagation()">
+			<span class="close" onclick="document.getElementById('backModal').style.display = 'none';">&times;</span>
+			<h2>Confirmação</h2>
+			<p>Você realmente deseja perder o seu progresso?</p>
+			<button id="confirmYes" onclick="window.location.href = '../menu/sudoku_aprendizagem_menu.html'">Sim</button>
+			<button id="confirmNo" onclick="document.getElementById('backModal').style.display = 'none';">Não</button>
+		</div>
+	</div>
+
+	<!-- Modal de Vitória -->
+	<div id="winModal" class="modal">
+		<div class="modal-content">
+			<h2>Parabéns, você ganhou!</h2>
+			<p>Você deseja recomeçar ou retornar ao menu?</p>
+			<button onclick="currentBoard.startNextGame()">Recomeçar</button>
+			<button  onclick="window.location.href = '../../../logicamente/logicamente.html';">Menu</button>
+		</div>
+	</div>
+</body>
+
+</html>
