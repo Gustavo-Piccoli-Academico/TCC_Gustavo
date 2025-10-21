@@ -13,24 +13,36 @@
     <div class="container">
         <div class="headerButtons">
             <button id="homeButton" onclick="window.location.href = '../../../logicamente/logicamente.html'">Página Inicial</button>
+            <button id="backButton" onclick="window.location.href = '../../menu/sudoku_menu.html'">Voltar</button>
             <button id="rulesButton" onclick="document.getElementById('rulesModal').style.display = 'block'">Regras</button>
         </div>
-        <h1>Escolha o tamanho do Sudoku:</h1>
+        
         <div class="buttonGroup">
-            <button id="4x4Button">4x4</button>
-            <button id="6x6Button">6x6</button>
-            <button id="9x9Button">9x9</button>
-        </div>
-        <div class="hx"><strong>(O tamanho 4x4 só possui a dificuldade fáci)</strong></div>
-        <h1>Escolha a dificuldade do Sudoku:</h1>
-        <div class="buttonGroup">
-            <button id="easyButton">Fácil</button>
-            <button id="mediumButton">Médio</button>
-            <button id="hardButton">Difícil</button>
+            <h1 style="margin: 10px;">Modo Inicial:</h1>
+            <button id="line" class="buttonGroupButton" onclick="clickButton('line')">Linha</button>
+            <button id="column" class="buttonGroupButton" onclick="clickButton('column')">Coluna</button>
+            <button id="quadrant" class="buttonGroupButton" onclick="clickButton('quadrant')">Quadrante</button>
+            <!-- colocar uma quebra de linha -->
         </div>
         <div class="buttonGroup">
-            <button id="playButton">Jogar</button>
-            <button id="freeButton">Livre</button>
+            <h1 style="margin: 20px;">Modo Intermediário:</h1>
+            <button id="linCol" class="buttonGroupButton" onclick="clickButton('linCol')">Linha e Coluna</button>
+            <button id="linQuad" class="buttonGroupButton" onclick="clickButton('linQuad')">Linha e Quadrante</button>
+            <button id="colQuad" class="buttonGroupButton" onclick="clickButton('colQuad')">Coluna e Quadrantes</button>
+        </div>
+        <div class="buttonGroup">
+            <h1 style="margin: 20px;">Modo Avançado:</h1>
+            <button id="linColQuad" class="buttonGroupButton" onclick="clickButton('linColQuad')">Linha, Coluna e Quadrante</button>
+        </div>
+
+        <div class="buttonGroup">
+            <h1 style="margin: 20px;">Tamanho:</h1>
+            <button id="4" class="numberButtonGroupButton" onclick="clickButton('4')">4x4</button>
+            <button id="6" class="numberButtonGroupButton" onclick="clickButton('6')">6x6</button>
+            <button id="9" class="numberButtonGroupButton" onclick="clickButton('9')">9x9</button>
+        </div>
+        <div class="buttonGroup">
+            <button id="playButton" class="buttonGroupButton" onclick="clickButton('playButton')">Jogar</button>
         </div>
         <div id="rulesModal" class="modal" onclick="this.style.display='none'">
             <div class="modal-content" onclick="event.stopPropagation()">

@@ -38,19 +38,11 @@ body {
     color: black;
 }
 
-.hx {
-    margin-top: -30px;
-    margin-bottom: 30px;
-    size: 1px;
-    color: black;
-}
-
 .buttonGroup {
     display: flex; 
     align-items: center;  
     margin-bottom: 50px;
 }
-
 
 .buttonGroup button {
     font-weight: bold;
@@ -71,69 +63,6 @@ body {
     transform: scale(1.1);
 }
 
-.buttonGroup button.active{
-    background-color: #ed8f2a;
-    transform: scale(1.1);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.673);
-}
-
-.buttonGroup button.disabled {
-    pointer-events: none;
-    background-color: grey;
-    color: #999;
-    cursor: not-allowed;
-    transform: none;
-}
-
-#playButton {
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
-    font-weight: bold;
-    margin-right: 19px;
-    background-color: #813780;
-    color: white;
-    font-size: 20px;
-    font-weight: bold;        
-    padding: 15px 30px;       
-    border: none;             
-    border-radius: 25px;      
-    cursor: pointer;          
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); 
-    width: 100px;        
-    height: 50px;
-}
-
-#playButton:hover {
-    background-color: #8137809d; 
-    transform: scale(1.1);     
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); 
-}
-
-#freeButton {
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
-    font-weight: bold;
-    margin-right: 19px;
-    background-color:rgb(4, 245, 68);
-    color: white;
-    font-size: 20px;
-    font-weight: bold;        
-    padding: 15px 30px;       
-    border: none;             
-    border-radius: 25px;      
-    cursor: pointer;          
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); 
-    width: 100px;        
-    height: 50px;
-}
-
-#freeButton:hover {
-    background-color: rgba(4, 245, 68, 0.5);
-    transform: scale(1.1);     
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); 
-}
 
 .modal {
     display: none;
