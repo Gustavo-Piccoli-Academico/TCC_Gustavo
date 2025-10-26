@@ -18,31 +18,31 @@
         </div>
         
         <div class="buttonGroup">
-            <h1 style="margin: 10px;">Modo Inicial:</h1>
-            <button id="line" class="buttonGroupButton" onclick="clickButton('line')">Linha</button>
-            <button id="column" class="buttonGroupButton" onclick="clickButton('column')">Coluna</button>
-            <button id="quadrant" class="buttonGroupButton" onclick="clickButton('quadrant')">Quadrante</button>
+            <h1 style="margin: 10px;">Dificuldade Fácil:</h1>
+            <button id="1" class="buttonGroupButton" onclick="menuAprendizagem.clickOptionButton('1')">Linha</button>
+            <button id="2" class="buttonGroupButton" onclick="menuAprendizagem.clickOptionButton('2')">Coluna</button>
+            <button id="3" class="buttonGroupButton" onclick="menuAprendizagem.clickOptionButton('3')">Quadrante</button>
             <!-- colocar uma quebra de linha -->
         </div>
         <div class="buttonGroup">
-            <h1 style="margin: 20px;">Modo Intermediário:</h1>
-            <button id="linCol" class="buttonGroupButton" onclick="clickButton('linCol')">Linha e Coluna</button>
-            <button id="linQuad" class="buttonGroupButton" onclick="clickButton('linQuad')">Linha e Quadrante</button>
-            <button id="colQuad" class="buttonGroupButton" onclick="clickButton('colQuad')">Coluna e Quadrantes</button>
+            <h1 style="margin: 20px;">Dificuldade Média:</h1>
+            <button id="4" class="buttonGroupButton" onclick="menuAprendizagem.clickOptionButton('4')">Linha e Coluna</button>
+            <button id="5" class="buttonGroupButton" onclick="menuAprendizagem.clickOptionButton('5')">Linha e Quadrante</button>
+            <button id="6" class="buttonGroupButton" onclick="menuAprendizagem.clickOptionButton('6')">Coluna e Quadrantes</button>
         </div>
         <div class="buttonGroup">
-            <h1 style="margin: 20px;">Modo Avançado:</h1>
-            <button id="linColQuad" class="buttonGroupButton" onclick="clickButton('linColQuad')">Linha, Coluna e Quadrante</button>
+            <h1 style="margin: 20px;">Dificuldade Difícil:</h1>
+            <button id="7" class="buttonGroupButton" onclick="menuAprendizagem.clickOptionButton('7')">Linha, Coluna e Quadrante</button>
         </div>
 
         <div class="buttonGroup">
             <h1 style="margin: 20px;">Tamanho:</h1>
-            <button id="4" class="numberButtonGroupButton" onclick="clickButton('4')">4x4</button>
-            <button id="6" class="numberButtonGroupButton" onclick="clickButton('6')">6x6</button>
-            <button id="9" class="numberButtonGroupButton" onclick="clickButton('9')">9x9</button>
+            <button id="a" class="numberButtonGroupButton" onclick="menuAprendizagem.clickSizeButton('a')" style="background-color: rgb(4, 245, 68);">4x4</button>
+            <button id="b" class="numberButtonGroupButton" onclick="menuAprendizagem.clickSizeButton('b')" style="background-color: rgb(4, 245, 68);">6x6</button>
+            <button id="c" class="numberButtonGroupButton" onclick="menuAprendizagem.clickSizeButton('c')" style="background-color: rgb(4, 245, 68);">9x9</button>
         </div>
         <div class="buttonGroup">
-            <button id="playButton" class="buttonGroupButton" onclick="clickButton('playButton')">Jogar</button>
+            <button id="playButton" class="buttonGroupButton" onclick="menuAprendizagem.clickPlayButton()">Jogar</button>
         </div>
         <div id="rulesModal" class="modal" onclick="this.style.display='none'">
             <div class="modal-content" onclick="event.stopPropagation()">
@@ -69,16 +69,24 @@
                 </p>
             </div>
         </div>
+        
         <div id="sizeModal" class="modal" onclick="this.style.display='none'">
             <div class="modal-content" onclick="event.stopPropagation()">
                 <span class="close" onclick="document.getElementById('sizeModal').style.display = 'none';">&times;</span>
-                <h2>Selecione um tamanho e uma dificuldade para jogar!</h2>
+                <h2>Selecione um tamanho para jogar!</h2>
             </div>
         </div>
+        
         <div id="difficultyModal" class="modal" onclick="this.style.display='none'">
             <div class="modal-content" onclick="event.stopPropagation()">
                 <span class="close" onclick="document.getElementById('difficultyModal').style.display = 'none';">&times;</span>
                 <h2>Selecione uma dificuldade para jogar!</h2>
+            </div>
+        </div>
+        <div id="difficultyAndSizeModal" class="modal" onclick="this.style.display='none'">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <span class="close" onclick="document.getElementById('difficultyAndSizeModal').style.display = 'none';">&times;</span>
+                <h2>Selecione uma dificuldade e um tamanho para jogar!</h2>
             </div>
         </div>
     </div>
