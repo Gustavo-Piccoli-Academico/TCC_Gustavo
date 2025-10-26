@@ -1,6 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////////////////////////////
 //#region CONSTANTS
-
 var currentBoard = null;
 
 const styles = { // Estilos disponíveis
@@ -10,13 +8,8 @@ const styles = { // Estilos disponíveis
     "fruits": ["🍎", "🍌", "🍇", "🍓", "🍊", "🍍", "🍉", "🥝", "🍑"],
     "animals": ["🐶", "🐱", "🐭", "🦊", "🐻", "🐼", "🐨", "🐯", "🦁"]
 };
-
-
 //#endregion
 
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//#region CLASSE CELL
 
 class CellLearn
 {
@@ -35,49 +28,11 @@ class CellLearn
         this.cellDiv = null; // Referência ao elemento DOM da célula
         this.row = row; // Linha da célula
         this.column = column; // Coluna da célula
-        this.quadrant = null; // Quadrante da célula
-        this.calculateQuadrant(size) // Calcula o quadrante da célula
         this.currentValue = currentValue; // Valor atual da célula
-        this.finalValue = finalValue; // Valor final da célula
         this.editableStatus = editableStatus; // true se a célula for editável, false caso contrário
-    }
-    
-    /** Calcula o quadrante da célula com base no tamanho do tabuleiro
-     * @param {number} size
-     */
-    calculateQuadrant(size)
-    {
-        // Definimos as dimensões dos sub-blocos (quadrantes) com base no tamanho da grade
-        let subGridHeight;
-        let subGridWidth;
-        switch (size) {
-            case 4:
-                subGridHeight = 2;
-                subGridWidth = 2;
-                break;
-            case 6:
-                subGridHeight = 2
-                subGridWidth = 3;
-                break;
-            case 9:
-                subGridHeight = 3;
-                subGridWidth = 3;
-                break;
-            default:
-                throw new Error("Tamanho de grade inválido: " + size);
-        }
-        const quadrantRow = Math.floor(this.row / subGridHeight);
-        const quadrantCol = Math.floor(this.column / subGridWidth);
-        const numQuadrantCols = size / subGridWidth;
-        this.quadrant = quadrantRow * numQuadrantCols + quadrantCol;
     }
 }
 
-//#endregion
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//#region CLASSE MATRIX
 
 class MatrixLearn
 {
@@ -85,11 +40,6 @@ class MatrixLearn
      */
     constructor() 
     {
-        this.showPeersAndRelatedCellsStatus = null; // Mostrar células relacionadas
-        if (localStorage.getItem('sudoku_peers') === "true")
-            this.showPeersAndRelatedCellsStatus = true;
-        else
-            this.showPeersAndRelatedCellsStatus = false;
         if(localStorage.getItem('sudoku_errors') === "true")
             this.showErrorsStatus = true;
         else
@@ -186,12 +136,6 @@ class MatrixLearn
         // Limpa as cores de todas as células
         this.clearCells();
         this.selectedCell = clickedCell;
-        // Se a exibição das células relacionadas estiver ativada, mostra as células relacionadas
-        if(this.showPeersAndRelatedCellsStatus && !this.showErrorsStatus)
-            this.showPeersAndRelatedCells();
-        // Se a exibição de erros estiver ativada, mostra os erros
-        else if(this.showErrorsStatus && !this.showPeersAndRelatedCellsStatus)
-            this.showErrors();
         this.selectedCell.cellDiv.classList.add("selected");
         // Habilita ou desabilita os botões de números com base se a célula selecionada é editável
         const numberButtons = document.querySelectorAll(".numberButton");
@@ -207,31 +151,6 @@ class MatrixLearn
             eraseButton.disabled = !this.selectedCell.editableStatus;
         else if(eraseButton instanceof HTMLButtonElement)
             eraseButton.disabled = false;
-    }
-
-    /** Alterna a exibição das células relacionadas
-     */
-    showPeersAndRelatedCells()
-    {    
-        // Desmarca todas as células na mesma linha, coluna e com o mesmo valor
-        Object.values(this.cellDictionary).forEach(cell => {
-            if (cell !== this.selectedCell)
-            {
-                // Destaca as células com o mesmo valor em todo o tabuleiro
-                if (cell.currentValue === this.selectedCell.currentValue && cell.currentValue !== 0) 
-                    cell.cellDiv.classList.add("cellsWithSameValue");
-                
-                // Destaca as células na mesma linha ou coluna ou quadrante
-                if (cell.row === this.selectedCell.row || cell.column === this.selectedCell.column || cell.quadrant === this.selectedCell.quadrant) {
-                    if (cell.currentValue !== this.selectedCell.currentValue || cell.currentValue === 0)
-                    {
-                        cell.cellDiv.classList.remove("incorrect");
-                        cell.cellDiv.classList.add("peerCells");
-                    }
-                }
-            }
-        });
-        this.selectedCell.cellDiv.classList.add("selected");
     }
 
     showErrors()
@@ -252,7 +171,6 @@ class MatrixLearn
         this.selectedCell.cellDiv.classList.add("selected");
     }
 
-
     /** Verifica se o jogador venceu
      */
     checkWinSudoku()
@@ -272,17 +190,11 @@ class MatrixLearn
             cell.cellDiv.classList.remove("hintedCell");
             cell.cellDiv.classList.remove("selected");
             cell.cellDiv.classList.remove("cellsWithSameValue");
-            cell.cellDiv.classList.remove("peerCells");
             cell.cellDiv.classList.remove("incorrect");
         });
     }
 }
 
-//#endregion
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//#region CLASSE BOARD
 
 class BoardLearn
 {
@@ -297,27 +209,15 @@ class BoardLearn
         // Desabilita os botões de números desnecessários
         this.numberedButtonsVisibility(); 
         // Inicializa o número de dicas disponíveis
-        this.availableHints = parseInt(localStorage.getItem('available_hints'));
+        this.availableHints = parseInt(localStorage.getItem('hints_sudoku'));
         const hintCountElement = document.getElementById('hintCount');
         hintCountElement.textContent = String(this.availableHints);
         // Define a cor inicial do botão de peers
-        this.peersButton = document.getElementById('peersButton');
         this.errorButton = document.getElementById('errorButton');
-        if (this.matrix.showPeersAndRelatedCellsStatus)
-        {
-            this.peersButton.classList.add("active");   
-            this.errorButton.classList.remove("active");
-        }
-        else if(this.matrix.showErrorsStatus)
-        {
-            this.peersButton.classList.remove("active");
-            this.errorButton.classList.add("active");
-        }                
+       if(this.matrix.showErrorsStatus)
+            this.errorButton.classList.add("active");    
         else
-        {
-            this.peersButton.classList.remove("active");
             this.errorButton.classList.remove("active");
-        }
     }
     
     /** Habilita ou desabilita os botões de números e apagar
@@ -337,36 +237,10 @@ class BoardLearn
         }
     }
 
-    /** Alterna a exibição das células relacionadas (peers)
-     */
-    peersButtonManager()
-    {
-        this.matrix.showPeersAndRelatedCellsStatus = !this.matrix.showPeersAndRelatedCellsStatus;
-        localStorage.setItem('sudoku_peers', this.matrix.showPeersAndRelatedCellsStatus.toString());
-        if(this.matrix.showErrorsStatus && this.matrix.showPeersAndRelatedCellsStatus)
-        {
-            this.matrix.showErrorsStatus = false;
-            this.errorButton.classList.remove("active");
-            localStorage.setItem('sudoku_errors', this.matrix.showErrorsStatus.toString());
-        }
-        if(this.matrix.selectedCell !== null)
-            this.matrix.cellBehaviourHandler(this.matrix.selectedCell);
-        this.peersButton.classList.toggle("active", this.matrix.showPeersAndRelatedCellsStatus);
-        if(this.matrix.selectedCell !== null)
-            this.matrix.selectedCell.cellDiv.classList.add("selected");
-    }
-
     errorsManager()
     {
         this.matrix.showErrorsStatus = !this.matrix.showErrorsStatus;
-        localStorage.setItem('sudoku_errors', this.matrix.showErrorsStatus.toString());
-        if(this.matrix.showErrorsStatus && this.matrix.showPeersAndRelatedCellsStatus)
-        {
-            this.matrix.showPeersAndRelatedCellsStatus = false;
-            this.peersButton.classList.remove("active");
-            localStorage.setItem('sudoku_peers', this.matrix.showPeersAndRelatedCellsStatus.toString());
-        }
-        
+        localStorage.setItem('sudoku_errors', this.matrix.showErrorsStatus.toString());        
         if(this.matrix.selectedCell !== null )
             this.matrix.cellBehaviourHandler(this.matrix.selectedCell);
         
@@ -389,10 +263,6 @@ class BoardLearn
             this.matrix.selectedCell.currentValue = clickedNumber;
             this.matrix.currentPuzzle[this.matrix.selectedCell.row][this.matrix.selectedCell.column] = clickedNumber;
             this.updateStyle(this.matrix.style);
-            if(this.matrix.showPeersAndRelatedCellsStatus)
-                this.matrix.showPeersAndRelatedCells();
-            else if(this.matrix.showErrorsStatus)
-                this.matrix.showErrors();
             if(this.matrix.checkWinSudoku())
                 document.getElementById('winModal').style.display = 'block';
         }
@@ -510,24 +380,13 @@ class BoardLearn
 
 }
 
-//#endregion
 
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
 //#region MAIN
-
 /** Função principal para iniciar o jogo
  */
-async function main(){
-    try 
-    {
-        currentBoard = new BoardLearn();
-    }
-    catch (error) {
-        console.log(error);
-    }
+function main(){
+    currentBoard = new BoardLearn();
 }
 
 main();
-
 //#endregion

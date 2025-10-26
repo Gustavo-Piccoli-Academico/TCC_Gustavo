@@ -18,20 +18,19 @@
         </div>
         <h1>Escolha o tamanho do Sudoku:</h1>
         <div class="buttonGroup">
-            <button id="4x4Button">4x4</button>
-            <button id="6x6Button">6x6</button>
-            <button id="9x9Button">9x9</button>
+            <button id="4x4Button" onclick="normalSudokuMenu.sizeClick('4')">4x4</button>
+            <button id="6x6Button" onclick="normalSudokuMenu.sizeClick('6')">6x6</button>
+            <button id="9x9Button" onclick="normalSudokuMenu.sizeClick('9')">9x9</button>
         </div>
         <div class="hx"><strong>(O tamanho 4x4 só possui a dificuldade fáci)</strong></div>
         <h1>Escolha a dificuldade do Sudoku:</h1>
         <div class="buttonGroup">
-            <button id="easyButton">Fácil</button>
-            <button id="mediumButton">Médio</button>
-            <button id="hardButton">Difícil</button>
+            <button id="easyButton" onclick="normalSudokuMenu.dificultyClick('1')" style="background-color: rgb(4, 245, 68);">Fácil</button>
+            <button id="mediumButton" onclick="normalSudokuMenu.dificultyClick('2')" style="background-color: rgb(4, 245, 68);">Médio</button>
+            <button id="hardButton" onclick="normalSudokuMenu.dificultyClick('3')" style="background-color: rgb(4, 245, 68);">Difícil</button>
         </div>
         <div class="buttonGroup">
-            <button id="playButton">Jogar</button>
-            <button id="freeButton">Livre</button>
+            <button id="playButton" onclick="normalSudokuMenu.playClick()">Jogar</button>
         </div>
         <div id="rulesModal" class="modal" onclick="this.style.display='none'">
             <div class="modal-content" onclick="event.stopPropagation()">
@@ -61,13 +60,19 @@
         <div id="sizeModal" class="modal" onclick="this.style.display='none'">
             <div class="modal-content" onclick="event.stopPropagation()">
                 <span class="close" onclick="document.getElementById('sizeModal').style.display = 'none';">&times;</span>
-                <h2>Selecione um tamanho e uma dificuldade para jogar!</h2>
+                <h2>Selecione uma dificuldade para jogar!</h2>
             </div>
         </div>
         <div id="difficultyModal" class="modal" onclick="this.style.display='none'">
             <div class="modal-content" onclick="event.stopPropagation()">
                 <span class="close" onclick="document.getElementById('difficultyModal').style.display = 'none';">&times;</span>
-                <h2>Selecione uma dificuldade para jogar!</h2>
+                <h2>Selecione um tamanho para jogar!</h2>
+            </div>
+        </div>
+        <div id="difficultyAndSizeModal" class="modal" onclick="this.style.display='none'">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <span class="close" onclick="document.getElementById('difficultyAndSizeModal').style.display = 'none';">&times;</span>
+                <h2>Selecione uma dificuldade e um tamanho para jogar!</h2>
             </div>
         </div>
     </div>

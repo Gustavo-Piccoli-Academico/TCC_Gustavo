@@ -905,7 +905,8 @@ class BoardNormal
 
 /** Função principal para iniciar o jogo
  */
-async function main(){
+async function main()
+{
     try 
     {
         currentBoard = new BoardNormal();
