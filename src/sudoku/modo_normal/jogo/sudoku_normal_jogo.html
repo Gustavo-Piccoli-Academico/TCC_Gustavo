@@ -151,8 +151,9 @@
 	</div>
 
 	<!-- Modal de Vitória -->
-	<div id="winModal" class="modal">
-		<div class="modal-content">
+	<div id="winModal" class="modal" onclick="this.style.display='none'">
+		<div class="modal-content" onclick="event.stopPropagation()">
+			<span class="close" onclick="document.getElementById('winModal').style.display = 'none';">&times;</span>
 			<h2>Parabéns, você ganhou!</h2>
 			<p>Você deseja recomeçar ou retornar ao menu?</p>
 			<button onclick="currentBoard.startNextGame()">Recomeçar</button>

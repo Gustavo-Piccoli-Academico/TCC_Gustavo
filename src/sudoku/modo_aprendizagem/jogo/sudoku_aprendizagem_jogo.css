@@ -10,10 +10,15 @@ body {
 
 /* Defines the style of the container */
 .sudokucontainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: inline-block;   
     margin-top: 50px;
+    border: none;
+}
+
+/* 4x4 Row Style*/
+.row4{
+    display: flex;
+    border: none;
 }
 
 /* 4x4 Cell Style*/
@@ -24,46 +29,46 @@ body {
     text-align: center;
     vertical-align: middle;
     line-height: 40px;
-    border: 1px solid #000;
     font-weight: bold;
+    border: 2px solid #000 /*APAGAR*/
 }
 
-.cell4:nth-child(n) {
-    border-right-width: 3px;
+.cell4.visibleLeft {
+    border-left: 2px solid #000;
 }
 
-.cell4:nth-child(2n+1) {
-    border-left-width: 3px;
+.cell4.visibleRight {
+    border-right: 2px solid #000;
 }
 
-.cell4:nth-child(1) {
-    border-left-width: 6px;
+.cell4.visibleTop {
+    border-top: 2px solid #000;
 }
 
-.cell4:nth-child(4) {
-    border-right-width: 6px;
+.cell4.visibleBottom {
+    border-bottom: 2px solid #000;
 }
 
-/* 4x4 Row Style*/
-.row4{
-    display: flex;
+.cell4.thickLeft {
+    border-left: 4px solid #000;
 }
 
-.row4:nth-child(n) .cell4 {
-    border-bottom-width: 3px;
+.cell4.thickRight {
+    border-right: 4px solid #000;
 }
 
-.row4:nth-child(2n+1) .cell4 {
-    border-top-width: 3px;
+.cell4.thickTop {
+    border-top: 4px solid #000;
 }
 
-.row4:nth-child(4) .cell4 {
-    border-bottom-width: 6px;
+.cell4.thickBottom {
+    border-bottom: 4px solid #000;
 }
 
-.row4:nth-child(1) .cell4 {
-    border-top-width: 6px;
-}
+
+
+
+
 /* #endregion */
 
 
