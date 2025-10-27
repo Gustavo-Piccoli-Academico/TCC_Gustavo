@@ -1,15 +1,16 @@
-/////////////////////////////////////////////////////////////////////////////////////////////////////
 //#region CONSTANTS
-
 var currentBoard = null;
 
-const normalStyles = { // Estilos disponíveis
+// Estilos disponíveis
+const normalStyles = { 
     "numbers": ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
     "letters": ["A", "B", "C", "D", "E", "F", "G", "H", "I"],
     "colors": ["🔴", "🟠", "🟡", "🟢", "🔵", "🟣", "⚫", "⚪", "🟤"],
     "fruits": ["🍎", "🍌", "🍇", "🍓", "🍊", "🍍", "🍉", "🥝", "🍑"],
     "animals": ["🐶", "🐱", "🐭", "🦊", "🐻", "🐼", "🐨", "🐯", "🦁"]
 };
+
+// Puzzles disponíveis
 const normalPuzzles = {
     "4": {
         // 4x4 fácil
@@ -398,17 +399,23 @@ const normalPuzzles = {
         ]
     }
 };
-
 //#endregion
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//#region CLASSE CELL
-
 class CellNormal
 {
-    /**
-     * Construtor da classe Cell
+    //#region ATTRIBUTES
+    id; // ID único da célula
+    cellDiv; // Referência ao elemento DOM da célula
+    row; // Linha da célula
+    column; // Coluna da célula
+    quadrant; // Quadrante da célula
+    currentValue; // Valor atual da célula
+    finalValue; // Valor final da célula
+    editableStatus; // Status de edição da célula
+    //#endregion
+
+    /** Construtor da classe Cell
      * @param {number} row
      * @param {number} column
      * @param {number} currentValue //
@@ -419,10 +426,8 @@ class CellNormal
     constructor(row, column, currentValue, finalValue, editableStatus, size) 
     {
         this.id = (size * row) + column; // ID único da célula
-        this.cellDiv = null; // Referência ao elemento DOM da célula
         this.row = row; // Linha da célula
         this.column = column; // Coluna da célula
-        this.quadrant = null; // Quadrante da célula
         this.calculateQuadrant(size) // Calcula o quadrante da célula
         this.currentValue = currentValue; // Valor atual da célula
         this.finalValue = finalValue; // Valor final da célula
@@ -460,19 +465,28 @@ class CellNormal
     }
 }
 
-//#endregion
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//#region CLASSE MATRIX
 
 class MatrixNormal
 {
+    //#region ATTRIBUTES
+    showPeersAndRelatedCellsStatus; // Status de exibição de células relacionadas
+    showErrorsStatus; // Status de exibição de erros
+    difficulty = Number(localStorage.getItem('difficulty_sudoku')); // Dificuldade do jogo
+    size = Number(localStorage.getItem('size_sudoku')); // Tamanho do tabuleiro
+    style = localStorage.getItem('style_sudoku'); // Estilo do tabuleiro
+    container = document.getElementById("sudokucontainer"); // Container do tabuleiro
+    selectedCell = null; // Célula selecionada
+    initialPuzzle = []; // Quebra-cabeça inicial
+    currentPuzzle = []; // Quebra-cabeça que vai ser atualizado durante o jogo
+    solvedPuzzle = []; // Quebra-cabeça resolvido
+    cellDictionary = {}; // Dicionário de células
+    quadrantDictionary = {}; // Dicionário de quadrantes
+    //#endregion
+
     /** Construtor da classe Matrix
      */
     constructor() 
     {
-        this.showPeersAndRelatedCellsStatus = null; // Mostrar células relacionadas
         if (localStorage.getItem('sudoku_peers') === "true")
             this.showPeersAndRelatedCellsStatus = true;
         else
@@ -481,16 +495,6 @@ class MatrixNormal
             this.showErrorsStatus = true;
         else
             this.showErrorsStatus = false;
-        this.difficulty = Number(localStorage.getItem('difficulty_sudoku')); // Dificuldade do jogo
-        this.size = Number(localStorage.getItem('size_sudoku')); // Tamanho do tabuleiro
-        this.style = localStorage.getItem('style_sudoku'); // Estilo do tabuleiro
-        this.container = document.getElementById("sudokucontainer"); // Container do tabuleiro
-        this.selectedCell = null; // Célula selecionada
-        this.initialPuzzle = []; // Quebra-cabeça inicial
-        this.currentPuzzle = []; // Quebra-cabeça que vai ser atualizado durante o jogo
-        this.solvedPuzzle = []; // Quebra-cabeça resolvido
-        this.cellDictionary = {}; // Dicionário de células
-        this.quadrantDictionary = {}; // Dicionário de quadrantes
         this.getInitialPuzzle(); // Inicializa o quebra-cabeça
         this.createSudokuBoard(); // Cria o tabuleiro
     }
@@ -621,6 +625,8 @@ class MatrixNormal
         this.selectedCell.cellDiv.classList.add("selected");
     }
 
+    /** Alterna a exibição dos erros
+     */
     showErrors()
     {
         Object.values(this.cellDictionary).forEach(cell => 
@@ -639,7 +645,6 @@ class MatrixNormal
         this.selectedCell.cellDiv.classList.add("selected");
     }
 
-
     /** Verifica se o jogador venceu
      */
     checkWinSudoku()
@@ -653,6 +658,8 @@ class MatrixNormal
         return true;
     }
 
+    /** Limpa as cores de todas as células
+     */
     clearCells()
     {
         Object.values(this.cellDictionary).forEach(cell => {
@@ -665,14 +672,16 @@ class MatrixNormal
     }
 }
 
-//#endregion
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//#region CLASSE BOARD
 
 class BoardNormal
 {
+    //#region ATTRIBUTES
+    availableHints = parseInt(localStorage.getItem('available_hints')); // Número de dicas disponíveis
+    matrix; // Instância da matriz do Sudoku
+    peersButton = document.getElementById('peersButton'); // Botão de exibição de células relacionadas
+    errorButton = document.getElementById('errorButton'); // Botão de exibição de erros
+    //#endregion
+
     /** Construtor da classe Board
      */
     constructor() 
@@ -682,14 +691,10 @@ class BoardNormal
         // Aplica o estilo ao tabuleiro
         this.updateStyle(this.matrix.style); 
         // Desabilita os botões de números desnecessários
-        this.numberedButtonsVisibility(); 
+        this.numberedButtonsVisibility(false); 
         // Inicializa o número de dicas disponíveis
-        this.availableHints = parseInt(localStorage.getItem('available_hints'));
         const hintCountElement = document.getElementById('hintCount');
         hintCountElement.textContent = String(this.availableHints);
-        // Define a cor inicial do botão de peers
-        this.peersButton = document.getElementById('peersButton');
-        this.errorButton = document.getElementById('errorButton');
         if (this.matrix.showPeersAndRelatedCellsStatus)
         {
             this.peersButton.classList.add("active");   
@@ -708,18 +713,37 @@ class BoardNormal
     }
     
     /** Habilita ou desabilita os botões de números e apagar
+     * @param {boolean} eraseAll - Se true, esconde todos os botões de números
      */
-    numberedButtonsVisibility() 
+    numberedButtonsVisibility(eraseAll) 
     {
-        if (this.matrix.size != 9)
+        if (eraseAll)
         {
-            document.getElementById("numberButton9").style.display = "none";
-            document.getElementById("numberButton8").style.display = "none";
-            document.getElementById("numberButton7").style.display = "none";
-            if (this.matrix.size != 6)
+            document.getElementById("eraseButton").style.display = "none";
+            document.querySelectorAll(".numberButton").forEach((button) => 
             {
-                document.getElementById("numberButton6").style.display = "none";
-                document.getElementById("numberButton5").style.display = "none";
+                if(button instanceof HTMLButtonElement)
+                    button.style.display = "none";
+            });
+            return;
+        }
+        else
+        {
+            document.getElementById("eraseButton").style.display = "inline-block";
+            document.querySelectorAll(".numberButton").forEach((button) => {
+            if(button instanceof HTMLButtonElement)
+                button.style.display = "inline-block";
+            });
+            if (this.matrix.size != 9)
+            {
+                document.getElementById("numberButton9").style.display = "none";
+                document.getElementById("numberButton8").style.display = "none";
+                document.getElementById("numberButton7").style.display = "none";
+                if (this.matrix.size != 6)
+                {
+                    document.getElementById("numberButton6").style.display = "none";
+                    document.getElementById("numberButton5").style.display = "none";
+                }
             }
         }
     }
@@ -743,6 +767,8 @@ class BoardNormal
             this.matrix.selectedCell.cellDiv.classList.add("selected");
     }
 
+    /** Alterna a exibição dos erros
+     */
     errorsManager()
     {
         this.matrix.showErrorsStatus = !this.matrix.showErrorsStatus;
@@ -763,8 +789,7 @@ class BoardNormal
         this.errorButton.classList.toggle("active", this.matrix.showErrorsStatus);
     }
 
-    /**
-     * Gerencia os eventos dos botões de números
+    /** Gerencia os eventos dos botões de números
      * @param {number} clickedNumber
      */
     numberButtonManager(clickedNumber)
@@ -781,7 +806,10 @@ class BoardNormal
             else if(this.matrix.showErrorsStatus)
                 this.matrix.showErrors();
             if(this.matrix.checkWinSudoku())
+            {
+                this.numberedButtonsVisibility(true);
                 document.getElementById('winModal').style.display = 'block';
+            }
         }
     }
 
@@ -828,6 +856,7 @@ class BoardNormal
      */
     restartGame()
     {
+        this.numberedButtonsVisibility(false); 
         document.getElementById('restartModal').style.display = 'none';
         this.availableHints = parseInt(localStorage.getItem('available_hints')); // Número de dicas disponíveis
         document.getElementById("hintCount").textContent = String(this.availableHints);
@@ -861,6 +890,8 @@ class BoardNormal
         }
     }
 
+    /** Mostra o modal de dicas
+     */
     showHintModal()
     {
         if(this.availableHints <= 0) 
@@ -897,12 +928,8 @@ class BoardNormal
 
 }
 
-//#endregion
 
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
 //#region MAIN
-
 /** Função principal para iniciar o jogo
  */
 async function main()
@@ -917,5 +944,4 @@ async function main()
 }
 
 main();
-
 //#endregion
