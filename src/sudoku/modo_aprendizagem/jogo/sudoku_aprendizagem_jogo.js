@@ -8,19 +8,14 @@ const learnStyles = { // Estilos disponíveis
     "fruits": ["🍎", "🍌", "🍇", "🍓", "🍊", "🍍", "🍉", "🥝", "🍑"],
     "animals": ["🐶", "🐱", "🐭", "🦊", "🐻", "🐼", "🐨", "🐯", "🦁"]
 };
-
-const ALL_BORDER_CLASSES = [
-    'visibleLeft', 'visibleRight', 'visibleTop', 'visibleBottom',
-    'thickLeft', 'thickRight', 'thickTop', 'thickBottom'
-];
 //#endregion
 
 
 class CellLearn
 {
-    constructor(row, col, quadrant, currentValue, editableStatus)
+    constructor(row, col, quadrant, currentValue, editableStatus, size)
     {
-        this.id = `cell-${row}-${col}`; // ID da célula
+        this.id = (size * row) + col; // ID da célula
         this.row = row; // Linha da célula
         this.col = col; // Coluna da célula
         this.quadrant = quadrant; // Quadrante da célula
@@ -189,122 +184,112 @@ class BoardLearn
         {
             const linha = [];
             for (let j = 0; j < this.sudokuSize; j++) 
-                linha.push(-1);
+                linha.push([this.getQuadrant(i,j), -1]);
             matrix.push(linha);
         }
-        let row;
-        let col;
+        let rowValues;
+        let rowComplete = [];
+        let colValues;
+        let colComplete = [];
         let quad;
-        let coordenates = [];
+        let quadCellsCoordinates = [];
 
-        if(this.boardType =="1" || this.boardType =="4") // Linha ou linha com coluna
+        // Todos sem quadrante, mas com linha
+        if(this.boardType =="1" || this.boardType =="4") 
         {
-            row = this.shuffleArray(Array.from({ length: this.sudokuSize }, (_, i) => i + 1));
+            rowValues = this.shuffleArray(Array.from({ length: this.sudokuSize }, (_, i) => i + 1));
             // Substituo a linha na matrix
             for (let i = 0; i < this.sudokuSize; i++)
             {
-                if(i == this.rowCoordinate)
-                {
-                    for (let j = 0; j < this.sudokuSize; j++) 
-                        matrix[i][j] = row[j];
-                    break;
-                }
+                rowComplete.push([this.rowCoordinate, i, matrix[this.rowCoordinate][i][0], rowValues[i]]);
+                matrix[this.rowCoordinate][i][1] = rowValues[i];
             }
 
-            if(this.boardType =="4") // Coluna com linha
+            // Linha com Coluna
+            if(this.boardType =="4") 
             {
-                col = this.shuffleArray(Array.from({ length: this.sudokuSize }, (_, i) => i + 1));
+                colValues = this.shuffleArray(Array.from({ length: this.sudokuSize }, (_, i) => i + 1));           
+
                 // Faz os dois vetores se cruzarem de maneira correta;
-                let fixedValue = row[this.colCoordinate];
-                let fixedIndex = this.rowCoordinate;
-                const currentValueIndex = col.indexOf(fixedValue);
-                const currentIndexValue = col[fixedIndex];
-                col[fixedIndex] = fixedValue;
-                col[currentValueIndex] = currentIndexValue;
+                let fixedValue = rowValues[this.colCoordinate];
+                colValues[this.rowCoordinate] = fixedValue;
+                colValues[colValues.indexOf(fixedValue)] = colValues[this.rowCoordinate];
                 // Substituo a coluna na matrix
                 for (let i = 0; i < this.sudokuSize; i++)
                 {
                     if(i == this.colCoordinate)
                     {
                         for (let j = 0; j < this.sudokuSize; j++) 
-                            matrix[j][i] = col[j];
+                            matrix[j][i][1] = colValues[j];
                         break;
                     }
                 }
             }
         }
-        else if(this.boardType =="2") // Coluna
+        // Coluna
+        else if(this.boardType =="2") 
         {
-            col = this.shuffleArray(Array.from({ length: this.sudokuSize }, (_, i) => i + 1));
+            colValues = this.shuffleArray(Array.from({ length: this.sudokuSize }, (_, i) => i + 1));
             // Substituo a coluna na matrix
             for (let i = 0; i < this.sudokuSize; i++)
             {
                 if(i == this.colCoordinate)
                 {
                     for (let j = 0; j < this.sudokuSize; j++) 
-                        matrix[j][i] = col[j];
+                        matrix[j][i][1] = colValues[j];
                     break;
                 }
             }
         }
-        
-        else if(this.boardType =="3" || this.boardType =="5" || this.boardType =="6" || this.boardType =="7") // Todos com quadrante
+        // Todos com quadrante
+        else if(this.boardType =="3" || this.boardType =="5" || this.boardType =="6" || this.boardType =="7") 
         {
             quad = this.shuffleArray(Array.from({ length: this.sudokuSize }, (_, i) => i + 1));
             for (let i = 0; i < this.sudokuSize; i++)
             {
                 for (let j = 0; j < this.sudokuSize; j++) 
                 {
-                    if(this.getQuadrant(i, j) == this.quadrantCoordinate)
-                        coordenates.push([i,j]);
+                    if(matrix[i][j][0] == this.quadrantCoordinate)
+                        quadCellsCoordinates.push([i,j]);
                 }
             }
             for (let i = 0; i < this.sudokuSize; i++)
-                matrix[coordenates[i][0]][coordenates[i][1]] = quad[i];
-        } 
-        if(this.boardType =="5" || this.boardType =="7") // Quadrante e Linha
+                matrix[quadCellsCoordinates[i][0]][quadCellsCoordinates[i][1]][1] = quad[i];
+        }
+        // Todos com quadrante e linha
+        if(this.boardType =="5" || this.boardType =="7") 
         {
-            row = this.shuffleArray(Array.from({ length: this.sudokuSize }, (_, i) => i + 1));
-            // Faz os dois vetores se cruzarem de maneira correta;
-            let fixedValue = quad[this.rowCoordinate];
-            let fixedIndex = this.quadrantCoordinate;
-            let currentValueIndex = row.indexOf(fixedValue);
-            let currentIndexValue = row[fixedIndex];
-            row[fixedIndex] = fixedValue;
-            row[currentValueIndex] = currentIndexValue;
-            // Substituo a coluna na matrix
-            for (let i = 0; i < this.sudokuSize; i++)
+            // Gera um vetor com os número de 1 até n (tamanho sudoku)
+            rowValues = this.shuffleArray(Array.from({ length: this.sudokuSize }, (_, i) => i + 1));
+            // Remove os números desse vetor que já estejam no quadrante
+            for(let i=0; i<this.sudokuSize; i++)
             {
-                if(i == this.colCoordinate)
-                {
-                    for (let j = 0; j < this.sudokuSize; j++) 
-                        matrix[j][i] = row[j];
-                    break;
-                }
+                if(matrix[this.rowCoordinate][i][0] == this.quadrantCoordinate && matrix[this.rowCoordinate][i][1] != -1)            
+                    rowValues.splice(rowValues.indexOf(matrix[this.rowCoordinate][i][1]), 1);
             }
-        } 
-        else if(this.boardType =="6") // Quadrante e coluna
-        {
-         
-        } 
-        if(this.boardType =="7")// Quadrante, Linha e coluna
-        {
-          col = this.shuffleArray(Array.from({ length: this.sudokuSize }, (_, i) => i + 1));
-            // Faz os dois vetores se cruzarem de maneira correta;
-            let fixedValue = quad[this.colCoordinate];
-            let fixedIndex = this.quadrantCoordinate;
-            let currentValueIndex = col.indexOf(fixedValue);
-            let currentIndexValue = col[fixedIndex];
-            col[fixedIndex] = fixedValue;
-            col[currentValueIndex] = currentIndexValue;
-            // Substituo a coluna na matrix
-            for (let i = 0; i < this.sudokuSize; i++)
+            // Preenche a matriz com os valores restantes no vetor
+            for(let i=0; i<this.sudokuSize; i++)
             {
-                for (let j = 0; j < this.sudokuSize; j++)
-                {       
-                    if(i == this.colCoordinate)
-                        matrix[i][j] = col[i];
-                }
+                if(matrix[this.rowCoordinate][i][1] == -1)
+                    matrix[this.rowCoordinate][i][1] = rowValues.pop();
+            }
+        }
+        // Todos com quadrante e coluna
+        if(this.boardType =="6" || this.boardType =="7") 
+        {
+            // Gera um vetor com os número de 1 até n (tamanho sudoku)
+            colValues = this.shuffleArray(Array.from({ length: this.sudokuSize }, (_, i) => i + 1));
+            // Remove os números desse vetor que já estejam no quadrante
+            for(let i=0; i<this.sudokuSize; i++)
+            {
+                if(matrix[i][this.colCoordinate][0] == this.quadrantCoordinate && matrix[i][this.colCoordinate][1] != -1)            
+                    colValues.splice(colValues.indexOf(matrix[i][this.colCoordinate][1]), 1);
+            }
+            // Preenche a matriz com os valores restantes no vetor
+            for(let i=0; i<this.sudokuSize; i++)
+            {
+                if(matrix[i][this.colCoordinate][1] == -1)
+                    matrix[i][this.colCoordinate][1] = colValues.pop();
             }
         }
         return matrix;
@@ -339,22 +324,21 @@ class BoardLearn
         let cellDictionary = {};
         for (let i = 0; i < this.sudokuSize; i++) {
             const row = document.createElement("div");
-            row.classList.add(`row${this.sudokuSize}`);
+            row.classList.add(`row`);
             // Cria uma nova célula
             for (let j = 0; j < this.sudokuSize; j++) {
                 let editableStatus = false;
                 let quadrant = this.getQuadrant(i, j);
-                let cellValue = this.initialBoardMatrix[i][j];
-                let newCell = new CellLearn(i, j, quadrant, cellValue, editableStatus);
-                
+                let cellValue = this.initialBoardMatrix[i][j][1];
+                let newCell = new CellLearn(i, j, quadrant, cellValue, editableStatus, this.sudokuSize);
                 newCell.cellDiv = document.createElement("div");
-                newCell.cellDiv.classList.add(`cell${this.sudokuSize}`);
+                newCell.cellDiv.classList.add(`cell`);
                 newCell.cellDiv.style.display = "flex";
+                newCell.cellDiv.style.width = `${this.cellSize}px`;
+                newCell.cellDiv.style.height = `${this.cellSize}px`;
                 if(newCell.currentValue != -1) // Célula Visível
                 {
                     newCell.cellDiv.classList.add("backgroundColor");
-                    newCell.cellDiv.style.width = `${this.cellSize}px`;
-                    newCell.cellDiv.style.height = `${this.cellSize}px`;
                     newCell.cellDiv.style.justifyContent = "center";
                     newCell.cellDiv.style.alignItems = "center";
                     newCell.cellDiv.style.fontSize = `${this.cellSize / 2}px`;
@@ -365,10 +349,11 @@ class BoardLearn
                         newCell.cellDiv.textContent = "";
                     else 
                         newCell.cellDiv.textContent = newCell.currentValue;
-                }
-                else // Célula Invisível
-                {
-                    newCell.cellDiv.classList.add("#EBF3E8");
+                    // Adiciona as bordas
+                    let borders = this.getBorders(i, j);
+                    borders.forEach(border => {
+                        newCell.cellDiv.classList.add(border);
+                    });
                 }
 
                 cellDictionary[newCell.id] = newCell;
@@ -379,6 +364,32 @@ class BoardLearn
         return cellDictionary;
     }
 
+    getBorders(i, j)
+    {
+        let borders = [];
+        if(i == (this.sudokuSize - 1) || (this.initialBoardMatrix[i+1][j][1] != undefined && this.initialBoardMatrix[i+1][j][1] == -1) || (this.initialBoardMatrix[i+1][j][0] != undefined && this.initialBoardMatrix[i+1][j][0] != this.initialBoardMatrix[i][j][0]))
+            borders.push('thickBottom');
+        else if(this.initialBoardMatrix[i+1][j][1] != undefined && this.initialBoardMatrix[i+1][j][1] != -1)
+            borders.push('visibleBottom')
+
+        if(i == 0 || (this.initialBoardMatrix[i-1][j][1] != undefined && this.initialBoardMatrix[i-1][j][1] == -1))
+            borders.push('thickTop');
+        else if(this.initialBoardMatrix[i-1][j][1] != undefined && this.initialBoardMatrix[i-1][j][1] != -1)
+            borders.push('visibleTop')
+
+        if(j == (this.sudokuSize - 1) || (this.initialBoardMatrix[i][j+1][1] != undefined && this.initialBoardMatrix[i][j+1][1] == -1))
+            borders.push('thickRight');
+        else if(this.initialBoardMatrix[i][j+1][1] != undefined && this.initialBoardMatrix[i][j+1][1] != -1)
+            borders.push('visibleRight')
+
+        if(j == 0 || (this.initialBoardMatrix[i][j-1][1] != undefined && this.initialBoardMatrix[i][j-1][1] == -1) || (this.initialBoardMatrix[i][j-1][0] != undefined && this.initialBoardMatrix[i][j-1][0] != this.initialBoardMatrix[i][j][0]))
+            borders.push('thickLeft');
+        else if(this.initialBoardMatrix[i][j-1][1] != undefined && this.initialBoardMatrix[i][j-1][1] != -1)
+            borders.push('visibleLeft')
+
+        return borders;
+    }
+
     
 
     //#region OUTROS
@@ -387,30 +398,35 @@ class BoardLearn
      */
     cellBehaviourHandler(clickedCell)
     {
-        // // Limpa as cores de todas as células
-        // this.clearCells();
-        // this.selectedCell = clickedCell;
-        // // Se a exibição das células relacionadas estiver ativada, mostra as células relacionadas
-        // if(this.showPeersAndRelatedCellsStatus && !this.showErrorsStatus)
-        //     this.showPeersAndRelatedCells();
-        // // Se a exibição de erros estiver ativada, mostra os erros
-        // else if(this.showErrorsStatus && !this.showPeersAndRelatedCellsStatus)
-        //     this.showErrors();
-        // this.selectedCell.cellDiv.classList.add("selected");
-        // // Habilita ou desabilita os botões de números com base se a célula selecionada é editável
-        // const numberButtons = document.querySelectorAll(".numberButton");
-        // numberButtons.forEach((button) => { 
-        // if (button instanceof HTMLButtonElement && !this.selectedCell.editableStatus) 
-        //     button.disabled = true;
-        // else if(button instanceof HTMLButtonElement)  
-        //     button.disabled = false;
-        // });
-        // // Habilita ou desabilita o botão de apagar com base se a célula selecionada é editável
-        // const eraseButton = document.getElementById("eraseButton");
-        // if (eraseButton instanceof HTMLButtonElement)
-        //     eraseButton.disabled = !this.selectedCell.editableStatus;
-        // else if(eraseButton instanceof HTMLButtonElement)
-        //     eraseButton.disabled = false;
+        // Limpa as cores de todas as células
+        this.clearCells();
+        this.selectedCell = clickedCell;
+        this.selectedCell.cellDiv.classList.add("selected");
+        // Habilita ou desabilita os botões de números com base se a célula selecionada é editável
+        const numberButtons = document.querySelectorAll(".numberButton");
+        numberButtons.forEach((button) => { 
+        if (button instanceof HTMLButtonElement && !this.selectedCell.editableStatus) 
+            button.disabled = true;
+        else if(button instanceof HTMLButtonElement)  
+            button.disabled = false;
+        });
+        // Habilita ou desabilita o botão de apagar com base se a célula selecionada é editável
+        const eraseButton = document.getElementById("eraseButton");
+        if (eraseButton instanceof HTMLButtonElement)
+            eraseButton.disabled = !this.selectedCell.editableStatus;
+        else if(eraseButton instanceof HTMLButtonElement)
+            eraseButton.disabled = false;
+    }
+
+    clearCells()
+    {
+        Object.values(this.cellDictionary).forEach(cell => {
+            cell.cellDiv.classList.remove("hintedCell");
+            cell.cellDiv.classList.remove("selected");
+            cell.cellDiv.classList.remove("cellsWithSameValue");
+            cell.cellDiv.classList.remove("peerCells");
+            cell.cellDiv.classList.remove("incorrect");
+        });
     }
 
     /** Atualiza o estilo dos símbolos no tabuleiro e nos botões
