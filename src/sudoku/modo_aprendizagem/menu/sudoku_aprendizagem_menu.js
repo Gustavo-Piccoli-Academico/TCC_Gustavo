@@ -37,35 +37,52 @@ class SudokuAprendizagemMenu{
         document.getElementById(buttonId).classList.add("active");
     }
 
-    calculateHints() {
+    calculateHintsAndRemovedCells() {
         const selectedSize = localStorage.getItem("size_sudoku");
         const selectedOption = localStorage.getItem("board_type");
         if(selectedOption === '1' || selectedOption === '2' || selectedOption === '3') 
         {
-            if(selectedSize !== 'c') // 4 ou 6
-                localStorage.setItem('available_hints', '0');
-            else // 9
-                localStorage.setItem('available_hints', '1');
+            localStorage.setItem('removed_cells', '2');
+            localStorage.setItem('available_hints', '1');
             return
         }
 
         if(selectedOption === '4' || selectedOption === '5' || selectedOption === '6') 
         {
             if(selectedSize === 'a')
+            {
+                localStorage.setItem('removed_cells', '2');
                 localStorage.setItem('available_hints', '1');
+            }
             else if(selectedSize === 'b')
-                localStorage.setItem('available_hints', '2');
+            {
+                localStorage.setItem('removed_cells', '3');
+                localStorage.setItem('available_hints', '1');
+            }
             else if(selectedSize === 'c')
-                localStorage.setItem('available_hints', '3');
+            {   
+                localStorage.setItem('removed_cells', '4');
+                localStorage.setItem('available_hints', '2');
+            }
         }
+
         else // selectedOption === '7'
         {
             if(selectedSize === 'a')
-                localStorage.setItem('available_hints', '2');
+            {
+                localStorage.setItem('removed_cells', '3');
+                localStorage.setItem('available_hints', '1');
+            }
             else if(selectedSize === 'b')
-                localStorage.setItem('available_hints', '3');
+            {
+                localStorage.setItem('removed_cells', '4');
+                localStorage.setItem('available_hints', '2');
+            }
             else if(selectedSize === 'c')
-                localStorage.setItem('available_hints', '4');
+            {
+                localStorage.setItem('removed_cells', '6');
+                localStorage.setItem('available_hints', '3');
+            }
         }
     }
 
@@ -80,7 +97,7 @@ class SudokuAprendizagemMenu{
             document.getElementById('difficultyModal').style.display = 'block';
         else
         {
-            this.calculateHints();
+            this.calculateHintsAndRemovedCells();
             window.location.href = "../jogo/sudoku_aprendizagem_jogo.html";
         }
     }
