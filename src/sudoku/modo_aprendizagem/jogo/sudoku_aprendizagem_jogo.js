@@ -31,11 +31,13 @@ class BoardLearn
 {
     //#region ATTRIBUTES
     availableHints = parseInt(localStorage.getItem('available_hints')); // Número de dicas disponíveis
+    removedCellsNumber = parseInt(localStorage.getItem('remove_cells')); // Número de células a serem removidas
     boardType = localStorage.getItem('board_type'); // Tipo de tabuleiro escolhido
     sudokuStyle = localStorage.getItem('style_sudoku'); // Estilo do Sudoku
     sudokuErrors = localStorage.getItem('sudoku_errors'); // Status de mostrar erros
     container = document.getElementById("sudokucontainer"); // Container do tabuleiro
     cellDictionary = {}; // Dicionário de células
+    cellList = []; // Lista de células
     sudokuSize; // Tamanho do tabuleiro
     cellSize; // Tamanho da célula
     rowCoordinate; // Linha escolhida
@@ -63,6 +65,8 @@ class BoardLearn
         // Atualiza o contador de dicas
         const hintCountElement = document.getElementById('hintCount');
         hintCountElement.textContent = String(this.availableHints);
+
+        console.log(this.selecionarAleatorios());
     }
     
     /** Retorna o tamanho do tabuleiro baseado na escolha do usuário
@@ -319,6 +323,7 @@ class BoardLearn
         return quadrantRow * numQuadrantCols + quadrantCol;
     }
 
+
     getCellDictionary()
     {
         let cellDictionary = {};
@@ -354,9 +359,9 @@ class BoardLearn
                     borders.forEach(border => {
                         newCell.cellDiv.classList.add(border);
                     });
+                    cellDictionary[newCell.id] = newCell;
+                    this.cellList.push(newCell);
                 }
-
-                cellDictionary[newCell.id] = newCell;
                 row.appendChild(newCell.cellDiv);
             }
             this.container.appendChild(row);
@@ -390,6 +395,21 @@ class BoardLearn
         return borders;
     }
 
+    removeCells()
+    {
+
+    }
+
+    selecionarAleatorios() 
+    {
+        console.log(entries)
+        for (let i = 0 ; i < entries.length; i++) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [entries[i], entries[j]] = [entries[j], entries[i]];
+        }
+        const selectedEntries = entries.slice(0, this.removedCellsNumber);
+        return Object.fromEntries(selectedEntries);
+    }
     
 
     //#region OUTROS
