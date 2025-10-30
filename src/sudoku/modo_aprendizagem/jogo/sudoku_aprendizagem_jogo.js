@@ -30,12 +30,12 @@ class CellLearn
 class BoardLearn
 {
     //#region ATTRIBUTES
-    availableHints = parseInt(localStorage.getItem('available_hints')); // Número de dicas disponíveis
-    removedCellsNumber = parseInt(localStorage.getItem('remove_cells')); // Número de células a serem removidas
+    removedCellsNumber = parseInt(localStorage.getItem('removed_cells')); // Número de células a serem removidas
     boardType = localStorage.getItem('board_type'); // Tipo de tabuleiro escolhido
     sudokuStyle = localStorage.getItem('style_sudoku'); // Estilo do Sudoku
-    sudokuErrors = localStorage.getItem('sudoku_errors'); // Status de mostrar erros
-    container = document.getElementById("sudokucontainer"); // Container do tabuleiro
+    sudokuErrors; // Status de mostrar erros
+    container = document.getElementById("sudokucontainer"); // Container do tabuleiro+
+    errorButton = document.getElementById('errorButton');
     cellDictionary = {}; // Dicionário de células
     cellList = []; // Lista de células
     sudokuSize; // Tamanho do tabuleiro
@@ -43,18 +43,25 @@ class BoardLearn
     rowCoordinate; // Linha escolhida
     colCoordinate; // Coluna escolhida
     quadrantCoordinate; // Quadrante escolhido
-    initialBoardMatrix = [];
+    boardMatrix = [];
     selectedCell = null; // Célula selecionada
+    removedIndexes = [];
     //#endregion
 
     constructor() 
     {
+        if(localStorage.getItem('sudoku_errors') == "true")
+            this.sudokuErrors = true;
+        else
+            this.sudokuErrors = false;
+
         // Define o tamanho do tabuleiro e das células
         [this.sudokuSize, this.cellSize] = this.getSizes();
         // Define a linha, coluna e quadrante escolhidos
         [this.rowCoordinate, this.colCoordinate, this.quadrantCoordinate] = this.getRowColQuadPositions();
         // Define a matrix inicial baseada na linha, coluna e quadrante escolhidos
-        this.initialBoardMatrix = this.getInitialMatrix();
+        this.boardMatrix = this.getInitialMatrix();
+        this.initialMatrix = structuredClone(this.boardMatrix);
         // Preenche a linha e ou coluna e ou quadrante baseado na escolha do usuário
         this.cellDictionary = this.getCellDictionary();
 
@@ -62,11 +69,7 @@ class BoardLearn
         this.updateStyle(this.sudokuStyle); 
         // Desabilita os botões de números desnecessários
         this.numberedButtonsVisibility(false); 
-        // Atualiza o contador de dicas
-        const hintCountElement = document.getElementById('hintCount');
-        hintCountElement.textContent = String(this.availableHints);
-
-        console.log(this.selecionarAleatorios());
+        this.removeCells();
     }
     
     /** Retorna o tamanho do tabuleiro baseado na escolha do usuário
@@ -194,7 +197,6 @@ class BoardLearn
         let rowValues;
         let rowComplete = [];
         let colValues;
-        let colComplete = [];
         let quad;
         let quadCellsCoordinates = [];
 
@@ -323,7 +325,6 @@ class BoardLearn
         return quadrantRow * numQuadrantCols + quadrantCol;
     }
 
-
     getCellDictionary()
     {
         let cellDictionary = {};
@@ -334,7 +335,7 @@ class BoardLearn
             for (let j = 0; j < this.sudokuSize; j++) {
                 let editableStatus = false;
                 let quadrant = this.getQuadrant(i, j);
-                let cellValue = this.initialBoardMatrix[i][j][1];
+                let cellValue = this.boardMatrix[i][j][1];
                 let newCell = new CellLearn(i, j, quadrant, cellValue, editableStatus, this.sudokuSize);
                 newCell.cellDiv = document.createElement("div");
                 newCell.cellDiv.classList.add(`cell`);
@@ -372,24 +373,24 @@ class BoardLearn
     getBorders(i, j)
     {
         let borders = [];
-        if(i == (this.sudokuSize - 1) || (this.initialBoardMatrix[i+1][j][1] != undefined && this.initialBoardMatrix[i+1][j][1] == -1) || (this.initialBoardMatrix[i+1][j][0] != undefined && this.initialBoardMatrix[i+1][j][0] != this.initialBoardMatrix[i][j][0]))
+        if(i == (this.sudokuSize - 1) || (this.boardMatrix[i+1][j][1] != undefined && this.boardMatrix[i+1][j][1] == -1) || (this.boardMatrix[i+1][j][0] != undefined && this.boardMatrix[i+1][j][0] != this.boardMatrix[i][j][0]))
             borders.push('thickBottom');
-        else if(this.initialBoardMatrix[i+1][j][1] != undefined && this.initialBoardMatrix[i+1][j][1] != -1)
+        else if(this.boardMatrix[i+1][j][1] != undefined && this.boardMatrix[i+1][j][1] != -1)
             borders.push('visibleBottom')
 
-        if(i == 0 || (this.initialBoardMatrix[i-1][j][1] != undefined && this.initialBoardMatrix[i-1][j][1] == -1))
+        if(i == 0 || (this.boardMatrix[i-1][j][1] != undefined && this.boardMatrix[i-1][j][1] == -1))
             borders.push('thickTop');
-        else if(this.initialBoardMatrix[i-1][j][1] != undefined && this.initialBoardMatrix[i-1][j][1] != -1)
+        else if(this.boardMatrix[i-1][j][1] != undefined && this.boardMatrix[i-1][j][1] != -1)
             borders.push('visibleTop')
 
-        if(j == (this.sudokuSize - 1) || (this.initialBoardMatrix[i][j+1][1] != undefined && this.initialBoardMatrix[i][j+1][1] == -1))
+        if(j == (this.sudokuSize - 1) || (this.boardMatrix[i][j+1][1] != undefined && this.boardMatrix[i][j+1][1] == -1))
             borders.push('thickRight');
-        else if(this.initialBoardMatrix[i][j+1][1] != undefined && this.initialBoardMatrix[i][j+1][1] != -1)
+        else if(this.boardMatrix[i][j+1][1] != undefined && this.boardMatrix[i][j+1][1] != -1)
             borders.push('visibleRight')
 
-        if(j == 0 || (this.initialBoardMatrix[i][j-1][1] != undefined && this.initialBoardMatrix[i][j-1][1] == -1) || (this.initialBoardMatrix[i][j-1][0] != undefined && this.initialBoardMatrix[i][j-1][0] != this.initialBoardMatrix[i][j][0]))
+        if(j == 0 || (this.boardMatrix[i][j-1][1] != undefined && this.boardMatrix[i][j-1][1] == -1) || (this.boardMatrix[i][j-1][0] != undefined && this.boardMatrix[i][j-1][0] != this.boardMatrix[i][j][0]))
             borders.push('thickLeft');
-        else if(this.initialBoardMatrix[i][j-1][1] != undefined && this.initialBoardMatrix[i][j-1][1] != -1)
+        else if(this.boardMatrix[i][j-1][1] != undefined && this.boardMatrix[i][j-1][1] != -1)
             borders.push('visibleLeft')
 
         return borders;
@@ -397,21 +398,35 @@ class BoardLearn
 
     removeCells()
     {
-
-    }
-
-    selecionarAleatorios() 
-    {
-        console.log(entries)
-        for (let i = 0 ; i < entries.length; i++) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [entries[i], entries[j]] = [entries[j], entries[i]];
+        if(this.removedIndexes.length == 0)
+        {
+            let size = this.cellList.length - 1;
+            for (let i = 0 ; i < this.removedCellsNumber; i++) 
+            {
+                let removedIndex = Math.floor(Math.random() * size);
+                while(this.cellList[removedIndex].cellDiv.textContent == "")
+                {
+                    removedIndex = Math.floor(Math.random() * size);
+                }
+                this.cellList[removedIndex].cellDiv.textContent = "";
+                this.cellList[removedIndex].editableStatus = true;
+                this.cellList[removedIndex].currentValue = 0;
+                this.removedIndexes.push(removedIndex);
+            } 
         }
-        const selectedEntries = entries.slice(0, this.removedCellsNumber);
-        return Object.fromEntries(selectedEntries);
+        else
+        {
+            let size = this.removedIndexes.length;
+            for (let i = 0 ; i < size; i++)
+            {
+                const currentIndex = this.removedIndexes[i];
+                this.cellList[currentIndex].cellDiv.textContent = "";
+                this.cellList[currentIndex].editableStatus = true;
+                this.cellList[currentIndex].currentValue = 0;
+            }
+        }
     }
     
-
     //#region OUTROS
     /** Adiciona os event listeners às células do tabuleiro
      * @param {CellLearn} clickedCell Célula clicada
@@ -421,6 +436,8 @@ class BoardLearn
         // Limpa as cores de todas as células
         this.clearCells();
         this.selectedCell = clickedCell;
+        if(this.sudokuErrors)
+            this.showErrors();
         this.selectedCell.cellDiv.classList.add("selected");
         // Habilita ou desabilita os botões de números com base se a célula selecionada é editável
         const numberButtons = document.querySelectorAll(".numberButton");
@@ -438,13 +455,45 @@ class BoardLearn
             eraseButton.disabled = false;
     }
 
+    /** Gerencia os eventos dos botões de números
+     * @param {number} clickedNumber
+     */
+    numberButtonManager(clickedNumber)
+    {
+         this.clearCells();
+         this.selectedCell.cellDiv.classList.add("selected");
+        if (this.selectedCell && this.selectedCell.editableStatus)
+        {
+            this.selectedCell.currentValue = clickedNumber;
+            this.selectedCell.cellDiv.textContent = clickedNumber.toString();
+            this.updateStyle(this.sudokuStyle);
+            if(this.sudokuErrors)
+                this.showErrors();
+            if(this.checkWinSudoku())
+            {
+                this.numberedButtonsVisibility(true);
+                document.getElementById('winModal').style.display = 'block';
+            }
+        }
+    }
+
+    /** Apaga o conteúdo da célula selecionada
+     */
+    eraseCell()
+    {
+        if (this.selectedCell && this.selectedCell.editableStatus) 
+        {
+            this.selectedCell.currentValue = 0;
+            this.selectedCell.cellDiv.textContent = "";
+            this.cellBehaviourHandler(this.selectedCell);
+        }
+    }
+
     clearCells()
     {
         Object.values(this.cellDictionary).forEach(cell => {
-            cell.cellDiv.classList.remove("hintedCell");
             cell.cellDiv.classList.remove("selected");
             cell.cellDiv.classList.remove("cellsWithSameValue");
-            cell.cellDiv.classList.remove("peerCells");
             cell.cellDiv.classList.remove("incorrect");
         });
     }
@@ -463,10 +512,10 @@ class BoardLearn
         {
             if (cell.currentValue !== 0 && cell.currentValue !== -1) 
                 cell.cellDiv.textContent = mapping[cell.currentValue - 1];
-            else if (cell.currentValue !== -1)
+            else
                 cell.cellDiv.textContent = "";
-        });        
-        
+        });
+
         // Atualiza os botões numéricos
         document.querySelectorAll(".numberButton").forEach((button, index) => 
         {
@@ -480,13 +529,81 @@ class BoardLearn
             button.classList.remove("activeStyle");
         });
         document.getElementById(newStyle).classList.add("activeStyle");
+    }
 
-        // Atualiza a célula selecionada, se houver
-        if(this.selectedCell !== null)
+    showErrors()
+    {
+        Object.values(this.cellDictionary).forEach(cell => 
         {
-            const mapping = learnStyles[this.sudokuStyle];
-            this.selectedCell.cellDiv.textContent = mapping[this.selectedCell.currentValue - 1];
+            // Destaca as células na mesma linha ou coluna ou quadrante
+            if ((cell.row == this.selectedCell.row ) && (this.selectedCell.row == this.rowCoordinate))
+            {
+                if ((cell.currentValue == this.selectedCell.currentValue) && (cell.currentValue != 0) && (cell.currentValue != -1) && (cell != this.selectedCell))
+                {
+                    cell.cellDiv.classList.add("incorrect");
+                    this.selectedCell.cellDiv.classList.remove("selected");
+                    this.selectedCell.cellDiv.classList.add("incorrect");
+                }
+            }
+
+            // Destaca as células na mesma linha ou coluna ou quadrante
+            if ((cell.col == this.selectedCell.col) && (this.selectedCell.col == this.colCoordinate))
+            {
+                if ((cell.currentValue == this.selectedCell.currentValue) && (cell.currentValue != 0) && (cell.currentValue != -1) && (cell !== this.selectedCell))
+                {
+                    cell.cellDiv.classList.add("incorrect");
+                    this.selectedCell.cellDiv.classList.remove("selected");
+                    this.selectedCell.cellDiv.classList.add("incorrect");
+                }
+            }
+            // Destaca as células na mesma linha ou coluna ou quadrante
+            if ((cell.quadrant == this.selectedCell.quadrant ) && (this.selectedCell.quadrant == this.quadrantCoordinate))
+            {
+                if ((cell.currentValue == this.selectedCell.currentValue) && (cell.currentValue != 0) && (cell.currentValue != -1) && (cell != this.selectedCell))
+                {
+                    cell.cellDiv.classList.add("incorrect");
+                    this.selectedCell.cellDiv.classList.remove("selected");
+                    this.selectedCell.cellDiv.classList.add("incorrect");
+                }
+            }
+
+        });
+        this.selectedCell.cellDiv.classList.add("selected");
+    }
+
+    /** Alterna a exibição dos erros
+     */
+    errorsManager()
+    {
+        this.sudokuErrors = !this.sudokuErrors;
+        localStorage.setItem('sudoku_errors', this.sudokuErrors.toString());
+        
+        if(this.selectedCell !== null )
+        {
+            this.cellBehaviourHandler(this.selectedCell);
+            this.selectedCell.cellDiv.classList.add("selected");
         }
+        
+        this.errorButton.classList.toggle("active", this.sudokuErrors);
+    }
+
+    checkWinSudoku()
+    {
+        
+        let cellListSize = this.cellList.length;
+        for(let i = 0; i < cellListSize; i++)
+        {
+            let currentCell = this.cellList[i];
+            if(currentCell.currentValue == 0)
+                return false;
+            for(let j = 0; j < cellListSize; j++)
+            {
+                let nextCell = this.cellList[j];
+                if(currentCell.id != nextCell.id && currentCell.currentValue == nextCell.currentValue && (currentCell.row == nextCell.row || currentCell.col == nextCell.col || currentCell.quadrant == nextCell.quadrant))
+                    return false;
+            }
+        }       
+        return true;
     }
 
     /** Habilita ou desabilita os botões de números e apagar
@@ -524,6 +641,44 @@ class BoardLearn
             }
         }
     }
+
+    /** Reinicia o jogo atual
+     */
+    restartGame()
+    {
+        this.clearCells();
+        this.numberedButtonsVisibility(false); 
+        document.getElementById('restartModal').style.display = 'none';
+        this.selectedCell = null; // Célula selecionada
+        let cellListSize = this.cellList.length;
+        for(let i = 0; i < cellListSize; i++)
+        {
+            if(this.cellList[i].editableStatus == true)
+            {
+                this.cellList[i].currentValue = 0;
+                this.cellList[i].cellDiv.textContent = "";
+            }
+        }
+        this.removeCells();
+        this.updateStyle(this.sudokuStyle);
+        this.clearCells();
+    }
+
+    startNextGame()
+    {
+        document.getElementById('winModal').style.display = 'none';
+        let removedClass = document.getElementsByClassName("cell");
+        for (let i = removedClass.length - 1; i >= 0; i--) 
+        {
+            removedClass[i].remove();
+        }
+        removedClass = document.getElementsByClassName("row");
+        for (let i = removedClass.length - 1; i >= 0; i--) 
+        {
+            removedClass[i].remove();
+        }
+        main();
+    }
     //#endregion
 }
 
@@ -532,7 +687,15 @@ class BoardLearn
 /** Função principal para iniciar o jogo
  */
 function main(){
-    currentBoard = new BoardLearn();
+    try
+    {
+        localStorage.setItem('sudoku_errors', "false");
+        currentBoard = new BoardLearn();
+    }
+    catch
+    {
+        console.log("ERRO");
+    }
 }
 
 main();
