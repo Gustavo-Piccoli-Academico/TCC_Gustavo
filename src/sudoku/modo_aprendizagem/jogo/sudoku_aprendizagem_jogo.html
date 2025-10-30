@@ -23,8 +23,6 @@
 		<button id="rulesButton" onclick="document.getElementById('rulesModal').style.display = 'block';">Regras</button>
 		<!-- Botão de Reinício -->
 		<button id="restartButton" onclick="document.getElementById('restartModal').style.display = 'block';">Recomeçar</button>
-		<!-- Botão de Dicas -->
-		<button id="hintsButton" onclick="currentBoard.showHintModal()">Dicas</button>
 		<!-- Botão de Estilo -->
 		<div class="styleGroup">
 			<button id="styleButton" onclick="">Estilo</button>
@@ -108,27 +106,6 @@
 		</div>
 	</div>
 
-	<!-- Modal de Dicas -->
-	<div id="hintsModal" class="modal" onclick="this.style.display='none'">
-		<div class="modal-content" onclick="event.stopPropagation()">
-			<span class="close" onclick="document.getElementById('hintsModal').style.display = 'none';">&times;</span>
-			<h2>Confirmação</h2>
-			<p>Você deseja usar uma dica? (Você ainda tem <span id="hintCount">?</span> dicas disponíveis)</p>
-			<button id="confirmYes" onclick="currentBoard.useHint();">Sim</button>
-			<button id="confirmNo" onclick="document.getElementById('hintsModal').style.display = 'none';">Não</button>
-		</div>
-	</div>
-
-	<!-- Modal de Sem Mais Dicas -->
-	<div id="NoMoreHintsModal" class="modal" onclick="this.style.display='none'">
-		<div class="modal-content" onclick="event.stopPropagation()">
-			<span class="close" onclick="document.getElementById('NoMoreHintsModal').style.display = 'none';">&times;</span>
-			<h2>Sem Dicas Disponíveis</h2>
-			<p>Você não tem mais dicas disponíveis.</p>
-			<button id="confirmNo" onclick="document.getElementById('NoMoreHintsModal').style.display = 'none';">Fechar</button>
-		</div>
-	</div>
-
 	<!-- Modal de Página Inicial -->
 	<div id="homeModal" class="modal" onclick="this.style.display='none'">
 		<div class="modal-content" onclick="event.stopPropagation()">
@@ -155,8 +132,8 @@
 	<div id="winModal" class="modal">
 		<div class="modal-content">
 			<h2>Parabéns, você ganhou!</h2>
-			<p>Você deseja recomeçar ou retornar ao menu?</p>
-			<button onclick="currentBoard.startNextGame()">Recomeçar</button>
+			<p>Você deseja jogar novamente ou retornar ao menu?</p>
+			<button onclick="currentBoard.startNextGame()">Jogar Novamente</button>
 			<button  onclick="window.location.href = '../../../logicamente/logicamente.html';">Menu</button>
 		</div>
 	</div>
