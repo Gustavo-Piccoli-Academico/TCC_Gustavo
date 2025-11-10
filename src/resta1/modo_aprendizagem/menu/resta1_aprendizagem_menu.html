@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>menu_sudoku</title>
+    <link rel="stylesheet" href="resta1_aprendizagem_menu.css">
+    <script  src ="resta1_aprendizagem_menu.js" defer></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="headerButtons">
+            <button id="backButton">Voltar</button>
+            <button id="homeButton">Página Inicial</button>
+            <button id="rulesButton">Regras</button>
+        </div>
+        <h1>Tipo de Resta 1:</h1>
+        <div class="buttonGroup">
+            <button id="ortogonalButton">Ortogonal</button>
+            <button id="diogonalButton">Diagonal</button>
+        </div>
+        <h1>Dificuldade:</h1>
+        <div class="buttonGroup dificulty">
+            <button id="easyButton">Fácil</button>
+            <button id="mediumButton">Intermediária</button>
+            <button id="hardButton">Difícil</button>
+        </div>
+        <button id="playButton">Jogar</button>
+        <div id="rulesModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Regras do Resta 1</h2>
+                <p>
+                    O jogo começa com um tabuleiro cheio de pecinhas, menos um buraco vazio.
+                    <br><br>
+                    O objetivo é deixar apenas uma pecinha no tabuleiro.
+                    <br><br>
+                    Para isso, você precisa mover uma pecinha pulando outra que está ao lado. A pecinha que foi pulada sai do tabuleiro.
+                    <br><br>
+                    Há dois tipo de Resta 1, o Normal e o Diagonal.
+                    <br><br>
+                    No Resta 1 Normal, você pode pular pecinhas na horizontal ou na vertical, nunca na diagonal.
+                    <br><br>
+                    No Resta 1 Diagonal, você pode pular pecinhas na horizontal ou nas diagonais, nunca na vertical.
+                    <br><br>
+                    Continue pulando e retirando pecinhas até não ter mais movimentos possíveis.
+                    <br><br>
+                    Se sobrar apenas uma pecinha, parabéns, você venceu!
+                    <br><br>
+                    <strong>Você consegue! 🧩😊</strong>
+                </p>
+            </div>
+        </div>
+        <div id="typeAndDifficultyModal" class="modal" onclick="this.style.display='none'">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <span class="close" onclick="document.getElementById('typeAndDifficultyModal').style.display = 'none';">&times;</span>
+                <h2>Escolha um tipo de jogo e uma dificuldade!</h2>
+            </div>
+        </div>
+        <div id="typeModal" class="modal" onclick="this.style.display='none'">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <span class="close" onclick="document.getElementById('typeModal').style.display = 'none';">&times;</span>
+                <h2>Escolha um tipo de jogo!</h2>
+            </div>
+        </div>
+        <div id="difficultyModal" class="modal" onclick="this.style.display='none'">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <span class="close" onclick="document.getElementById('difficultyModal').style.display = 'none';">&times;</span>
+                <h2>Escolha uma dificuldade!</h2>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

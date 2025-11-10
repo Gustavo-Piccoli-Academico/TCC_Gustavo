@@ -5,7 +5,11 @@ document.getElementById("playButton").classList.add("active");
 document.addEventListener("click", function (event) {
     switch(event.target.id){
         case ('homeButton'):{ // 
-            window.location.href = "../../logicamente/logicamente.html";
+            window.location.href = "../../../logicamente/logicamente.html";
+            break;
+        }
+        case ('backButton'):{ // 
+            window.location.href = "../../menu/resta1_menu.html";
             break;
         }
         case('rulesButton'):{
@@ -119,7 +123,7 @@ document.addEventListener("click", function (event) {
         case ('playButton'):{
             if (type_resta1 != null){
                 localStorage.setItem('type', type_resta1);
-                window.location.href = "../jogo/resta1_jogo.html";
+                window.location.href = "../jogo/resta1_normal_jogo.html";
             }
             else{
                 document.getElementById('boardModal').style.display = 'block';

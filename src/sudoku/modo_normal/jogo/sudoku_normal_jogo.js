@@ -1,6 +1,5 @@
 //#region CONSTANTS
 var currentBoard = null;
-
 // Estilos disponíveis
 const normalStyles = { 
     "numbers": ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
@@ -113,7 +112,8 @@ class MatrixNormal
      */
     getInitialPuzzle()
     {
-        let puzzleSet = NormalPuzzles.normalPuzzles[this.size][this.difficulty.toString()];
+        let normalPuzzles= new SudokuPuzzles().normalPuzzles;
+        let puzzleSet = normalPuzzles[this.size][this.difficulty.toString()];
         let selectedPuzzle = puzzleSet[Math.floor(Math.random() * puzzleSet.length)];
         // Trasnforma a string do puzzle inicial em uma matriz 2D
         for (let i = 0; i < this.size; i++) {
@@ -535,7 +535,6 @@ class BoardNormal
         this.matrix.cellDictionary[randomID].cellDiv.classList.add("hintedCell");
         document.getElementById('hintsModal').style.display = 'none';
     }
-
 }
 
 

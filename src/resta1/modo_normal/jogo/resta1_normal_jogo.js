@@ -1,12 +1,10 @@
 // Global Variables
 const type_resta1 = localStorage.getItem("type");
-let container_resta1 = document.getElementById("container_resta1");
+let container_resta1 = document.getElementById("boardContainer");
 let matrix = null;
-
 let first_selected = false;
 let first_position = [];
 let first_piece = null;
-
 let modal = 0;
 let valid_moves = [];
 let is_diagonal = false;
@@ -401,7 +399,7 @@ document.addEventListener("click", function (event) {
             if (modal == 4){ //menu
                 document.getElementById('winModal').style.display = 'none';
                 document.getElementById('loseModal').style.display = 'none';
-                window.location.href = "../menu/resta1_menu.html";
+                window.location.href = "../menu/resta1_normal_menu.html";
             }
             else{
                 document.getElementById('restartModal').style.display = 'none';
@@ -417,11 +415,11 @@ document.addEventListener("click", function (event) {
             }
             else if (modal == 2){
                 document.getElementById('homeModal').style.display = 'none';
-                window.location.href = "../../logicamente/logicamente.html";
+                window.location.href = "../../../logicamente/logicamente.html";
             }
             else if (modal == 3){
                 document.getElementById('backModal').style.display = 'none';
-                window.location.href = "../menu/resta1_menu.html";
+                window.location.href = "../menu/resta1_normal_menu.html";
             }
             else if (modal == 4){//Restart
                 document.getElementById('winModal').style.display = 'none';
@@ -471,4 +469,3 @@ function main(){
 }
 
 main();
-
