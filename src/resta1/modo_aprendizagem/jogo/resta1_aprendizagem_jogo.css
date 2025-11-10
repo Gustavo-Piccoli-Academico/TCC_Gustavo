@@ -53,7 +53,7 @@ button:hover {
     max-width: 500px;
     height: auto;
     aspect-ratio: 1/1;
-    background: url("../imagens/textura.png") center/cover no-repeat;
+    background: url("../../imagens/textura.png") center/cover no-repeat;
     border: 2px solid #8c7351;
     border-radius: 8px;
     padding: 10px;
