@@ -66,6 +66,21 @@ body {
   height: 50px;    
 }
 
+.buttonGroup button2 {
+  font-weight: bold;
+  background-color: #8f8e8d;
+  color: white;
+  font-size: 18px;
+  border: none;
+  border-radius: 25px;
+  margin-right: 20px;
+  white-space: normal;
+  align-content: center;
+  width: 100px;        
+  height: 50px;
+   
+}
+
 .buttonGroup button:hover {
   background-color: #c2803979;
   transform: scale(1.1);
@@ -107,32 +122,6 @@ body {
 
 #livreButton:hover {
   background-color: #3dc129; 
-  transform: scale(1.1);     
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); 
-}
-
-#playButton {
-  display: flex; 
-  align-items: center; 
-  justify-content: center;
-  font-weight: bold;
-  margin-right: 19px;
-  background-color: #813780;
-  color: white;
-  font-size: 20px;
-  font-weight: bold;        
-  padding: 15px 30px;       
-  border: none;             
-  border-radius: 25px;      
-  cursor: pointer;          
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); 
-  width: 100px;        
-  height: 50px;
-   
-}
-
-#playButton:hover {
-  background-color: #8137809d; 
   transform: scale(1.1);     
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); 
 }
